@@ -1,0 +1,3 @@
+# Project exclude paths
+/hypersub/chaincode/node_modules/
+/hypersub/organization/nexnet/contract/node_modules/

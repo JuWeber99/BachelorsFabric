@@ -1,0 +1,237 @@
+################################################################################
+#
+#   ORGANIZATIONS
+#
+#   This section defines the organizational identities that can be referenced
+#   in the configuration profiles.
+#
+################################################################################
+Organizations:
+  - &Nexnet
+    Name: Nexnet
+    SkipAsForeign: false
+    ID: NexnetMSP
+    MSPDir: ../organizations/peerOrganizations/nexnet/msp
+    Policies: &C1SignaturePolicies
+      Readers:
+        Type: Signature
+        Rule: "OR('NexnetMSP.admin', 'NexnetMSP.peer', 'NexnetMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "AND(OR('NexnetMSP.admin', 'NexnetMSP.client'), OR('XOrgMSP.admin', 'XOrgMSP.client'))"
+      Admins:
+        Type: Signature
+        Rule: "AND('NexnetMSP.admin', 'XOrgMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "AND('NexnetMSP.peer', 'XOrgMSP.peer')"
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 7052 #XOrg Anchor
+      - Host: 127.0.0.1
+        Port: 7053 # Auditor Anchor
+
+  - &XOrg
+    Name: XOrg
+    SkipAsForeign: false
+    ID: XOrgMSP
+    MSPDir: ../organizations/peerOrganizations/xorg1/msp
+
+    Policies:
+      <<: *C1SignaturePolicies
+
+    OrdererEndpoints:
+      - "127.0.0.1:7050"
+
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 7051 #Nexnet Anchor
+      - Host: 127.0.0.1
+        Port: 7053 # Auditor Anchor
+
+  - &Auditor
+    Name: Auditor
+    SkipAsForeign: false
+    ID: Auditor
+    MSPDir: ../organizations/peerOrganizations/auditor/msp
+
+    # Auditors independent 
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('AuditorMSP.admin', 'AuditorMSP.peer', 'AuditorMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('AuditorMSP.admin', 'AuditorMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('AuditorMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('AuditorMSP.peer')"
+
+    OrdererEndpoints:
+      - "127.0.0.1:7050"
+
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 7051 #Nexnet Anchor
+      - Host: 127.0.0.1
+        Port: 7052 # XOrg Anchor
+
+  - &OrdererOrg
+    Name: NexnetOrderer
+    ID: NexnetOrdererMSP
+    MSPDir: ../organizations/ordererOrganizations/nexnet/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('NexnetOrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('NexnetOrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('NexnetOrdererMSP.admin')"
+
+    OrdererEndpoints:
+      - orderer.example.com:7050
+
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+################################################################################
+#
+#   SECTION: Application
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters
+#
+################################################################################
+Application: &ApplicationDefaults
+
+  Organizations:
+    <<: *XOrg
+
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+################################################################################
+#
+#   SECTION: Orderer
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for orderer related parameters
+#
+################################################################################
+Orderer: &OrdererDefaultSettings
+  OrdererType: etcdraft
+
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.example.com
+        Port: 7050
+        ClientTLSCert: ../organizations/ordererOrganizations/nexnet/orderers/orderer.nexnet/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/nexnet/orderers/orderer.nexnet/tls/server.crt
+
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Writers"
+
+################################################################################
+#
+#   CHANNEL
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for channel related parameters.
+#
+################################################################################
+Channel: &ChannelDefaultSettings
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+
+  Capabilities:
+    <<: *ChannelCapabilities
+
+################################################################################
+#
+#   Profile
+#
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+Profiles:
+  C1OrdererGenesis:
+    <<: *ChannelDefaultSettings
+    Orderer:
+      <<: *OrdererDefaultSettings
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      C1Consortium:
+        Organizations:
+          - *Nexnet
+          - *XOrg
+          - *Auditor
+  Channel1:
+    Consortium: C1Consortium
+    <<: *ChannelDefaultSettings
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Nexnet
+        - *XOrg
+        - *Auditor
+      Capabilities:
+        <<: *ApplicationCapabilities
+
