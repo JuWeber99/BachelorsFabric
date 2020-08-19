@@ -5,14 +5,14 @@ import {IsoCountryCodes} from "../types/IsoCountryCodes";
 export const testAccounts: Array<CustomerAccount> = [
     {
         accountId: "D2lHSwZA7MUUY0OKSk8z", //random hash string
-        bankingDetails: {
+        bankingDetails: [{
             paymentType: PaymentType.P2P,
             details: {
                 payerId: "testPayerID",
                 paymentToken: "testPaymentToken"
             }
-        },
-        personalDetails: {
+        }],
+        personalDetails: [{
             address: {
                 country: IsoCountryCodes.Germany,
                 postalCode: "16798",
@@ -25,18 +25,18 @@ export const testAccounts: Array<CustomerAccount> = [
             name: "Weber",
             mailAddress: "s_weberj@hwr-berlin.de",
             telephoneContact: "03309332033"
-        },
-        wallet: {
+        }],
+        statement: {
             walletId: "randomHashStringIdentifier",
             currentBills: [],
             dueAmount: 0
         },
-        simDetails: {
+        simDetails: [{
             identity: "CERTIFICATE PATH",
             phoneNumber: "+4901623713723",
             activeContracts: [],
             consumedPricedEvents: [],
-        },
+        }],
         isRevoked: false
     }
 ]

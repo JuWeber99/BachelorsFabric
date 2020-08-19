@@ -1,19 +1,11 @@
 #!/bin/bash
-#
-# Copyright IBM Corp All Rights Reserved
-#
-# SPDX-License-Identifier: Apache-2.0
-#
+# This script brings up a Hyperledger Fabric network for the PoC of the bachelor's thesis
 
-# This script brings up a Hyperledger Fabric network for testing smart contracts
-# and applications. The test network consists of two organizations with one
-# peer each, and a single node Raft ordering service. Users can also use this
-# script to create a channel deploy a chaincode on the channel
-#
+export PROJECT_BASE=/home/balr/Developement/BachelorsFabric
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
-# this may be commented out to resolve installed version of tools if desired
-export PATH=${PWD}/../bin:$PATH
-export FABRIC_CFG_PATH=${PWD}/configtx
+export PATH=$PROJECT_BASE/bin:$PATH
+#TODO correct path to production env
+export FABRIC_CFG_PATH=$PROJECT_BASE/config
 export VERBOSE=false
 
 # Print the usage message
@@ -338,7 +330,7 @@ function createConsortium() {
 
 # After we create the org crypto material and the system channel genesis block,
 # we can now bring up the peers and orderering service. By default, the base
-# file for creating the network is "docker-compose-test-net.yaml" in the ``docker``
+# file for creating the network is "docker-compose-hypersub-net.yaml" in the ``docker``
 # folder. This file defines the environment variables and file mounts that
 # point the crypto material and genesis block that were created in earlier.
 

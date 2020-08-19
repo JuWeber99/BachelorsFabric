@@ -1,6 +1,6 @@
 import {Object, Property} from 'fabric-contract-api'
 import {SimDetails} from "./SimDetails";
-import {Wallet} from "./Wallet";
+import {Statement} from "./Statement";
 import {BankingDetails, P2PDetails, SepaDetails} from "./BankingDetails";
 import {PersonalDetails} from "./PersonalDetails";
 
@@ -14,15 +14,15 @@ export class CustomerAccount {
     public isRevoked?: boolean;
 
     @Property()
-    public personalDetails: PersonalDetails;
+    public personalDetails: Array<PersonalDetails>;
 
     @Property()
-    public bankingDetails: BankingDetails<P2PDetails | SepaDetails>;
+    public bankingDetails: Array<BankingDetails<P2PDetails | SepaDetails>>;
 
     @Property()
-    public simDetails: SimDetails;
+    public simDetails: Array<SimDetails>;
 
     @Property()
-    public wallet: Wallet;
+    public statement: Statement;
 
 }
