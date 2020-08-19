@@ -26,7 +26,7 @@ services:
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=ordererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -54,11 +54,7 @@ services:
     container_name: peer0.nexnet.hypersub.com
     image: hyperledger/fabric-peer:latest
     environment:
-      #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
@@ -75,7 +71,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.nexnet.hypersub.com:7051
-      - CORE_PEER_LOCALMSPID=NexnetMSP
+      - CORE_PEER_LOCALMSPID=nexnetMSP
     volumes:
         - /var/run/:/host/var/run/
         - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/msp:/etc/hyperledger/fabric/msp
@@ -114,7 +110,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:8051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xorg.hypersub.com:8051
-      - CORE_PEER_LOCALMSPID=XorgMSP
+      - CORE_PEER_LOCALMSPID=xorgMSP
     volumes:
       - /var/run/:/host/var/run/
       - ../organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/msp:/etc/hyperledger/fabric/msp
@@ -134,9 +130,6 @@ services:
     environment:
       #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
@@ -153,7 +146,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.auditor.hypersub.com:9051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.auditor.hypersub.com:9051
-      - CORE_PEER_LOCALMSPID=AuditorMSP
+      - CORE_PEER_LOCALMSPID=auditorMSP
     volumes:
       - /var/run/:/host/var/run/
       - ../organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp:/etc/hyperledger/fabric/msp
@@ -172,9 +165,6 @@ services:
     environment:
       #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
@@ -191,12 +181,12 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.debtcollector.hypersub.com:10051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.debtcollector.hypersub.com:10051
-      - CORE_PEER_LOCALMSPID=DebtCollectorMSP
+      - CORE_PEER_LOCALMSPID=debtcollectorMSP
     volumes:
       - /var/run/:/host/var/run/
       - ../organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/msp:/etc/hyperledger/fabric/msp
       - ../organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.xorg.hypersub.com:/var/hyperledger/production
+      - peer0.debtcollector.hypersub.com:/var/hyperledger/production
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:

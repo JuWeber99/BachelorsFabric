@@ -8,23 +8,23 @@
 ################################################################################
 Organizations:
   - &Nexnet
-    Name: Nexnet
+    Name: nexnet
     SkipAsForeign: false
-    ID: NexnetMSP
+    ID: nexnetMSP
     MSPDir: ../organizations/peerOrganizations/nexnet/msp
     Policies: &C1SignaturePolicies
       Readers:
         Type: Signature
-        Rule: "OR('NexnetMSP.admin', 'NexnetMSP.peer', 'NexnetMSP.client')"
+        Rule: "OR('nexnetMSP.admin', 'nexnetMSP.peer', 'nexnetMSP.client')"
       Writers:
         Type: Signature
-        Rule: "AND(OR('NexnetMSP.admin', 'NexnetMSP.client'), OR('XOrgMSP.admin', 'XOrgMSP.client'))"
+        Rule: "AND(OR('nexnetMSP.admin', 'nexnetMSP.client'), OR('XOrgMSP.admin', 'XOrgMSP.client'))"
       Admins:
         Type: Signature
-        Rule: "AND('NexnetMSP.admin', 'XOrgMSP.admin')"
+        Rule: "AND('nexnetMSP.admin', 'XOrgMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "AND('NexnetMSP.peer', 'XOrgMSP.peer')"
+        Rule: "AND('nexnetMSP.peer', 'XOrgMSP.peer')"
     AnchorPeers:
       - Host: 127.0.0.1
         Port: 7052 #XOrg Anchor
@@ -34,7 +34,7 @@ Organizations:
   - &Xorg
     Name: Xorg
     SkipAsForeign: false
-    ID: XorgMSP
+    ID: xorgMSP
     MSPDir: ../organizations/peerOrganizations/xorg/msp
 
     Policies:
@@ -45,37 +45,37 @@ Organizations:
 
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 7051 #Nexnet Anchor
+        Port: 7051 #nexnet Anchor
       - Host: 127.0.0.1
         Port: 9051 # Auditor Anchor
 
   - &Auditor
     Name: Auditor
     SkipAsForeign: false
-    ID: AuditorMSP
+    ID: auditorMSP
     MSPDir: ../organizations/peerOrganizations/auditor/msp
 
     # Auditors independent 
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('AuditorMSP.admin', 'AuditorMSP.peer', 'AuditorMSP.client')"
+        Rule: "OR('auditorMSP.admin', 'auditorMSP.peer', 'auditorMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('AuditorMSP.admin', 'AuditorMSP.client')"
+        Rule: "OR('auditorMSP.admin', 'auditorMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('AuditorMSP.admin')"
+        Rule: "OR('auditorMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('AuditorMSP.peer')"
+        Rule: "OR('auditorMSP.peer')"
 
     OrdererEndpoints:
       - "127.0.0.1:7050"
 
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 7051 #Nexnet Anchor
+        Port: 7051 #nexnet Anchor
       - Host: 127.0.0.1
         Port: 8051 # Xorg Anchor
 
@@ -83,51 +83,51 @@ Organizations:
   - &DebtCollector
     Name: DebtCollector
     SkipAsForeign: false
-    ID: DebtCollectorMSP
+    ID: debtcollectorMSP
     MSPDir: ../organizations/peerOrganizations/debtcollector/msp
 
     # DebtCollectors independent
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('DebtCollectorMSP.admin', 'DebtCollectorMSP.peer', 'DebtCollectorMSP.client')"
+        Rule: "OR('debtcollectorMSP.admin', 'debtcollectorMSP.peer', 'debtcollectorMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('DebtCollectorMSP.admin', 'DebtCollectorMSP.client')"
+        Rule: "OR('debtcollectorMSP.admin', 'debtcollectorMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('DebtCollectorMSP.admin')"
+        Rule: "OR('debtcollectorMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('DebtCollectorMSP.peer')"
+        Rule: "OR('debtcollectorMSP.peer')"
 
     OrdererEndpoints:
       - "127.0.0.1:7050"
 
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 7051 #Nexnet Anchor
+        Port: 7051 #nexnet Anchor
       - Host: 127.0.0.1
         Port: 8051 # Xorg Anchor
 
 
   - &OrdererOrg
     Name: OrdererOrg
-    ID: OrdererMSP
-    MSPDir: ../organizations/ordererOrganizations/example.com/msp
+    ID: ordererMSP
+    MSPDir: ../organizations/ordererOrganizations/hypersub.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('OrdererMSP.member')"
+        Rule: "OR('ordererMSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('OrdererMSP.member')"
+        Rule: "OR('ordererMSP.member')"
       Admins:
         Type: Signature
-        Rule: "OR('OrdererMSP.admin')"
+        Rule: "OR('ordererMSP.admin')"
 
     OrdererEndpoints:
-      - orderer.example.com:7050
+      - orderer.hypersub.com:7050
 
 
 Capabilities:
@@ -184,10 +184,16 @@ Orderer: &OrdererDefaultSettings
 
   EtcdRaft:
     Consenters:
-      - Host: orderer.example.com
+      - Host: orderer.hypersub.com
         Port: 7050
-        ClientTLSCert: ../organizations/ordererOrganizations/nexnet/orderers/orderer.nexnet/tls/server.crt
-        ServerTLSCert: ../organizations/ordererOrganizations/nexnet/orderers/orderer.nexnet/tls/server.crt
+        ClientTLSCert: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.crt
+        ServerTLSCert: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.crt
+    Options:
+      TickInterval: 500ms
+      ElectionTick: 10
+      HeartbeatTick: 1
+      MaxInflightBlocks: 5
+      SnapshotIntervalSize: 16 MB
 
   BatchTimeout: 2s
   BatchSize:

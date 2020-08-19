@@ -11,7 +11,6 @@ CA_IMAGETAG="latest"
 export PROJECT_BASE=/home/balr/Developement/BachelorsFabric
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
 export PATH=$HYPERSUB_BASE/bin:$PATH
-#TODO correct path to production env
 export FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 export VERBOSE=true
 
@@ -130,4 +129,5 @@ function createOrganisations() {
   createOrdererOrgIdentities
 
  # TODO: generate CCP files for all => look at ccp-generate.sh
+
 }
