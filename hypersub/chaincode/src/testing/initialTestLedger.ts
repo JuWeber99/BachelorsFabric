@@ -1,4 +1,4 @@
-import {CustomerAccount} from "../types/CustomerAccountAsset";
+import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 import {PaymentType} from "../types/BankingDetails";
 import {IsoCountryCodes} from "../types/IsoCountryCodes";
 
