@@ -98,27 +98,35 @@ function checkPrereqs() {
   fi
 }
 
-IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
-sleep 10
+function createOrganisations() {
 
-. $PROJECT_BASE/scripts/printEcho.sh
+  if [ -d "$PROJECT_BASE/organizations/peerOrganizations" ]; then
+    rm -Rf $PROJECT_BASE/organizations/peerOrganizations && rm -Rf $PROJECT_BASE/organizations/ordererOrganizations
+  fi
 
-printEcho Nexnet
-. $PROJECT_BASE/organizations/enrollRegisterNexnet.sh
-createNexnetIdentities
+  IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
+  sleep 10
 
-printEcho Xorg
-. $PROJECT_BASE/organizations/enrollRegisterXorg.sh
-createXorgIdentities
+  . $PROJECT_BASE/scripts/printEcho.sh
 
-printEcho Auditor
-. $PROJECT_BASE/organizations/enrollRegisterAuditor.sh
-createAuditorIdentities
+  printEcho Nexnet
+  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
+  createNexnetIdentities
 
-printEcho Debt collector
-. $PROJECT_BASE/organizations/enrollRegisterDebtCollector.sh
-createDebtCollectorIdentities
+  printEcho Xorg
+  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
+  createXorgIdentities
 
-printEcho Orderer
-. $PROJECT_BASE/organizations/enrollRegisterOrderer.sh
-createOrdererOrgIdentities
+  printEcho Auditor
+  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
+  createAuditorIdentities
+
+  printEcho Debt collector
+  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
+  createDebtCollectorIdentities
+
+  printEcho Orderer
+  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
+  createOrdererOrgIdentities
+
+}

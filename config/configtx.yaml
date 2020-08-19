@@ -31,11 +31,11 @@ Organizations:
       - Host: 127.0.0.1
         Port: 7053 # Auditor Anchor
 
-  - &XOrg
-    Name: XOrg
+  - &Xorg
+    Name: Xorg
     SkipAsForeign: false
-    ID: XOrgMSP
-    MSPDir: ../organizations/peerOrganizations/xorg1/msp
+    ID: XorgMSP
+    MSPDir: ../organizations/peerOrganizations/xorg/msp
 
     Policies:
       <<: *C1SignaturePolicies
@@ -47,12 +47,12 @@ Organizations:
       - Host: 127.0.0.1
         Port: 7051 #Nexnet Anchor
       - Host: 127.0.0.1
-        Port: 7053 # Auditor Anchor
+        Port: 9051 # Auditor Anchor
 
   - &Auditor
     Name: Auditor
     SkipAsForeign: false
-    ID: Auditor
+    ID: AuditorMSP
     MSPDir: ../organizations/peerOrganizations/auditor/msp
 
     # Auditors independent 
@@ -77,22 +77,54 @@ Organizations:
       - Host: 127.0.0.1
         Port: 7051 #Nexnet Anchor
       - Host: 127.0.0.1
-        Port: 7052 # XOrg Anchor
+        Port: 8051 # Xorg Anchor
 
-  - &OrdererOrg
-    Name: NexnetOrderer
-    ID: NexnetOrdererMSP
-    MSPDir: ../organizations/ordererOrganizations/nexnet/msp
+
+  - &DebtCollector
+    Name: DebtCollector
+    SkipAsForeign: false
+    ID: DebtCollectorMSP
+    MSPDir: ../organizations/peerOrganizations/debtcollector/msp
+
+    # DebtCollectors independent
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('NexnetOrdererMSP.member')"
+        Rule: "OR('DebtCollectorMSP.admin', 'DebtCollectorMSP.peer', 'DebtCollectorMSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('NexnetOrdererMSP.member')"
+        Rule: "OR('DebtCollectorMSP.admin', 'DebtCollectorMSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('NexnetOrdererMSP.admin')"
+        Rule: "OR('DebtCollectorMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('DebtCollectorMSP.peer')"
+
+    OrdererEndpoints:
+      - "127.0.0.1:7050"
+
+    AnchorPeers:
+      - Host: 127.0.0.1
+        Port: 7051 #Nexnet Anchor
+      - Host: 127.0.0.1
+        Port: 8051 # Xorg Anchor
+
+
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: ../organizations/ordererOrganizations/example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
 
     OrdererEndpoints:
       - orderer.example.com:7050
@@ -117,7 +149,7 @@ Capabilities:
 Application: &ApplicationDefaults
 
   Organizations:
-    <<: *XOrg
+    <<: *Xorg
 
   Policies:
     Readers:
@@ -209,7 +241,7 @@ Channel: &ChannelDefaultSettings
 #
 ################################################################################
 Profiles:
-  C1OrdererGenesis:
+  HypersubGenesis:
     <<: *ChannelDefaultSettings
     Orderer:
       <<: *OrdererDefaultSettings
@@ -221,17 +253,18 @@ Profiles:
       C1Consortium:
         Organizations:
           - *Nexnet
-          - *XOrg
+          - *Xorg
           - *Auditor
-  Channel1:
-    Consortium: C1Consortium
-    <<: *ChannelDefaultSettings
+      C2Consortium:
+        Organisations:
+          - *Nexnet
+          - *Xorg
+          - *DebtCollector
     Application:
       <<: *ApplicationDefaults
       Organizations:
         - *Nexnet
-        - *XOrg
-        - *Auditor
+        - *Xorg
       Capabilities:
         <<: *ApplicationCapabilities
 

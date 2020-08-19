@@ -59,7 +59,7 @@ services:
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -75,7 +75,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.nexnet.hypersub.com:7051
-      - CORE_PEER_LOCALMSPID=nexnetMSP
+      - CORE_PEER_LOCALMSPID=NexnetMSP
     volumes:
         - /var/run/:/host/var/run/
         - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/msp:/etc/hyperledger/fabric/msp
@@ -88,7 +88,8 @@ services:
     networks:
       - hypersub
 
-  peer0.auditor.hypersub.com:
+
+  peer0.xorg.hypersub.com:
     container_name: peer0.xorg.hypersub.com
     image: hyperledger/fabric-peer:latest
     environment:
@@ -97,7 +98,46 @@ services:
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.xorg.hypersub.com
+      - CORE_PEER_ADDRESS=peer0.xorg.hypersub.com:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.xorg.hypersub.com:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xorg.hypersub.com:8051
+      - CORE_PEER_LOCALMSPID=XorgMSP
+    volumes:
+      - /var/run/:/host/var/run/
+      - ../organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/msp:/etc/hyperledger/fabric/msp
+      - ../organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls:/etc/hyperledger/fabric/tls
+      - peer0.xorg.hypersub.com:/var/hyperledger/production
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 8051:8051
+    networks:
+      - hypersub
+
+
+  peer0.auditor.hypersub.com:
+    container_name: peer0.auditor.hypersub.com
+    image: hyperledger/fabric-peer:latest
+    environment:
+      #Generic peer variables
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -113,54 +153,16 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.auditor.hypersub.com:9051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.auditor.hypersub.com:9051
-      - CORE_PEER_LOCALMSPID=auditorMSP
+      - CORE_PEER_LOCALMSPID=AuditorMSP
     volumes:
-        - /var/run/:/host/var/run/
-        - ../organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp:/etc/hyperledger/fabric/msp
-        - ../organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.auditor.hypersub.com:/var/hyperledger/production
+      - /var/run/:/host/var/run/
+      - ../organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp:/etc/hyperledger/fabric/msp
+      - ../organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls:/etc/hyperledger/fabric/tls
+      - peer0.auditor.hypersub.com:/var/hyperledger/production
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
       - 9051:9051
-    networks:
-      - hypersub
-
-  peer0.xorg.hypersub.com:
-    container_name: peer0.auditor.hypersub.com
-    image: hyperledger/fabric-peer:latest
-    environment:
-      #Generic peer variables
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_test
-      - FABRIC_LOGGING_SPEC=INFO
-      #- FABRIC_LOGGING_SPEC=DEBUG
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_PROFILE_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      # Peer specific variabes
-      - CORE_PEER_ID=peer0.xorg.hypersub.com
-      - CORE_PEER_ADDRESS=peer0.xorg.hypersub.com:10001
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:10001
-      - CORE_PEER_CHAINCODEADDRESS=peer0.xorg.hypersub.com:10002
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10002
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:10001
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xorg.hypersub.com:10001
-      - CORE_PEER_LOCALMSPID=xorgMSP
-    volumes:
-      - /var/run/:/host/var/run/
-      - ../organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/msp:/etc/hyperledger/fabric/msp
-      - ../organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.xorg.hypersub.com:/var/hyperledger/production
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: peer node start
-    ports:
-      - 10001:10001
     networks:
       - hypersub
 
@@ -173,7 +175,7 @@ services:
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -183,13 +185,13 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variabes
       - CORE_PEER_ID=peer0.xorg.hypersub.com
-      - CORE_PEER_ADDRESS=peer0.xorg.hypersub.com:11001
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:11001
-      - CORE_PEER_CHAINCODEADDRESS=peer0.xorg.hypersub.com:11002
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11002
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:11001
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.debtcollector.hypersub.com:11001
-      - CORE_PEER_LOCALMSPID=debtcollectorMSP
+      - CORE_PEER_ADDRESS=peer0.xorg.hypersub.com:10051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.debtcollector.hypersub.com:10052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.debtcollector.hypersub.com:10051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.debtcollector.hypersub.com:10051
+      - CORE_PEER_LOCALMSPID=DebtCollectorMSP
     volumes:
       - /var/run/:/host/var/run/
       - ../organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/msp:/etc/hyperledger/fabric/msp
@@ -198,6 +200,6 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
-      - 11001:11001
+      - 10051:10051
     networks:
       - hypersub
