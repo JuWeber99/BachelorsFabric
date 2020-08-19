@@ -1,5 +1,5 @@
 import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
-import {CustomerAccount} from "./types/CustomerAccountAsset";
+import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 import {testAccounts} from "./testing/initialTestLedger";
 import {JsonUtil} from "./util";
 
