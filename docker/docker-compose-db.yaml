@@ -1,0 +1,46 @@
+version: '2'
+
+networks:
+  hypersub:
+
+services:
+  couchdb0:
+    container_name: couchdb_nexnet
+    image: couchdb:3.1
+    environment:
+      - COUCHDB_USER=nexnet
+      - COUCHDB_PASSWORD=nexnet
+    ports:
+      - "5984:5984"
+    networks:
+      - hypersub
+
+  peer0.nexnet.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb_nexnet:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=nexnet
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=nexnet
+    depends_on:
+      - couchdb_nexnet
+
+  couchdb1:
+    container_name: couchdb_xorg
+    image: couchdb:3.1
+    environment:
+      - COUCHDB_USER=xorg
+      - COUCHDB_PASSWORD=xorg
+    ports:
+    # reach all dbs on same local port
+      - "7984:5984"
+    networks:
+      - hypersub
+
+  peer0.xorg.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb_xorg:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=xorg
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=xorg
+    depends_on:
+      - couchdb_xorg
