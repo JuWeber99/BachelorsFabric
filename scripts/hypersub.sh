@@ -129,4 +129,5 @@ function createOrganisations() {
   . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
   createOrdererOrgIdentities
 
+ # TODO: generate CCP files for all => look at ccp-generate.sh
 }
