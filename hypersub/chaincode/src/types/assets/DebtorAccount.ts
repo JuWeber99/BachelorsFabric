@@ -4,7 +4,8 @@ import {Statement} from "../Statement";
 
 
 @Object()
-export class DebtorAccountAsset {
+export class DebtorAccount {
+
 
     @Property()
     public debtorId: string;
