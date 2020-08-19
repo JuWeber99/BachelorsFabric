@@ -3,9 +3,9 @@
 
 export PROJECT_BASE=/home/balr/Developement/BachelorsFabric
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
-export PATH=$PROJECT_BASE/bin:$PATH
+export PATH=$HYPERSUB_BASE/bin:$PATH
 #TODO correct path to production env
-export FABRIC_CFG_PATH=$PROJECT_BASE/config
+export FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 export VERBOSE=false
 
 # Print the usage message

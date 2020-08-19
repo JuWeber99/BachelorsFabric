@@ -10,9 +10,9 @@ CA_IMAGETAG="latest"
 
 export PROJECT_BASE=/home/balr/Developement/BachelorsFabric
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
-export PATH=$PROJECT_BASE/bin:$PATH
+export PATH=$HYPERSUB_BASE/bin:$PATH
 #TODO correct path to production env
-export FABRIC_CFG_PATH=$PROJECT_BASE/config
+export FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 export VERBOSE=true
 
 function clearContainers() {
@@ -100,33 +100,33 @@ function checkPrereqs() {
 
 function createOrganisations() {
 
-  if [ -d "$PROJECT_BASE/organizations/peerOrganizations" ]; then
-    rm -Rf $PROJECT_BASE/organizations/peerOrganizations && rm -Rf $PROJECT_BASE/organizations/ordererOrganizations
+  if [ -d "$HYPERSUB_BASE/organizations/peerOrganizations" ]; then
+    rm -Rf $HYPERSUB_BASE/organizations/peerOrganizations && rm -Rf $HYPERSUB_BASE/organizations/ordererOrganizations
   fi
 
   IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
   sleep 10
 
-  . $PROJECT_BASE/scripts/printEcho.sh
+  . $HYPERSUB_BASE/scripts/printEcho.sh
 
   printEcho Nexnet
-  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
+  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
   createNexnetIdentities
 
   printEcho Xorg
-  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
+  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
   createXorgIdentities
 
   printEcho Auditor
-  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
+  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
   createAuditorIdentities
 
   printEcho Debt collector
-  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
+  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
   createDebtCollectorIdentities
 
   printEcho Orderer
-  . $PROJECT_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
+  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
   createOrdererOrgIdentities
 
  # TODO: generate CCP files for all => look at ccp-generate.sh
