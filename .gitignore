@@ -13,3 +13,5 @@
 /organizations/fabric-ca/debtcollector/msp/keystore/d0ee51b843beb84293410c6d7f6b70fb3fe3bcaf83c1c1d536defa6071512390_sk
 /organizations/peerOrganizations/
 /organizations/ordererOrganizations/
+.idea
+.idea/*
