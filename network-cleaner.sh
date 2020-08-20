@@ -15,6 +15,7 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/xorg
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/nexnet
+  docker network prune -f
 }
 
 networkDown

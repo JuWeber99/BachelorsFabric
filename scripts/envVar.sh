@@ -7,16 +7,17 @@
 # This is a collection of bash functions used by different scripts
 
 export CORE_PEER_TLS_ENABLED=true
-export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-export PEER0_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-export PEER0_ORG2_CA=${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
-export PEER0_ORG3_CA=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+export ORDERER_CA=${PWD}/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
+export PEER0_NEXNET_CA=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt
+export PEER0_XORG_CA=${PWD}/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt
+export PEER0_AUDITOR_CA=${PWD}/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt
+export PEER0_DEBTCOLLECTOR_CA=${PWD}/organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls/ca.crt
 
 # Set OrdererOrg.Admin globals
 setOrdererGlobals() {
-  export CORE_PEER_LOCALMSPID="OrdererMSP"
-  export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-  export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/ordererOrganizations/example.com/users/Admin@example.com/msp
+  export CORE_PEER_LOCALMSPID="ordererMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
+  export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp
 }
 
 # Set environment variables for the peer org
@@ -29,21 +30,28 @@ setGlobals() {
   fi
   echo "Using organization ${USING_ORG}"
   if [ $USING_ORG -eq 1 ]; then
-    export CORE_PEER_LOCALMSPID="Org1MSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    export CORE_PEER_LOCALMSPID="nexnetMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_nexnet_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
   elif [ $USING_ORG -eq 2 ]; then
-    export CORE_PEER_LOCALMSPID="Org2MSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
-    export CORE_PEER_ADDRESS=localhost:9051
+    export CORE_PEER_LOCALMSPID="xorgMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XORG_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp
+    export CORE_PEER_ADDRESS=localhost:8051
 
   elif [ $USING_ORG -eq 3 ]; then
-    export CORE_PEER_LOCALMSPID="Org3MSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
-    export CORE_PEER_ADDRESS=localhost:11051
+    export CORE_PEER_LOCALMSPID="auditorMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_AUDITOR_CA
+    export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com/msp
+    export CORE_PEER_ADDRESS=localhost:9051
+
+  elif [ $USING_ORG -eq 4 ]; then
+    export CORE_PEER_LOCALMSPID="debtcollectorMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_DEBTCOLLECTOR_CA
+    export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/users/Admin@debtcollector.hypersub.com/msp
+    export CORE_PEER_ADDRESS=localhost:10051
+
   else
     echo "================== ERROR !!! ORG Unknown =================="
   fi
@@ -62,12 +70,12 @@ parsePeerConnectionParameters() {
   PEERS=""
   while [ "$#" -gt 0 ]; do
     setGlobals $1
-    PEER="peer0.org$1"
+    PEER="peer0.$1"
     ## Set peer adresses
     PEERS="$PEERS $PEER"
     PEER_CONN_PARMS="$PEER_CONN_PARMS --peerAddresses $CORE_PEER_ADDRESS"
     ## Set path to TLS certificate
-    TLSINFO=$(eval echo "--tlsRootCertFiles \$PEER0_ORG$1_CA")
+    TLSINFO=$(eval echo "--tlsRootCertFiles \$PEER0_$1_CA")
     PEER_CONN_PARMS="$PEER_CONN_PARMS $TLSINFO"
     # shift by one to get to the next organization
     shift

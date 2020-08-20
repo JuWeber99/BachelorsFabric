@@ -5,13 +5,13 @@ CHANNEL_NAME="$1"
 DELAY="$2"
 MAX_RETRY="$3"
 VERBOSE="$4"
-: ${CHANNEL_NAME:="mychannel"}
+: ${CHANNEL_NAME:="channel1"}
 : ${DELAY:="3"}
 : ${MAX_RETRY:="5"}
 : ${VERBOSE:="false"}
 
 # import utils
-. scripts/envVar.sh
+. $HYPERSUB_BASE/scripts/envVar.sh
 
 if [ ! -d "channel-artifacts" ]; then
 	mkdir channel-artifacts
@@ -20,7 +20,7 @@ fi
 createChannelTx() {
 
 	set -x
-	configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/${CHANNEL_NAME}.tx -channelID $CHANNEL_NAME
+	configtxgen -profile "Channel$i" -outputCreateChannelTx $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.tx -channelID $CHANNEL_NAME
 	res=$?
 	set +x
 	if [ $res -ne 0 ]; then
@@ -33,11 +33,11 @@ createChannelTx() {
 
 createAncorPeerTx() {
 
-	for orgmsp in Org1MSP Org2MSP; do
+	for orgmsp in nexnetMSP xorgMSP; do
 
 	echo "#######    Generating anchor peer update transaction for ${orgmsp}  ##########"
 	set -x
-	configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/${orgmsp}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgmsp}
+	configtxgen -profile Channel1 -outputAnchorPeersUpdate ./channel-artifacts/${orgmsp}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgmsp}
 	res=$?
 	set +x
 	if [ $res -ne 0 ]; then
@@ -87,7 +87,7 @@ joinChannel() {
 	done
 	cat log.txt
 	echo
-	verifyResult $res "After $MAX_RETRY attempts, peer0.org${ORG} has failed to join channel '$CHANNEL_NAME' "
+	verifyResult $res "After $MAX_RETRY attempts, peer0.${ORG} has failed to join channel '$CHANNEL_NAME' "
 }
 
 updateAnchorPeers() {
@@ -120,7 +120,7 @@ verifyResult() {
   fi
 }
 
-FABRIC_CFG_PATH=${PWD}/configtx
+FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 
 ## Create channeltx
 echo "### Generating channel create transaction '${CHANNEL_NAME}.tx' ###"
@@ -130,23 +130,21 @@ createChannelTx
 echo "### Generating anchor peer update transactions ###"
 createAncorPeerTx
 
-FABRIC_CFG_PATH=$PWD/../config/
-
 ## Create channel
 echo "Creating channel "$CHANNEL_NAME
 createChannel
 
 ## Join all the peers to the channel
-echo "Join Org1 peers to the channel..."
+echo "Join nexnet peers to the channel..."
 joinChannel 1
-echo "Join Org2 peers to the channel..."
+echo "Join xorg peers to the channel..."
 joinChannel 2
 
 ## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for org1..."
-updateAnchorPeers 1
-echo "Updating anchor peers for org2..."
-updateAnchorPeers 2
+# echo "Updating anchor peers for org1..."
+# updateAnchorPeers 1
+# echo "Updating anchor peers for org2..."
+# updateAnchorPeers 2
 
 echo
 echo "========= Channel successfully joined =========== "
