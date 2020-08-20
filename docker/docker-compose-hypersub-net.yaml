@@ -25,7 +25,7 @@ services:
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block.pb
       - ORDERER_GENERAL_LOCALMSPID=ordererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       # enabled TLS
@@ -41,7 +41,7 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-        - ../system-genesis-block/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ../system-genesis-block/genesis.block.pb:/var/hyperledger/orderer/genesis.block.pb
         - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp:/var/hyperledger/orderer/msp
         - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/:/var/hyperledger/orderer/tls
         - orderer.hypersub.com:/var/hyperledger/production/orderer

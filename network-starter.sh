@@ -148,7 +148,7 @@ function createConsortium() {
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
   set -x
-  configtxgen -profile HypersubGenesis -channelID system-channel -outputBlock $HYPERSUB_BASE/system-genesis-block/genesis.block.pb
+  configtxgen -profile HypersubGenesis -channelID orderer-system-channel -outputBlock $HYPERSUB_BASE/system-genesis-block/genesis.block.pb
   res=$?
   set +x
   if [ $res -ne 0 ]; then

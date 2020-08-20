@@ -10,6 +10,11 @@ function networkDown() {
   docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
   rm -rf $HYPERSUB_BASE/organizations/peerOrganizations
   rm -rf $HYPERSUB_BASE/organizations/ordererOrganizations
+  rm -rf $HYPERSUB_BASE/organizations/fabric-ca/auditor
+  rm -rf $HYPERSUB_BASE/organizations/fabric-ca/debtcollector
+  rm -rf $HYPERSUB_BASE/organizations/fabric-ca/xorg
+  rm -rf $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg
+  rm -rf $HYPERSUB_BASE/organizations/fabric-ca/nexnet
 }
 
 networkDown
