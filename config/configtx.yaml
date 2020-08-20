@@ -11,7 +11,7 @@ Organizations:
     Name: nexnet
     SkipAsForeign: false
     ID: nexnetMSP
-    MSPDir: ../organizations/peerOrganizations/nexnet/msp
+    MSPDir: ../organizations/peerOrganizations/nexnet.hypersub.com/msp
     Policies: &C1SignaturePolicies
       Readers:
         Type: Signature
@@ -37,7 +37,7 @@ Organizations:
     Name: Xorg
     SkipAsForeign: false
     ID: xorgMSP
-    MSPDir: ../organizations/peerOrganizations/xorg/msp
+    MSPDir: ../organizations/peerOrganizations/xorg.hypersub.com/msp
 
     Policies:
       <<: *C1SignaturePolicies
@@ -58,7 +58,7 @@ Organizations:
     Name: Auditor
     SkipAsForeign: false
     ID: auditorMSP
-    MSPDir: ../organizations/peerOrganizations/auditor/msp
+    MSPDir: home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/msp
 
     # Auditors independent 
     Policies:
@@ -89,7 +89,7 @@ Organizations:
     Name: DebtCollector
     SkipAsForeign: false
     ID: debtcollectorMSP
-    MSPDir: ../organizations/peerOrganizations/debtcollector/msp
+    MSPDir: home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/debtcollector.hypersub.com/msp
 
     # DebtCollectors independent
     Policies:

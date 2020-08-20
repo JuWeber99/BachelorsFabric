@@ -3,7 +3,6 @@
 ######## VARIABLE and PATH DEFINITIONS ########
 
 export HYPERSUB_BASE=/home/balr/Developement/BachelorsFabric
-# prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
 export PATH=$HYPERSUB_BASE/bin:$PATH
 export FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 export VERBOSE=true
