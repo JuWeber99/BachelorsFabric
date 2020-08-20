@@ -3,14 +3,14 @@ function createAuditor {
   echo
 	echo "Enroll the CA admin for auditor"
   echo
-	mkdir -p organizations/peerOrganizations/auditor.hypersub.com/
+	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/
 
 	export FABRIC_CA_CLIENT_HOME=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/
 #  rm -rf $FABRIC_CA_CLIENT_HOME/fabric-ca-client-config.yaml
 #  rm -rf $FABRIC_CA_CLIENT_HOME/msp
 
   set -x
-  fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-auditor --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
+  fabric-ca-client enroll -u https://admin:adminpw@localhost:9054 --caname ca-auditor --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
   echo 'NodeOUs:
@@ -32,25 +32,25 @@ function createAuditor {
 	echo "Register peer0"
   echo
   set -x
-	fabric-ca-client register --caname ca-auditor --id.name peer0 --id.secret peer0 --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
+	fabric-ca-client register --caname ca-auditor --id.name peer0 --id.secret peer0pw --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
   echo
-  echo "Register user: AuditorUser"
+  echo "Register user: auditoruser"
   echo
   set -x
-  fabric-ca-client register --caname ca-auditor --id.name AuditorUser --id.secret AuditorUser --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
+  fabric-ca-client register --caname ca-auditor --id.name auditoruser --id.secret auditoruserpw --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
   echo
   echo "Register the organisation admin for auditor"
   echo
   set -x
-  fabric-ca-client register --caname ca-auditor --id.name auditoradmin --id.secret auditoradmin --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
+  fabric-ca-client register --caname ca-auditor --id.name auditoradmin --id.secret auditoradminpw --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
-	mkdir -p organizations/peerOrganizations/auditor.hypersub.com/peers
-  mkdir -p organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com
+	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com
 
   echo
   echo "## Generate the peer0 msp for auditor"
@@ -82,19 +82,19 @@ function createAuditor {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/ca
   cp $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp/cacerts/* $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/ca/ca.auditor.hypersub.com-cert.pem
 
-  mkdir -p organizations/peerOrganizations/auditor.hypersub.com/users
-  mkdir -p organizations/peerOrganizations/auditor.hypersub.com/users/AuditorUser@auditor.hypersub.com
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/auditoruser@auditor.hypersub.com
 
   echo
-  echo "## Generate the user msp for AuditorUser-user"
+  echo "## Generate the user msp for auditoruser-user"
   echo
   set -x
-	fabric-ca-client enroll -u https://AuditorUser:AuditorUser@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/AuditorUser@auditor.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
+	fabric-ca-client enroll -u https://auditoruser:auditoruserpw@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/auditoruser@auditor.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
-  cp $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/AuditorUser@auditor.hypersub.com/msp/config.yaml
+  cp $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/auditoruser@auditor.hypersub.com/msp/config.yaml
 
-  mkdir -p organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com
 
   echo
   echo "## Generate the auditor admin msp"

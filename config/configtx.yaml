@@ -27,9 +27,11 @@ Organizations:
         Rule: "AND('nexnetMSP.peer', 'XOrgMSP.peer')"
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 7052 #XOrg Anchor
+        Port: 8051 #XOrg Anchor
       - Host: 127.0.0.1
-        Port: 7053 # Auditor Anchor
+        Port: 9051 # Auditor Anchor
+      - Host: 127.0.0.1
+        Port: 10051 # debt collector Anchor
 
   - &Xorg
     Name: Xorg
@@ -48,6 +50,9 @@ Organizations:
         Port: 7051 #nexnet Anchor
       - Host: 127.0.0.1
         Port: 9051 # Auditor Anchor
+      - Host: 127.0.0.1
+        Port: 10051 # debt collector Anchor
+
 
   - &Auditor
     Name: Auditor
@@ -253,24 +258,40 @@ Profiles:
       <<: *OrdererDefaultSettings
       Organizations:
         - *OrdererOrg
+        - *Xorg
+        - *DebtCollector
+        - *Auditor
       Capabilities:
         <<: *OrdererCapabilities
     Consortiums:
-      C1Consortium:
+      ConsortiumOne:
         Organizations:
           - *Nexnet
           - *Xorg
           - *Auditor
-      C2Consortium:
-        Organisations:
+      ConsortiumTwo:
+        Organizations:
           - *Nexnet
           - *Xorg
           - *DebtCollector
+
+  Channel1:
+    <<: *ChannelDefaultSettings
+    Consortium: ConsortiumOne
     Application:
       <<: *ApplicationDefaults
       Organizations:
         - *Nexnet
         - *Xorg
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  Channel2:
+    <<: *ChannelDefaultSettings
+    Consortium: ConsortiumTwo
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
       Capabilities:
         <<: *ApplicationCapabilities
 

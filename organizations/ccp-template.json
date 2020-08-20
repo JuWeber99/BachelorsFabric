@@ -1,5 +1,5 @@
 {
-    "name": "hypersub-network-{ORG}",
+    "name": "hypersub-network-${ORG}",
     "version": "1.0.0",
     "client": {
         "organization": "${ORG}",
@@ -23,7 +23,7 @@
         }
     },
     "peers": {
-        "peer0.org${ORG}.hypersub.com": {
+        "peer0.${ORG}.hypersub.com": {
             "url": "grpcs://localhost:${P0PORT}",
             "tlsCACerts": {
                 "pem": "${PEERPEM}"

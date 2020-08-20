@@ -4,7 +4,7 @@ networks:
   hypersub:
 
 services:
-  couchdb0:
+  couchdb_nexnet:
     container_name: couchdb_nexnet
     image: couchdb:3.1
     environment:
@@ -15,7 +15,7 @@ services:
     networks:
       - hypersub
 
-  peer0.nexnet.example.com:
+  peer0.nexnet.hypersub.com:
     environment:
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb_nexnet:5984
@@ -24,7 +24,7 @@ services:
     depends_on:
       - couchdb_nexnet
 
-  couchdb1:
+  couchdb_xorg:
     container_name: couchdb_xorg
     image: couchdb:3.1
     environment:
@@ -36,7 +36,7 @@ services:
     networks:
       - hypersub
 
-  peer0.xorg.example.com:
+  peer0.xorg.hypersub.com:
     environment:
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb_xorg:5984

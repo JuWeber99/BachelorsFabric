@@ -2,17 +2,21 @@
 
 ######## VARIABLE and PATH DEFINITIONS ########
 
-COMPOSE_FILE_BASE=docker/docker-compose-hypersub-net.yaml
-COMPOSE_FILE_COUCH=docker/docker-compose-db.yaml
-COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
-IMAGETAG="latest"
-CA_IMAGETAG="latest"
-
-export PROJECT_BASE=/home/balr/Developement/BachelorsFabric
+export HYPERSUB_BASE=/home/balr/Developement/BachelorsFabric
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
 export PATH=$HYPERSUB_BASE/bin:$PATH
 export FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 export VERBOSE=true
+
+COMPOSE_FILE_BASE=$HYPERSUB_BASE/docker/docker-compose-hypersub-net.yaml
+COMPOSE_FILE_COUCH=$HYPERSUB_BASE/docker/docker-compose-db.yaml
+COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
+COMPOSE_FILES="-f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH"
+IMAGETAG="latest"
+CA_IMAGETAG="latest"
+DATABASE="couchdb"
+
+
 
 function clearContainers() {
   CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-peer.*/) {print $1}')
@@ -43,8 +47,6 @@ function checkPrereqs() {
     echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
     exit 1
   fi
-  # use the fabric tools container to see if the samples and binaries match your
-  # docker images
   LOCAL_VERSION=$(peer version | sed -ne 's/ Version: //p')
   DOCKER_IMAGE_VERSION=$(docker run --rm hyperledger/fabric-tools:$IMAGETAG peer version | sed -ne 's/ Version: //p' | head -1)
 
@@ -103,31 +105,72 @@ function createOrganisations() {
     rm -Rf $HYPERSUB_BASE/organizations/peerOrganizations && rm -Rf $HYPERSUB_BASE/organizations/ordererOrganizations
   fi
 
-  IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
+  IMAGE_TAG=${CA_IMAGETAG}
+  docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
   sleep 10
 
   . $HYPERSUB_BASE/scripts/printEcho.sh
 
   printEcho Nexnet
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
-  createNexnetIdentities
+  createNexnet
 
   printEcho Xorg
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
-  createXorgIdentities
+  createXorg
 
   printEcho Auditor
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
-  createAuditorIdentities
+  createAuditor
 
   printEcho Debt collector
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
-  createDebtCollectorIdentities
+  createDebtCollector
 
   printEcho Orderer
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
-  createOrdererOrgIdentities
+  createOrderer
 
- # TODO: generate CCP files for all => look at ccp-generate.sh
+  printEcho "Generate CCP-Connection Files "
+  bash $HYPERSUB_BASE/organizations/ccp-generate.sh
 
 }
+
+# Generate orderer system channel genesis block.
+function createConsortium() {
+  which configtxgen
+  if [ "$?" -ne 0 ]; then
+    echo "configtxgen tool not found. exiting"
+    exit 1
+  fi
+
+  echo "#########  Generating Orderer Genesis block ##############"
+
+  # Note: For some unknown reason (at least for now) the block file can't be
+  # named orderer.genesis.block or the orderer will fail to launch!
+  set -x
+  configtxgen -profile HypersubGenesis -channelID system-channel -outputBlock $HYPERSUB_BASE/system-genesis-block/genesis.block
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo $'\e[1;32m'"Failed to generate orderer genesis block..."$'\e[0m'
+    exit 1
+  fi
+}
+
+function networkUp() {
+
+  createOrganisations
+  createConsortium
+
+  IMAGE_TAG=$IMAGETAG docker-compose ${COMPOSE_FILES} up -d 2>&1
+
+  docker ps -a
+  if [ $? -ne 0 ]; then
+    echo "ERROR !!!! Unable to start network"
+    exit 1
+  fi
+}
+
+checkPrereqs
+networkUp

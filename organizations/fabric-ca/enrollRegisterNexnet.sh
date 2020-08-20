@@ -3,7 +3,7 @@ function createNexnet {
   echo
 	echo "Enroll the CA admin for nexnet"
   echo
-	mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/
+	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/
 
 	export FABRIC_CA_CLIENT_HOME=$HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/
 #  rm -rf $FABRIC_CA_CLIENT_HOME/fabric-ca-client-config.yaml
@@ -32,25 +32,25 @@ function createNexnet {
 	echo "Register peer0"
   echo
   set -x
-	fabric-ca-client register --caname ca-nexnet --id.name peer0 --id.secret peer0 --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
+	fabric-ca-client register --caname ca-nexnet --id.name peer0 --id.secret peer0pw --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
   set +x
 
   echo
-  echo "Register user: Julian"
+  echo "Register user: nexnetuser"
   echo
   set -x
-  fabric-ca-client register --caname ca-nexnet --id.name Julian --id.secret Julian --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
+  fabric-ca-client register --caname ca-nexnet --id.name nexnetuser --id.secret nexnetuserpw --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
   set +x
 
   echo
   echo "Register the organisation admin for nexnet"
   echo
   set -x
-  fabric-ca-client register --caname ca-nexnet --id.name nexnetadmin --id.secret nexnetadmin --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
+  fabric-ca-client register --caname ca-nexnet --id.name nexnetadmin --id.secret nexnetadminpw --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
   set +x
 
-	mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/peers
-  mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com
+	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/peers
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com
 
   echo
   echo "## Generate the peer0 msp for nexnet"
@@ -82,19 +82,19 @@ function createNexnet {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/ca
   cp $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/msp/cacerts/* $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/ca/ca.nexnet.hypersub.com-cert.pem
 
-  mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/users
-  mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/users/Julian@nexnet.hypersub.com
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/nexnetuser@nexnet.hypersub.com
 
   echo
-  echo "## Generate the user msp for Julian user"
+  echo "## Generate the user msp for nexnetuser-user"
   echo
   set -x
-	fabric-ca-client enroll -u https://Julian:Julian@localhost:7054 --caname ca-nexnet -M $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Julian@nexnet.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
+	fabric-ca-client enroll -u https://nexnetuser:nexnetuserpw@localhost:7054 --caname ca-nexnet -M $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/nexnetuser@nexnet.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/nexnet/tls-cert.pem
   set +x
 
-  cp $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Julian@nexnet.hypersub.com/msp/config.yaml
+  cp $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/nexnetuser@nexnet.hypersub.com/msp/config.yaml
 
-  mkdir -p organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com
+  mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com
 
   echo
   echo "## Generate the nexnet admin msp"
@@ -106,3 +106,4 @@ function createNexnet {
   cp $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp/config.yaml
 
 }
+
