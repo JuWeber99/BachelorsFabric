@@ -15,3 +15,8 @@
 /organizations/ordererOrganizations/
 .idea
 .idea/*
+/organizations/fabric-ca/auditor/
+/organizations/fabric-ca/debtcollector/
+/organizations/fabric-ca/nexnet/
+/organizations/fabric-ca/ordererOrg/
+/organizations/fabric-ca/xorg/
