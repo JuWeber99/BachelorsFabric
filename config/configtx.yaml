@@ -8,7 +8,7 @@
 ################################################################################
 Organizations:
   - &Nexnet
-    Name: nexnet
+    Name: Nexnet
     SkipAsForeign: false
     ID: nexnetMSP
     MSPDir: ../organizations/peerOrganizations/nexnet.hypersub.com/msp
@@ -27,11 +27,13 @@ Organizations:
         Rule: "AND('nexnetMSP.peer', 'XOrgMSP.peer')"
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 8051 #XOrg Anchor
-      - Host: 127.0.0.1
-        Port: 9051 # Auditor Anchor
-      - Host: 127.0.0.1
-        Port: 10051 # debt collector Anchor
+        Port: 7051 #nexnet Anchor
+      #- Host: 127.0.0.1
+      #  Port: 8051 #XOrg Anchor
+      #- Host: 127.0.0.1
+      #  Port: 9051 # Auditor Anchor
+      #- Host: 127.0.0.1
+      #  Port: 10051 # debt collector Anchor
 
   - &Xorg
     Name: Xorg
@@ -46,13 +48,14 @@ Organizations:
       - "127.0.0.1:7050"
 
     AnchorPeers:
+      #- Host: 127.0.0.1
+      #  Port: 7051 #nexnet Anchor
+      #- Host: 127.0.0.1
+      #  Port: 9051 # Auditor Anchor
+      #- Host: 127.0.0.1
+      #  Port: 10051 # debt collector Anchor
       - Host: 127.0.0.1
-        Port: 7051 #nexnet Anchor
-      - Host: 127.0.0.1
-        Port: 9051 # Auditor Anchor
-      - Host: 127.0.0.1
-        Port: 10051 # debt collector Anchor
-
+        Port: 8051
 
   - &Auditor
     Name: Auditor
@@ -80,10 +83,11 @@ Organizations:
 
     AnchorPeers:
       - Host: 127.0.0.1
-        Port: 7051 #nexnet Anchor
-      - Host: 127.0.0.1
-        Port: 8051 # Xorg Anchor
-
+        Port: 9051
+      # - Host: 127.0.0.1
+      #   Port: 7051 #nexnet Anchor
+      # - Host: 127.0.0.1
+      #   Port: 8051 # Xorg Anchor
 
   - &DebtCollector
     Name: DebtCollector
@@ -110,10 +114,12 @@ Organizations:
       - "127.0.0.1:7050"
 
     AnchorPeers:
+      #- Host: 127.0.0.1
+      #  Port: 7051 #nexnet Anchor
+      #- Host: 127.0.0.1
+      #  Port: 8051 # Xorg Anchor
       - Host: 127.0.0.1
-        Port: 7051 #nexnet Anchor
-      - Host: 127.0.0.1
-        Port: 8051 # Xorg Anchor
+        Port: 10051
 
 
   - &OrdererOrg
@@ -283,6 +289,7 @@ Profiles:
       Organizations:
         - *Nexnet
         - *Xorg
+        - *Auditor
       Capabilities:
         <<: *ApplicationCapabilities
 

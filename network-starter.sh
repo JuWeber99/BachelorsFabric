@@ -173,3 +173,5 @@ function networkUp() {
 
 checkPrereqs
 networkUp
+sleep 5
+$HYPERSUB_BASE/scripts/createChannels.sh

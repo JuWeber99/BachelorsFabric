@@ -7,7 +7,12 @@ COMPOSE_FILE_COUCH=$HYPERSUB_BASE/docker/docker-compose-db.yaml
 COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
 
 function networkDown() {
+
+  #clean up containers
   docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
+  docker network prune -f
+
+  #clean up files
   rm -rf $HYPERSUB_BASE/organizations/peerOrganizations
   rm -rf $HYPERSUB_BASE/organizations/ordererOrganizations
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/auditor
@@ -15,7 +20,9 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/xorg
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg
   rm -rf $HYPERSUB_BASE/organizations/fabric-ca/nexnet
-  docker network prune -f
+  rm -rf $HYPERSUB_BASE/channel-artifacts
+  rm -rf $HYPERSUB_BASE/system-genesis-block
+
 }
 
 networkDown

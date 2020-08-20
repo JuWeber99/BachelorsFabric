@@ -7,17 +7,17 @@
 # This is a collection of bash functions used by different scripts
 
 export CORE_PEER_TLS_ENABLED=true
-export ORDERER_CA=${PWD}/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
-export PEER0_NEXNET_CA=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt
-export PEER0_XORG_CA=${PWD}/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt
-export PEER0_AUDITOR_CA=${PWD}/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt
-export PEER0_DEBTCOLLECTOR_CA=${PWD}/organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls/ca.crt
+export ORDERER_CA=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
+export PEER0_NEXNET_CA=$HYPERSUB_BASEorganizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt
+export PEER0_XORG_CA=$HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt
+export PEER0_AUDITOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt
+export PEER0_DEBTCOLLECTOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls/ca.crt
 
 # Set OrdererOrg.Admin globals
 setOrdererGlobals() {
   export CORE_PEER_LOCALMSPID="ordererMSP"
-  export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
-  export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp
+  export CORE_PEER_TLS_ROOTCERT_FILE=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp
 }
 
 # Set environment variables for the peer org
@@ -29,6 +29,7 @@ setGlobals() {
     USING_ORG="${OVERRIDE_ORG}"
   fi
   echo "Using organization ${USING_ORG}"
+  echo
   if [ $USING_ORG -eq 1 ]; then
     export CORE_PEER_LOCALMSPID="nexnetMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_nexnet_CA
