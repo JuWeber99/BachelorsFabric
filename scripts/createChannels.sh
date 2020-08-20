@@ -2,6 +2,7 @@
 
 # import utils
 . $HYPERSUB_BASE/scripts/envVar.sh
+. $HYPERSUB_BASE/scripts/printer.sh
 
 if [ ! -d "channel-artifacts" ]; then
   mkdir channel-artifacts
@@ -14,51 +15,57 @@ createChannelTx() {
   res=$?
   set +x
   if [ $res -ne 0 ]; then
-    echo "Failed to generate channel configuration transaction..."
+    printError "Failed to generate channel configuration transaction..."
     exit 1
   fi
   echo
 
 }
 
-createChannelTwoTx() {
-
-  set -x
-  configtxgen -profile "Channel2" -outputCreateChannelTx $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.tx -channelID $CHANNEL_NAME
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate channel configuration transaction..."
-    exit 1
-  fi
-  echo
-
-}
-
+##### Anchor Peer Transactions for channel1 #####
 createAncorPeerTxOne() {
 
-  for orgmsp in nexnetMSP xorgMSP auditorMSP; do
+  for orgname in Nexnet Xorg Auditor; do
 
-    echo "#######    Generating anchor peer update transaction for ${orgmsp}  ##########"
+    printTask "Generating anchor peer update transaction for ${orgname}"
     set -x
-    configtxgen -profile Channel1 -outputAnchorPeersUpdate $HYPERSUB_BASE/channel-artifacts/${orgmsp}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgmsp}
+    configtxgen -profile Channel1 -outputAnchorPeersUpdate $HYPERSUB_BASE/channel-artifacts/${orgname}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgname}
     res=$?
     set +x
     if [ $res -ne 0 ]; then
-      echo "Failed to generate anchor peer update transaction for ${orgmsp}..."
+      printError "Failed to generate anchor peer update transaction for ${orgname}..."
       exit 1
     fi
     echo
   done
 }
 
+##### Anchor Peer Transactions for channel1 #####
+createAncorPeerTxTwo() {
+
+  for orgname in Nexnet Xorg DebtCollector; do
+
+    printTask "Generating anchor peer update transaction for ${orgname}"
+    set -x
+    configtxgen -profile Channel2 -outputAnchorPeersUpdate $HYPERSUB_BASE/channel-artifacts/${orgname}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgname}
+    res=$?
+    set +x
+    if [ $res -ne 0 ]; then
+      printError "Failed to generate anchor peer update transaction for ${orgname}..."
+      exit 1
+    fi
+    echo
+  done
+}
+
+##### creating a channel #####
 createChannel() {
   setGlobals 1
   # Poll in case the raft leader is not set yet
   local rc=1
   local COUNTER=1
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    echo "waiting for retry for: $DELAY seconds"
+    printError "waiting for retry for: $DELAY seconds"
     sleep $DELAY
     set -x
     peer channel create -o localhost:7050 -c $CHANNEL_NAME --ordererTLSHostnameOverride orderer.hypersub.com -f $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.tx --outputBlock $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.block.pb --tls --cafile $ORDERER_CA >&log.txt
@@ -69,21 +76,18 @@ createChannel() {
   done
   cat log.txt
   verifyResult $res "Channel creation failed"
-  echo
-  echo "===================== Channel '$CHANNEL_NAME' created ===================== "
-  echo
+  printInfo "===================== Channel '$CHANNEL_NAME' created ===================== "
 }
 
-# queryCommitted ORG
+# joining the peers to the channel
 joinChannel() {
   ORG=$1
   setGlobals $ORG
-  echo "Using $ORG to join"
   local rc=1
   local COUNTER=1
   ## Sometimes Join takes time, hence retry
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    echo "waiting for retry for: $DELAY seconds"
+    printError "waiting for retry for: $DELAY seconds"
     sleep $DELAY
     set -x
     peer channel join -b $HYPERSUB_BASE/channel-artifacts/$CHANNEL_NAME.block.pb >&log.txt
@@ -94,7 +98,7 @@ joinChannel() {
   done
   cat log.txt
   echo
-  verifyResult $res "After $MAX_RETRY attempts, peer0.${ORG} has failed to join channel '$CHANNEL_NAME' "
+  verifyResult $res "After $MAX_RETRY attempts, peer0.${ORG_NAME} has failed to join channel '$CHANNEL_NAME' "
 }
 
 updateAnchorPeers() {
@@ -106,7 +110,7 @@ updateAnchorPeers() {
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
     set -x
-    peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com -c $CHANNEL_NAME -f $HYPERSUB_BASE/channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
+    peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com -c $CHANNEL_NAME -f $HYPERSUB_BASE/channel-artifacts/${ORG_NAME}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
     res=$?
     set +x
     let rc=$res
@@ -114,14 +118,14 @@ updateAnchorPeers() {
   done
   cat log.txt
   verifyResult $res "Anchor peer update failed"
-  echo "===================== Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME' ===================== "
   sleep $DELAY
   echo
 }
 
 verifyResult() {
   if [ $1 -ne 0 ]; then
-    echo "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
+    printError "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
     echo
     exit 1
   fi
@@ -139,69 +143,67 @@ VERBOSE="$4"
 : ${VERBOSE:="false"}
 
 ## Create channeltx for channel 1
-echo "### Generating channel create transaction '${CHANNEL_NAME}.tx' ###"
+printTask "Generating channel create transaction '${CHANNEL_NAME}.tx'"
 createChannelTx "1"
 
 ## Create anchorpeertx
-echo "### Generating anchor peer update transactions ###"
+printTask "Generating anchor peer update transactions "
 createAncorPeerTxOne
 
 ## Create channel
-echo "Creating channel "$CHANNEL_NAME
+printTask "Creating channel "$CHANNEL_NAME
 createChannel
 
 ## Join all the peers to the channel
-echo "Join nexnet peers to the channel..."
+printTask "Join nexnet peers to the channel..."
 joinChannel 1
-echo "Join xorg peers to the channel..."
+printTask "Join xorg peers to the channel..."
 joinChannel 2
-echo "Join auditor peers to the channel"
+printTask "Join auditor peers to the channel"
 joinChannel 3
 
 ## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for nexnet..."
+printTask "Updating anchor peers for nexnet..."
 updateAnchorPeers 1
-echo "Updating anchor peers for xorg..."
+printTask "Updating anchor peers for xorg..."
 updateAnchorPeers 2
-echo "Updating anchor peers for auditor..."
+printTask "Updating anchor peers for auditor..."
 updateAnchorPeers 3
 
 echo
-echo "========= Channel successfully joined =========== "
+printInfo "========= Channel1 successfully joined =========== "
 echo
 
-#CHANNEL_NAME="channel2"
-#
-### Create channeltx for channel 1
-#echo "### Generating channel create transaction '${CHANNEL_NAME}.tx' ###"
-#createChannelTx "2"
-#
-#
-### Create anchorpeertx
-#echo "### Generating anchor peer update transactions ###"
-#createAncorPeerTxOne
-#
-#
-### Create channel
-#echo "Creating channel "$CHANNEL_NAME
-#createChannel
-#
-### Join all the peers to the channel
-#echo "Join nexnet peers to the channel..."
-#joinChannel 1
-#echo "Join xorg peers to the channel..."
-#joinChannel 2
-#echo "Join debtcollector peers to the channel..."
-#joinChannel 4
-#
-### Set the anchor peers for each org in the channel
-## echo "Updating anchor peers for org1..."
-## updateAnchorPeers 1
-## echo "Updating anchor peers for org2..."
-## updateAnchorPeers 2
-#
-#echo
-#echo "========= Channel successfully joined =========== "
-#echo
+CHANNEL_NAME="channel2"
+
+## Create channeltx for channel 1
+printTask "Generating channel create transaction '${CHANNEL_NAME}.tx' "
+createChannelTx "2"
+
+## Create anchorpeertx
+printTask "Generating anchor peer update transactions "
+createAncorPeerTxTwo
+
+## Create channel
+printTask "Creating channel $CHANNEL_NAME"
+createChannel
+
+## Join all the peers to the channel
+printTask "Join nexnet peers to the channel..."
+joinChannel 1
+printTask "Join xorg peers to the channel..."
+joinChannel 2
+printTask "Join debtcollector peers to the channel..."
+joinChannel 4
+
+## Set the anchor peers for each org in the channel
+printTask "Updating anchor peers for nexnet ..."
+updateAnchorPeers 1
+printTask "Updating anchor peers for xorg..."
+updateAnchorPeers 2
+printTask "Updating anchor peers for xorg..."
+updateAnchorPeers 4
+
+printInfo " ========= Channel2 successfully joined =========== "
 
 exit 0

@@ -15,12 +15,13 @@ IMAGETAG="latest"
 CA_IMAGETAG="latest"
 DATABASE="couchdb"
 
-
+# source print script
+. $HYPERSUB_BASE/scripts/printer.sh
 
 function clearContainers() {
   CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-peer.*/) {print $1}')
   if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
-    echo "---- No containers available for deletion ----"
+    printInfo "---- No containers available for deletion ----"
   else
     docker rm -f $CONTAINER_IDS
   fi
@@ -29,7 +30,7 @@ function clearContainers() {
 function removeUnwantedImages() {
   DOCKER_IMAGE_IDS=$(docker images | awk '($1 ~ /dev-peer.*/) {print $3}')
   if [ -z "$DOCKER_IMAGE_IDS" -o "$DOCKER_IMAGE_IDS" == " " ]; then
-    echo "---- No images available for deletion ----"
+    printInfo "---- No images available for deletion ----"
   else
     docker rmi -f $DOCKER_IMAGE_IDS
   fi
@@ -40,7 +41,7 @@ function checkPrereqs() {
   peer version >/dev/null 2>&1
 
   if [[ $? -ne 0 || ! -d "$HYPERSUB_BASE/config" ]]; then
-    echo "ERROR! Peer binary and configuration files not found.."
+    printError "ERROR! Peer binary and configuration files not found.."
     echo
     echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
     echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
@@ -49,26 +50,26 @@ function checkPrereqs() {
   LOCAL_VERSION=$(peer version | sed -ne 's/ Version: //p')
   DOCKER_IMAGE_VERSION=$(docker run --rm hyperledger/fabric-tools:$IMAGETAG peer version | sed -ne 's/ Version: //p' | head -1)
 
-  echo "LOCAL_VERSION=$LOCAL_VERSION"
-  echo "DOCKER_IMAGE_VERSION=$DOCKER_IMAGE_VERSION"
+  printInfo "LOCAL_VERSION=$LOCAL_VERSION"
+  printInfo "DOCKER_IMAGE_VERSION=$DOCKER_IMAGE_VERSION"
 
   if [ "$LOCAL_VERSION" != "$DOCKER_IMAGE_VERSION" ]; then
-    echo "=================== WARNING ==================="
+    printError "=================== WARNING ==================="
     echo "  Local fabric binaries and docker images are  "
     echo "  out of  sync. This may cause problems.       "
-    echo "==============================================="
+    printError "==============================================="
   fi
 
   for UNSUPPORTED_VERSION in $NONWORKING_VERSIONS; do
-    echo "$LOCAL_VERSION" | grep -q $UNSUPPORTED_VERSION
+    printInfo "$LOCAL_VERSION" | grep -q $UNSUPPORTED_VERSION
     if [ $? -eq 0 ]; then
-      echo "ERROR! Local Fabric binary version of $LOCAL_VERSION does not match the versions supported by the test network."
+      printError "ERROR! Local Fabric binary version of $LOCAL_VERSION does not match the versions supported by the test network."
       exit 1
     fi
 
-    echo "$DOCKER_IMAGE_VERSION" | grep -q $UNSUPPORTED_VERSION
+    printInfo "$DOCKER_IMAGE_VERSION" | grep -q $UNSUPPORTED_VERSION
     if [ $? -eq 0 ]; then
-      echo "ERROR! Fabric Docker image version of $DOCKER_IMAGE_VERSION does not match the versions supported by the test network."
+      printError "ERROR! Fabric Docker image version of $DOCKER_IMAGE_VERSION does not match the versions supported by the test network."
       exit 1
     fi
   done
@@ -78,7 +79,7 @@ function checkPrereqs() {
 
     fabric-ca-client version >/dev/null 2>&1
     if [[ $? -ne 0 ]]; then
-      echo "ERROR! fabric-ca-client binary not found.."
+      printError "ERROR! fabric-ca-client binary not found.."
       echo
       echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
       echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
@@ -86,14 +87,14 @@ function checkPrereqs() {
     fi
     CA_LOCAL_VERSION=$(fabric-ca-client version | sed -ne 's/ Version: //p')
     CA_DOCKER_IMAGE_VERSION=$(docker run --rm hyperledger/fabric-ca:$CA_IMAGETAG fabric-ca-client version | sed -ne 's/ Version: //p' | head -1)
-    echo "CA_LOCAL_VERSION=$CA_LOCAL_VERSION"
-    echo "CA_DOCKER_IMAGE_VERSION=$CA_DOCKER_IMAGE_VERSION"
+    printInfo "CA_LOCAL_VERSION=$CA_LOCAL_VERSION"
+    printInfo "CA_DOCKER_IMAGE_VERSION=$CA_DOCKER_IMAGE_VERSION"
 
     if [ "$CA_LOCAL_VERSION" != "$CA_DOCKER_IMAGE_VERSION" ]; then
-      echo "=================== WARNING ======================"
+      printError "=================== WARNING ======================"
       echo "  Local fabric-ca binaries and docker images are  "
       echo "  out of sync. This may cause problems.           "
-      echo "=================================================="
+      printError "=================================================="
     fi
   fi
 }
@@ -108,29 +109,27 @@ function createOrganisations() {
   docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
   sleep 10
 
-  . $HYPERSUB_BASE/scripts/printEcho.sh
-
-  printEcho Nexnet
+  printTask "Creating Identities for organization: Nexnet"
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
   createNexnet
 
-  printEcho Xorg
+  printTask "Creating Identities for organization: Xorg"
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
   createXorg
 
-  printEcho Auditor
+  printTask "Creating Identities for organization: Auditor"
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
   createAuditor
 
-  printEcho Debt collector
+  printTask "Creating Identities for organization: DebtCollector"
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
   createDebtCollector
 
-  printEcho Orderer
+  printTask "Creating Identities for organization: Orderer"
   . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
   createOrderer
 
-  printEcho "Generate CCP-Connection Files "
+  printTask "Generate CCP-Connection Files"
   bash $HYPERSUB_BASE/organizations/ccp-generate.sh
 
 }
@@ -139,11 +138,11 @@ function createOrganisations() {
 function createConsortium() {
   which configtxgen
   if [ "$?" -ne 0 ]; then
-    echo "configtxgen tool not found. exiting"
+    printError "configtxgen tool not found. exiting"
     exit 1
   fi
 
-  echo "#########  Generating Orderer Genesis block ##############"
+  printTask "#########  Generating Orderer Genesis block ##############"
 
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
@@ -166,11 +165,12 @@ function networkUp() {
 
   docker ps -a
   if [ $? -ne 0 ]; then
-    echo "ERROR !!!! Unable to start network"
+    printError "ERROR !!!! Unable to start network"
     exit 1
   fi
 }
 
+echo
 checkPrereqs
 networkUp
 sleep 5

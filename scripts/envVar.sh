@@ -13,6 +13,8 @@ export PEER0_XORG_CA=$HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersu
 export PEER0_AUDITOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt
 export PEER0_DEBTCOLLECTOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls/ca.crt
 
+. $HYPERSUB_BASE/scripts/printer.sh
+
 # Set OrdererOrg.Admin globals
 setOrdererGlobals() {
   export CORE_PEER_LOCALMSPID="ordererMSP"
@@ -28,34 +30,40 @@ setGlobals() {
   else
     USING_ORG="${OVERRIDE_ORG}"
   fi
-  echo "Using organization ${USING_ORG}"
-  echo
+
   if [ $USING_ORG -eq 1 ]; then
+    export ORG_NAME="Nexnet"
     export CORE_PEER_LOCALMSPID="nexnetMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_NEXNET_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
   elif [ $USING_ORG -eq 2 ]; then
+    export ORG_NAME="Xorg"
     export CORE_PEER_LOCALMSPID="xorgMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XORG_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:8051
 
   elif [ $USING_ORG -eq 3 ]; then
+    export ORG_NAME="Auditor"
     export CORE_PEER_LOCALMSPID="auditorMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_AUDITOR_CA
     export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:9051
 
   elif [ $USING_ORG -eq 4 ]; then
+    export ORG_NAME="DebtCollector"
     export CORE_PEER_LOCALMSPID="debtcollectorMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_DEBTCOLLECTOR_CA
     export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/users/Admin@debtcollector.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:10051
 
   else
-    echo "================== ERROR !!! ORG Unknown =================="
+    printError "================== ERROR !!! ORG Unknown =================="
   fi
+
+  printInfo "Using organization ${ORG_NAME}"
+  echo
 
   if [ "$VERBOSE" == "true" ]; then
     env | grep CORE
@@ -87,7 +95,7 @@ parsePeerConnectionParameters() {
 
 verifyResult() {
   if [ $1 -ne 0 ]; then
-    echo $'\e[1;31m'!!!!!!!!!!!!!!! $2 !!!!!!!!!!!!!!!!$'\e[0m'
+    printError "!!!!!!!!!!!!!!! $2 !!!!!!!!!!!!!!!!"
     echo
     exit 1
   fi
