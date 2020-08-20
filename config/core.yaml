@@ -259,18 +259,18 @@ peer:
         clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
-            file: tls/server.crt
+            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.crt
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: tls/server.key
+            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: tls/ca.crt
+            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - tls/ca.crt
+              - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:

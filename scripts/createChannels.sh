@@ -21,7 +21,6 @@ createChannelTx() {
 
 }
 
-
 createChannelTwoTx() {
 
   set -x
@@ -38,11 +37,11 @@ createChannelTwoTx() {
 
 createAncorPeerTxOne() {
 
-  for orgmsp in Nexnet Xorg Auditor; do
+  for orgmsp in nexnetMSP xorgMSP auditorMSP; do
 
     echo "#######    Generating anchor peer update transaction for ${orgmsp}  ##########"
     set -x
-    configtxgen -profile Channel1 -outputAnchorPeersUpdate ./channel-artifacts/${orgmsp}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgmsp}
+    configtxgen -profile Channel1 -outputAnchorPeersUpdate $HYPERSUB_BASE/channel-artifacts/${orgmsp}anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgmsp}
     res=$?
     set +x
     if [ $res -ne 0 ]; then
@@ -62,7 +61,7 @@ createChannel() {
     echo "waiting for retry for: $DELAY seconds"
     sleep $DELAY
     set -x
-    peer channel create -o localhost:7050 -c $CHANNEL_NAME --ordererTLSHostnameOverride orderer.hypersub.com -f ./channel-artifacts/${CHANNEL_NAME}.tx --outputBlock ./channel-artifacts/${CHANNEL_NAME}.block.pb --tls --cafile $ORDERER_CA >&log.txt
+    peer channel create -o localhost:7050 -c $CHANNEL_NAME --ordererTLSHostnameOverride orderer.hypersub.com -f $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.tx --outputBlock $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.block.pb --tls --cafile $ORDERER_CA >&log.txt
     res=$?
     set +x
     let rc=$res
@@ -79,13 +78,15 @@ createChannel() {
 joinChannel() {
   ORG=$1
   setGlobals $ORG
+  echo "Using $ORG to join"
   local rc=1
   local COUNTER=1
   ## Sometimes Join takes time, hence retry
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    echo "waiting for retry for: $DELAY seconds"
     sleep $DELAY
     set -x
-    peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block.pb >&log.txt
+    peer channel join -b $HYPERSUB_BASE/channel-artifacts/$CHANNEL_NAME.block.pb >&log.txt
     res=$?
     set +x
     let rc=$res
@@ -105,7 +106,7 @@ updateAnchorPeers() {
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
     set -x
-    peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
+    peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com -c $CHANNEL_NAME -f $HYPERSUB_BASE/channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
     res=$?
     set +x
     let rc=$res
@@ -128,7 +129,6 @@ verifyResult() {
 
 FABRIC_CFG_PATH=$HYPERSUB_BASE/config
 
-
 CHANNEL_NAME="channel1"
 DELAY="$2"
 MAX_RETRY="$3"
@@ -142,11 +142,9 @@ VERBOSE="$4"
 echo "### Generating channel create transaction '${CHANNEL_NAME}.tx' ###"
 createChannelTx "1"
 
-
 ## Create anchorpeertx
 echo "### Generating anchor peer update transactions ###"
 createAncorPeerTxOne
-
 
 ## Create channel
 echo "Creating channel "$CHANNEL_NAME
@@ -161,17 +159,16 @@ echo "Join auditor peers to the channel"
 joinChannel 3
 
 ## Set the anchor peers for each org in the channel
- echo "Updating anchor peers for nexnet..."
- updateAnchorPeers 1
- echo "Updating anchor peers for xorg..."
- updateAnchorPeers 2
- echo "Updating anchor peers for auditor..."
- updateAnchorPeers 3
+echo "Updating anchor peers for nexnet..."
+updateAnchorPeers 1
+echo "Updating anchor peers for xorg..."
+updateAnchorPeers 2
+echo "Updating anchor peers for auditor..."
+updateAnchorPeers 3
 
 echo
 echo "========= Channel successfully joined =========== "
 echo
-
 
 #CHANNEL_NAME="channel2"
 #
@@ -206,6 +203,5 @@ echo
 #echo
 #echo "========= Channel successfully joined =========== "
 #echo
-
 
 exit 0

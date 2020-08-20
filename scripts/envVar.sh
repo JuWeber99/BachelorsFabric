@@ -8,7 +8,7 @@
 
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
-export PEER0_NEXNET_CA=$HYPERSUB_BASEorganizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt
+export PEER0_NEXNET_CA=$HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt
 export PEER0_XORG_CA=$HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt
 export PEER0_AUDITOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt
 export PEER0_DEBTCOLLECTOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/peers/peer0.debtcollector.hypersub.com/tls/ca.crt
@@ -32,7 +32,7 @@ setGlobals() {
   echo
   if [ $USING_ORG -eq 1 ]; then
     export CORE_PEER_LOCALMSPID="nexnetMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_nexnet_CA
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_NEXNET_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
   elif [ $USING_ORG -eq 2 ]; then
