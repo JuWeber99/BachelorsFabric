@@ -58,7 +58,7 @@ Organizations:
     Name: Auditor
     SkipAsForeign: false
     ID: auditorMSP
-    MSPDir: home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/msp
+    MSPDir: ../organizations/peerOrganizations/auditor.hypersub.com/msp
 
     # Auditors independent 
     Policies:
@@ -89,7 +89,7 @@ Organizations:
     Name: DebtCollector
     SkipAsForeign: false
     ID: debtcollectorMSP
-    MSPDir: home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/debtcollector.hypersub.com/msp
+    MSPDir: ../organizations/peerOrganizations/debtcollector.hypersub.com/msp
 
     # DebtCollectors independent
     Policies:
