@@ -18,13 +18,13 @@ Organizations:
         Rule: "OR('nexnetMSP.admin', 'nexnetMSP.peer', 'nexnetMSP.client')"
       Writers:
         Type: Signature
-        Rule: "AND(OR('nexnetMSP.admin', 'nexnetMSP.client'), OR('XOrgMSP.admin', 'XOrgMSP.client'))"
+        Rule: "AND(OR('nexnetMSP.admin', 'nexnetMSP.client'), OR('xorgMSP.admin', 'xorgMSP.client'))"
       Admins:
         Type: Signature
-        Rule: "AND('nexnetMSP.admin', 'XOrgMSP.admin')"
+        Rule: "AND('nexnetMSP.admin', 'xorgMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "AND('nexnetMSP.peer', 'XOrgMSP.peer')"
+        Rule: "AND('nexnetMSP.peer', 'xorgMSP.peer')"
     AnchorPeers:
       - Host: 127.0.0.1
         Port: 7051 #nexnet Anchor
@@ -160,7 +160,6 @@ Capabilities:
 Application: &ApplicationDefaults
 
   Organizations:
-    <<: *Xorg
 
   Policies:
     Readers:
@@ -299,6 +298,9 @@ Profiles:
     Application:
       <<: *ApplicationDefaults
       Organizations:
+        - *Nexnet
+        - *Xorg
+        - *DebtCollector
       Capabilities:
         <<: *ApplicationCapabilities
 
