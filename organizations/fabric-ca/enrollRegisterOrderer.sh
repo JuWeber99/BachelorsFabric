@@ -1,7 +1,7 @@
 function createOrderer {
 
   echo
-	echo "Enroll the CA admin"
+	printSubtask "Enroll the CA admin"
   echo
 	mkdir -p $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com
 
@@ -30,14 +30,14 @@ function createOrderer {
 
 
   echo
-	echo "Register orderer"
+	printSubtask "Register orderer"
   echo
   set -x
 	fabric-ca-client register --caname ca-orderer --id.name orderer --id.secret ordererpw --id.type orderer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg/tls-cert.pem
     set +x
 
   echo
-  echo "Register the orderer admin"
+  printSubtask "Register the orderer admin"
   echo
   set -x
   fabric-ca-client register --caname ca-orderer --id.name ordereradmin --id.secret ordereradminpw --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg/tls-cert.pem
@@ -49,7 +49,7 @@ function createOrderer {
   mkdir -p $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com
 
   echo
-  echo "## Generate the orderer msp"
+  printSubtask "Generate the orderer msp"
   echo
   set -x
 	fabric-ca-client enroll -u https://orderer:ordererpw@localhost:11054 --caname ca-orderer -M $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp --csr.hosts orderer.hypersub.com --csr.hosts localhost --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg/tls-cert.pem
@@ -58,7 +58,7 @@ function createOrderer {
   cp $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/config.yaml
 
   echo
-  echo "## Generate the orderer-tls certificates"
+  printSubtask "Generate the orderer-tls certificates"
   echo
   set -x
   fabric-ca-client enroll -u https://orderer:ordererpw@localhost:11054 --caname ca-orderer -M $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls --enrollment.profile tls --csr.hosts orderer.hypersub.com --csr.hosts localhost --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg/tls-cert.pem
@@ -78,7 +78,7 @@ function createOrderer {
   mkdir -p $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com
 
   echo
-  echo "## Generate the admin msp"
+  printSubtask "Generate the admin msp"
   echo
   set -x
 	fabric-ca-client enroll -u https://ordereradmin:ordereradminpw@localhost:11054 --caname ca-orderer -M $HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg/tls-cert.pem

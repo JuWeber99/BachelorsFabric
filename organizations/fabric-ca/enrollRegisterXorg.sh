@@ -1,7 +1,7 @@
 function createXorg {
 
   echo
-	echo "Enroll the CA admin for xorg"
+	printSubtask "Enroll the CA admin for xorg"
   echo
 	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/
 
@@ -29,21 +29,21 @@ function createXorg {
     OrganizationalUnitIdentifier: orderer' > $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/msp/config.yaml
 
   echo
-	echo "Register peer0"
+	printSubtask "Register peer0"
   echo
   set -x
 	fabric-ca-client register --caname ca-xorg --id.name peer0 --id.secret peer0pw --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
   set +x
 
   echo
-  echo "Register user: xorguser"
+  printSubtask "Register user: xorguser"
   echo
   set -x
   fabric-ca-client register --caname ca-xorg --id.name xorguser --id.secret xorguserpw --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
   set +x
 
   echo
-  echo "Register the organisation admin for xorg"
+  printSubtask "Register the organisation admin for xorg"
   echo
   set -x
   fabric-ca-client register --caname ca-xorg --id.name xorgadmin --id.secret xorgadminpw --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
@@ -53,7 +53,7 @@ function createXorg {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com
 
   echo
-  echo "## Generate the peer0 msp for xorg"
+  printSubtask "Generate the peer0 msp for xorg"
   echo
   set -x
 	fabric-ca-client enroll -u https://peer0:peer0pw@localhost:8054 --caname ca-xorg -M $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/msp --csr.hosts peer0.xorg.hypersub.com --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
@@ -62,7 +62,7 @@ function createXorg {
   cp $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/msp/config.yaml
 
   echo
-  echo "## Generate the peer0-tls certificates for xorg"
+  printSubtask "Generate the peer0-tls certificates for xorg"
   echo
   set -x
   fabric-ca-client enroll -u https://peer0:peer0pw@localhost:8054 --caname ca-xorg -M $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls --enrollment.profile tls --csr.hosts peer0.xorg.hypersub.com --csr.hosts localhost --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
@@ -86,7 +86,7 @@ function createXorg {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/xorguser@xorg.hypersub.com
 
   echo
-  echo "## Generate the user msp for xorguser-user"
+  printSubtask "Generate the user msp for xorguser-user"
   echo
   set -x
 	fabric-ca-client enroll -u https://xorguser:xorguserpw@localhost:8054 --caname ca-xorg -M $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/xorguser@xorg.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem
@@ -97,7 +97,7 @@ function createXorg {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com
 
   echo
-  echo "## Generate the xorg admin msp"
+  printSubtask "Generate the xorg admin msp"
   echo
   set -x
 	fabric-ca-client enroll -u https://xorgadmin:xorgadminpw@localhost:8054 --caname ca-xorg -M $HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/xorg/tls-cert.pem

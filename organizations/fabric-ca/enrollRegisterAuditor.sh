@@ -1,6 +1,6 @@
 function createAuditor {
 
-	echo "Enroll the CA admin for auditor"
+	printSubtask "Enroll the CA admin for auditor"
 
 	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/
 
@@ -27,17 +27,17 @@ function createAuditor {
     Certificate: cacerts/localhost-9054-ca-auditor.pem
     OrganizationalUnitIdentifier: orderer' > $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/msp/config.yaml
 
-	echo "Register peer0"
+	printSubtask "Register peer0"
   set -x
 	fabric-ca-client register --caname ca-auditor --id.name peer0 --id.secret peer0pw --id.type peer --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
-  echo "Register user: auditoruser"
+  printSubtask "Register user: auditoruser"
   set -x
   fabric-ca-client register --caname ca-auditor --id.name auditoruser --id.secret auditoruserpw --id.type client --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
-  echo "Register the organisation admin for auditor"
+  printSubtask "Register the organisation admin for auditor"
   set -x
   fabric-ca-client register --caname ca-auditor --id.name auditoradmin --id.secret auditoradminpw --id.type admin --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
@@ -45,14 +45,14 @@ function createAuditor {
 	mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com
 
-  echo "## Generate the peer0 msp for auditor"
+  printSubtask "Generate the peer0 msp for auditor"
   set -x
 	fabric-ca-client enroll -u https://peer0:peer0pw@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp --csr.hosts peer0.auditor.hypersub.com --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
 
   cp $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/msp/config.yaml $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/msp/config.yaml
 
-  echo "## Generate the peer0-tls certificates for auditor"
+  printSubtask "Generate the peer0-tls certificates for auditor"
   set -x
   fabric-ca-client enroll -u https://peer0:peer0pw@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls --enrollment.profile tls --csr.hosts peer0.auditor.hypersub.com --csr.hosts localhost --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
@@ -74,7 +74,7 @@ function createAuditor {
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/auditoruser@auditor.hypersub.com
 
-  echo "## Generate the user msp for auditoruser-user"
+  printSubtask "Generate the user msp for auditoruser-user"
   set -x
 	fabric-ca-client enroll -u https://auditoruser:auditoruserpw@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/auditoruser@auditor.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
@@ -83,7 +83,7 @@ function createAuditor {
 
   mkdir -p $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com
 
-  echo "## Generate the auditor admin msp"
+  printSubtask "Generate the auditor admin msp"
   set -x
 	fabric-ca-client enroll -u https://auditoradmin:auditoradminpw@localhost:9054 --caname ca-auditor -M $HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com/msp --tls.certfiles $HYPERSUB_BASE/organizations/fabric-ca/auditor/tls-cert.pem
   set +x
