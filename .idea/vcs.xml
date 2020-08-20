@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/hypersub/application/web/193-paypal-checkout-v2-demos" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/hypersub/application/web/customer-application" vcs="Git" />
   </component>
 </project>
