@@ -1,0 +1,10 @@
+.payment-checkout {
+}
+
+.payment-checkout img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    padding: 25px;
+}

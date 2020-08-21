@@ -1,5 +1,5 @@
 import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
-import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
+import {CustomerAccount} from "../../application/types/assets/CustomerAccountAsset";
 import {testAccounts} from "./testing/initialTestLedger";
 import {JsonUtil} from "./util";
 
@@ -24,7 +24,7 @@ export class CustomerAccountContract extends Contract {
 
     @Transaction(false)
     @Returns("string")
-    public async ReadCustomerAccount(ctx: Context, id?: string, customerAccount?: CustomerAccount) : Promise<string> {
+    public async ReadCustomerAccount(ctx: Context, id?: string, customerAccount?: CustomerAccount): Promise<string> {
         let jsonRepresentation;
         if (id == null && customerAccount == null) {
             throw new Error("no Parameter given")

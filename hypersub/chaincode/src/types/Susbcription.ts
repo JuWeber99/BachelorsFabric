@@ -4,11 +4,11 @@ import {Duration} from "moment";
 
 
 export interface Subscription {
-    contractId: bigint;
+    contractId: string;
     subscriptionProduct: Product;
     isActive: boolean;
-    startDate: Date;
-    endDate?: Date;
+    startDate: Date | string;
+    endDate?: Date | string;
     billingPeriod: Duration;
     cancellationPeriod: Duration;
     bookedOptions?: Array<RateOption>

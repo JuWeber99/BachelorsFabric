@@ -6,9 +6,9 @@ export enum ProductType {
 }
 
 export interface Product {
-    productId: bigint;
+    productId: string;
     productType: ProductType;
     callThreshold: Duration;
-    smsThreshold: bigint;
-    dataUsageThresholdInMb: bigint;
+    smsThreshold: number;
+    dataUsageThresholdInMb: number;
 }
