@@ -12,13 +12,8 @@
 #
 ################################################################################
 General:
-    # Listen address: The IP on which to bind to listen.
     ListenAddress: 127.0.0.1
-
-    # Listen port: The port on which to bind to listen.
     ListenPort: 7050
-
-    # TLS: TLS settings for the GRPC server.
     TLS:
         Enabled: false
         # PrivateKey governs the file location of the private key of the TLS certificate.
