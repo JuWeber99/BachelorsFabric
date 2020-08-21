@@ -1,11 +1,11 @@
-import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
+import {CustomerAccount} from "../types/CustomerAccountAsset";
 import {PaymentType} from "../types/BankingDetails";
 import {IsoCountryCodes} from "../types/IsoCountryCodes";
-import {DebtorAccount} from "../types/assets/DebtorAccount";
+import {DebtorAccount} from "../types/DebtorAccount";
 import {Subscription} from "../types/Susbcription";
 import {Product, ProductType} from "../types/Product";
 import {RateOption} from "../types/RateOption";
-import * as moment from "moment"
+import moment from "moment";
 import {Bill, BillDeliveryType} from "../types/Bill";
 import {DTransaction} from "../types/DTransaction";
 import {
@@ -41,7 +41,7 @@ export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: moment(moment.now()).calendar() ,
+    issueTimestamp: new Date(moment.now()) ,
     pricedEventType: PricedEventType.CALL,
     taxRate: 19
 }
@@ -49,14 +49,14 @@ export const testCallEvent: CallEvent = {
 export const testDataUsageEvent: DataUsageEvent = {
     usedAmountInMb: 123,
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: moment(moment.now()).calendar(),
+    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.DATA_USAGE,
 }
 
 export const testSMSEvent: SmsEvent = {
     targetPhoneNumber: "491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: moment(moment.now()).calendar(),
+    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.SMS
 }
 
@@ -72,8 +72,8 @@ export const testContract: Subscription = {
     contractId: "8bb10978c15551cac26fbf63e536453781d2649c4a313b4382b780fd63ff3933",
     subscriptionProduct: testStandartSubscribtion,
     isActive: true,
-    startDate: moment().calendar(),
-    endDate: moment(moment.now()).add(5, "months").calendar(),
+    startDate: new Date(moment.now()),
+    endDate: moment(moment.now()).add(5, "months").toDate(),
     billingPeriod: moment.duration(30, "days"),
     cancellationPeriod: moment.duration(7, "days"),
     bookedOptions: [testOptions]
@@ -81,7 +81,7 @@ export const testContract: Subscription = {
 
 export const testTransaction: DTransaction = {
     amount: 300,
-    timestamp: moment(moment.now()).calendar(),
+    timestamp: new Date(moment.now()),
     transactionId: "e71f9ae31c72971778b956b42040edf72415e5d638a65c31ebf66a47e67ab03c"
 
 }

@@ -6,7 +6,7 @@ import {Payment} from "./components/Payment";
 import {BrowserRouter, Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
-import {testContract, testStandartSubscribtion} from "./initialTestLedger";
+import {testContract} from "./testing/initialTestLedger";
 
 function App() {
     const product = {
@@ -15,6 +15,7 @@ function App() {
         description: 'fancy chair, like new',
         image: chair,
     };
+
 
     return (
         <div className={"app-container"}>
@@ -26,7 +27,7 @@ function App() {
                     <Home/>
                 </Route>
                 <Route exact path={"/test"}>
-                    <SubscriptionInformationCard subscription={testContract}/>
+                    <SubscriptionInformationCard contract={testContract} />
                 </Route>
             </Switch>
         </div>

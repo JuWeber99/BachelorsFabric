@@ -1,5 +1,17 @@
+.subscription-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    max-width: 80vw;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 2px;
+    border: 2px solid grey;
+    padding: 20px
+}
+
 .subscription-detail{
-    padding: 5px;
     border: 1px solid grey;
     border-radius: 10px;
+    text-align: center;
 }
