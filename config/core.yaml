@@ -98,7 +98,7 @@ peer:
         # "leader" selection, where leader is the peer to establish
         # connection with ordering service and use delivery protocol
         # to pull ledger blocks from ordering service.
-        useLeaderElection: false
+        useLeaderElection: true
         # Statically defines peer to be an organization "leader",
         # where this means that current peer will maintain connection
         # with ordering service and disseminate block across peers in
@@ -231,7 +231,7 @@ peer:
             # default value is true, i.e. state transfer is active
             # and takes care to sync up missing blocks allowing
             # lagging peer to catch up to speed with rest network
-            enabled: false
+            enabled: true
             # checkInterval interval to check whether peer is lagging behind enough to
             # request blocks via state transfer from another peer.
             checkInterval: 10s
@@ -259,18 +259,18 @@ peer:
         clientAuthRequired: false
         # X.509 certificate used for TLS server
         cert:
-            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.crt
+            file: tls/server.crt
         # Private key used for TLS server (and client if clientAuthEnabled
         # is set to true
         key:
-            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.key
+            file: tls/server.key
         # Trusted root certificate chain for tls.cert
         rootcert:
-            file: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/ca.crt
+            file: tls/ca.crt
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/ca.crt
+              - tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
@@ -541,7 +541,7 @@ chaincode:
 
     node:
         # This is an image based on node:$(NODE_VER)-alpine
-        runtime: $(DOCKER_NS)/fabric-nodeenv:$(TWO_DIGIT_VERSION)
+        runtime: $(DOCKER_NS)/fabric-nodeenv:latest
 
     # List of directories to treat as external builders and launchers for
     # chaincode. The external builder detection processing will iterate over the

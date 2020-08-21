@@ -172,7 +172,9 @@ function networkUp() {
 
 echo
 . $HYPERSUB_BASE/network-cleaner.sh
+echo
 checkPrereqs
 networkUp
 sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
+$HYPERSUB_BASE/scripts/deployChaincode.sh

@@ -35,13 +35,13 @@ setGlobals() {
     export ORG_NAME="Nexnet"
     export CORE_PEER_LOCALMSPID="nexnetMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_NEXNET_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
+    export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
   elif [ $USING_ORG -eq 2 ]; then
     export ORG_NAME="Xorg"
     export CORE_PEER_LOCALMSPID="xorgMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XORG_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp
+    export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp
     export CORE_PEER_ADDRESS=localhost:8051
 
   elif [ $USING_ORG -eq 3 ]; then
