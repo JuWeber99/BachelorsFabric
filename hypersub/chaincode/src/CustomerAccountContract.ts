@@ -1,7 +1,7 @@
 import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
-import {CustomerAccount} from "../../application/types/assets/CustomerAccountAsset";
 import {testAccounts} from "./testing/initialTestLedger";
 import {JsonUtil} from "./util";
+import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 
 @Info(
     {title: "CustomerAccountContract", description: "Smart contract for managing customer accounts"}
