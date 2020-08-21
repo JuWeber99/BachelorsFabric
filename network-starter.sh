@@ -171,6 +171,7 @@ function networkUp() {
 }
 
 echo
+. $HYPERSUB_BASE/network-cleaner.sh
 checkPrereqs
 networkUp
 sleep 5

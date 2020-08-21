@@ -20,3 +20,5 @@
 /organizations/fabric-ca/nexnet/
 /organizations/fabric-ca/ordererOrg/
 /organizations/fabric-ca/xorg/
+/hypersub/application/server/src/.env
+/hypersub/server/node_modules/
