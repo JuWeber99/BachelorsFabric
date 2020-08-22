@@ -57,7 +57,7 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/channel-artifacts
   rm -rf $HYPERSUB_BASE/system-genesis-block
   rm -rf $HYPERSUB_BASE/customeraccountcc.tar.gz
-  rm -rf $HYPERSUB_BASE/hypersub/sserver/src/wallet
+  rm -rf $HYPERSUB_BASE/hypersub/server/src/wallet
 }
 
 networkDown
