@@ -13,7 +13,6 @@ function printTask() {
 
 function printSubtask() {
   echo -e "\e[1;4;94m\t$1 \e[0m"
-  echo
 }
 
 function printInfo() {

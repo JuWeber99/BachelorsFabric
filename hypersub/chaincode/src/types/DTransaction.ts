@@ -2,6 +2,6 @@
 export class DTransaction {
     transactionId: string;
     amount: number;
-    timestamp: Date | string;
+    timeOfTransaction: Date | string;
     errors? : Array<string>;
 }

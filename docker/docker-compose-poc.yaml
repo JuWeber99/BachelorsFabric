@@ -38,3 +38,4 @@ services:
 
 networks:
   poc-hypersub:
+    name: "poc-hypersub"

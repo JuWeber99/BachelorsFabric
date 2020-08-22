@@ -202,7 +202,7 @@ checkCommitReadiness() {
     printSubtask "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
   else
     echo
-    echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
     echo
     exit 1
   fi
@@ -231,11 +231,11 @@ queryCommitted() {
   echo
   cat log.txt
   if test $rc -eq 0; then
-    printInfo "===================== Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+    printInfo "= Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' = "
     echo
   else
     echo
-    echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
     echo
     exit 1
   fi
@@ -250,17 +250,15 @@ chaincodeInvokeInitFromNexnet() {
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
     --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
-    -I -c '{"Args":[]}' >&log.txt
+    -I -c '{"Function":"initLedger","Args":[]}' >&log.txt
 
   res=$?
   set +x
   cat log.txt
   verifyResult $res "Invoke execution on $PEERS failed "
-  printInfo "===================== Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' ===================== "
+  printInfo "= Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' = "
   echo ""
 }
-
-#  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls true --cafile /home/balr/Developement/BachelorsFabric/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem -C channel1 -n mychaincode --peerAddresses localhost:7051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt --peerAddresses localhost:8051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt --isInit -c {"function": "InitLedger", "Args": []}
 
 chaincodeQuery() {
   ORG=$1

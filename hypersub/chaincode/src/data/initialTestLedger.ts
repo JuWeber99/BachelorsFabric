@@ -35,7 +35,6 @@ export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()) ,
     pricedEventType: PricedEventType.CALL,
     taxRate: 19
 }
@@ -43,14 +42,12 @@ export const testCallEvent: CallEvent = {
 export const testDataUsageEvent: DataUsageEvent = {
     usedAmountInMb: 123,
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.DATA_USAGE,
 }
 
 export const testSMSEvent: SmsEvent = {
     targetPhoneNumber: "491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.SMS
 }
 
@@ -66,8 +63,8 @@ export const testContract: Subscription = {
     contractId: "8bb10978c15551cac26fbf63e536453781d2649c4a313b4382b780fd63ff3933",
     subscriptionProduct: testStandartSubscribtion,
     isActive: true,
-    startDate: moment().calendar(),
-    endDate: moment(moment.now()).add(5, "months").calendar(),
+    startDate: new Date("June 14, 2019"),
+    endDate: new Date("June 14, 2020"),
     billingPeriod: moment.duration(30, "days"),
     cancellationPeriod: moment.duration(7, "days"),
     bookedOptions: [testOptions]
@@ -75,7 +72,7 @@ export const testContract: Subscription = {
 
 export const testTransaction: DTransaction = {
     amount: 300,
-    timestamp: new Date(),
+    timeOfTransaction: new Date("June 14, 2019 15:30:00"),
     transactionId: "e71f9ae31c72971778b956b42040edf72415e5d638a65c31ebf66a47e67ab03c"
 
 }
@@ -86,8 +83,8 @@ export const testBill: Bill = {
     billId: "311120699c855e163b663f649c3543dbd8c717c5b33d956c2442c713fba51983",
     billTransactions: [testTransaction],
     contract: testContract,
-    endDate:  moment(moment.now()).add(5, "months").calendar(),
-    startDate:  moment().calendar()
+    startDate: new Date("June 14, 2019"),
+    endDate: new Date("July 14, 2019"),
 }
 
 export const testPersonalDetails: PersonalDetails = {
@@ -98,7 +95,7 @@ export const testPersonalDetails: PersonalDetails = {
         houseNumber: "17",
         residence: "Fürstenberg/Havel"
     },
-    birthday: moment({day: 14, month: 6, year: 1999}).toDate(),
+    birthday: new Date("June 14, 1999"),
     forename: "Julian",
     name: "Weber",
     mailAddress: "s_weberj@hwr-berlin.de",

@@ -11,6 +11,7 @@ COMPOSE_FILE_BASE=$HYPERSUB_BASE/docker/docker-compose-hypersub-net.yaml
 COMPOSE_FILE_COUCH=$HYPERSUB_BASE/docker/docker-compose-db.yaml
 COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
 COMPOSE_FILES="-f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH"
+COMPOSE_FILE_CUSTOMER_APP=$HYPERSUB_BASE/docker/docker-compose-poc.yaml
 IMAGETAG="latest"
 CA_IMAGETAG="latest"
 DATABASE="couchdb"
@@ -18,115 +19,61 @@ DATABASE="couchdb"
 # source print script
 . $HYPERSUB_BASE/scripts/printer.sh
 
-function clearContainers() {
-  CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-peer.*/) {print $1}')
-  if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
-    printInfo "---- No containers available for deletion ----"
-  else
-    docker rm -f $CONTAINER_IDS
-  fi
+### Functions to startup Docker-Containers ###
+
+function startCA_Containers() {
+  IMAGE_TAG=${CA_IMAGETAG}
+  docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
+  sleep 10
 }
 
-function removeUnwantedImages() {
-  DOCKER_IMAGE_IDS=$(docker images | awk '($1 ~ /dev-peer.*/) {print $3}')
-  if [ -z "$DOCKER_IMAGE_IDS" -o "$DOCKER_IMAGE_IDS" == " " ]; then
-    printInfo "---- No images available for deletion ----"
-  else
-    docker rmi -f $DOCKER_IMAGE_IDS
-  fi
-}
+function startNode_Containers() {
+  IMAGE_TAG=$IMAGETAG
 
-function checkPrereqs() {
-  ## Check if your have cloned the peer binaries and configuration files.
-  peer version >/dev/null 2>&1
+  docker-compose ${COMPOSE_FILES} up -d 2>&1
+  docker ps -a
 
-  if [[ $? -ne 0 || ! -d "$HYPERSUB_BASE/config" ]]; then
-    printError "ERROR! Peer binary and configuration files not found.."
-    echo
-    printInfo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-    printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+  if [ $? -ne 0 ]; then
+    printError "ERROR !!!! Unable to start network"
     exit 1
   fi
-  LOCAL_VERSION=$(peer version | sed -ne 's/ Version: //p')
-  DOCKER_IMAGE_VERSION=$(docker run --rm hyperledger/fabric-tools:$IMAGETAG peer version | sed -ne 's/ Version: //p' | head -1)
+}
 
-  printInfo "LOCAL_VERSION=$LOCAL_VERSION"
-  printInfo "DOCKER_IMAGE_VERSION=$DOCKER_IMAGE_VERSION"
-
-  if [ "$LOCAL_VERSION" != "$DOCKER_IMAGE_VERSION" ]; then
-    printError "=================== WARNING ==================="
-    printError "  Local fabric binaries and docker images are  "
-    printError "  out of  sync. This may cause problems.       "
-    printError "==============================================="
-  fi
-
-  for UNSUPPORTED_VERSION in $NONWORKING_VERSIONS; do
-    printInfo "$LOCAL_VERSION" | grep -q $UNSUPPORTED_VERSION
-    if [ $? -eq 0 ]; then
-      printError "ERROR! Local Fabric binary version of $LOCAL_VERSION does not match the versions supported by the test network."
-      exit 1
-    fi
-
-    printInfo "$DOCKER_IMAGE_VERSION" | grep -q $UNSUPPORTED_VERSION
-    if [ $? -eq 0 ]; then
-      printError "ERROR! Fabric Docker image version of $DOCKER_IMAGE_VERSION does not match the versions supported by the test network."
-      exit 1
-    fi
-  done
-
-  ## Check for fabric-ca
-  if [ "$CRYPTO" == "Certificate Authorities" ]; then
-
-    fabric-ca-client version >/dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-      printError "ERROR! fabric-ca-client binary not found.."
-      echo
-      printError "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-      printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
-      exit 1
-    fi
-    CA_LOCAL_VERSION=$(fabric-ca-client version | sed -ne 's/ Version: //p')
-    CA_DOCKER_IMAGE_VERSION=$(docker run --rm hyperledger/fabric-ca:$CA_IMAGETAG fabric-ca-client version | sed -ne 's/ Version: //p' | head -1)
-    printInfo "CA_LOCAL_VERSION=$CA_LOCAL_VERSION"
-    printInfo "CA_DOCKER_IMAGE_VERSION=$CA_DOCKER_IMAGE_VERSION"
-
-    if [ "$CA_LOCAL_VERSION" != "$CA_DOCKER_IMAGE_VERSION" ]; then
-      printError "=================== WARNING ======================"
-      printError "  Local fabric-ca binaries and docker images are  "
-      printError "  out of sync. This may cause problems.           "
-      printError "=================================================="
-    fi
-  fi
+function startApplication_Containers() {
+  printInfo "Sleeping for a short amount ..."
+  sleep 5
+  printTask "Starting Docker containers for the application"
+  docker-compose -f $COMPOSE_FILE_CUSTOMER_APP up -d
+  docker ps -a
+  res=$?
+  printError $res
 }
 
 function createOrganisations() {
-
   if [ -d "$HYPERSUB_BASE/organizations/peerOrganizations" ]; then
     rm -Rf $HYPERSUB_BASE/organizations/peerOrganizations && rm -Rf $HYPERSUB_BASE/organizations/ordererOrganizations
   fi
 
-  IMAGE_TAG=${CA_IMAGETAG}
-  docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
-  sleep 10
+  startCA_Containers
 
   printTask "Creating Identities for organization: Nexnet"
-  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterNexnet.sh
+  . $HYPERSUB_BASE/scripts/enrollRegisterNexnet.sh
   createNexnet
 
   printTask "Creating Identities for organization: Xorg"
-  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterXorg.sh
+  . $HYPERSUB_BASE/scripts/enrollRegisterXorg.sh
   createXorg
 
   printTask "Creating Identities for organization: Auditor"
-  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterAuditor.sh
+  . $HYPERSUB_BASE/scripts/enrollRegisterAuditor.sh
   createAuditor
 
   printTask "Creating Identities for organization: DebtCollector"
-  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterDebtCollector.sh
+  . $HYPERSUB_BASE/scripts/enrollRegisterDebtCollector.sh
   createDebtCollector
 
   printTask "Creating Identities for organization: Orderer"
-  . $HYPERSUB_BASE/organizations/fabric-ca/enrollRegisterOrderer.sh
+  . $HYPERSUB_BASE/scripts/enrollRegisterOrderer.sh
   createOrderer
 
   printTask "Generate CCP-Connection Files"
@@ -158,26 +105,24 @@ function createConsortium() {
 }
 
 function networkUp() {
-
   createOrganisations
   createConsortium
-
-  IMAGE_TAG=$IMAGETAG docker-compose ${COMPOSE_FILES} up -d 2>&1
-
-  docker ps -a
-  if [ $? -ne 0 ]; then
-    printError "ERROR !!!! Unable to start network"
-    exit 1
-  fi
+  startNode_Containers
 }
+
+### Application Flow ###
 
 echo
 . $HYPERSUB_BASE/network-cleaner.sh
 echo
 
-checkPrereqs
 networkUp
 
 sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
 $HYPERSUB_BASE/scripts/deployChaincode.sh
+
+startApplication_Containers
+
+#/home/balr/Developement/caching/.npm-global/bin/ts-node $HYPERSUB_BASE/hypersub/server/src/enrollAdmin.ts
+#/home/balr/Developement/caching/.npm-global/bin/ts-node $HYPERSUB_BASE/hypersub/server/src/enrollRegisterUser.ts
