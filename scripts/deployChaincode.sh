@@ -5,7 +5,7 @@ CC_NAME=${2:-"mychaincode"}
 CC_SRC_PATH=${3:-"$HYPERSUB_BASE/hypersub/chaincode"}
 CC_VERSION=${5:-"1.0"}
 CC_SEQUENCE=${6:-"1"}
-CC_INIT_FCN=${7:-"TRUE"}
+CC_INIT_FCN=${7:-"Init"}
 CC_END_POLICY=${8:-""}
 CC_COLL_CONFIG=${9:-""}
 DELAY=${10:-"3"}
@@ -58,7 +58,7 @@ installChaincode() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode installation on peer0${ORG} has failed"
-  echo "===================== Chaincode is installed on peer0${ORG} ===================== "
+  printInfo "===================== Chaincode is installed on peer0${ORG} ===================== "
   echo
 }
 
@@ -73,7 +73,7 @@ queryInstalled() {
   cat log.txt
   PACKAGE_ID=$(sed -n "/${CC_NAME}_${CC_VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
   verifyResult $res "Query installed on peer0${ORG} has failed"
-  echo "===================== Query installed successful on peer0${ORG} on channel ===================== "
+  printInfo "===================== Query installed successful on peer0${ORG} on channel ===================== "
   echo
 }
 
@@ -88,7 +88,7 @@ approveForNexnet() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -106,11 +106,9 @@ commitChaincodeDefinitionFromNexnet() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
-
-
 
 approveForXorg() {
   setXorgGlobals
@@ -122,7 +120,7 @@ approveForXorg() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -140,7 +138,7 @@ commitChaincodeDefinitionXorg() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -154,7 +152,7 @@ approveForAuditor() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -173,7 +171,7 @@ commitChaincodeDefinitionAuditor() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -181,14 +179,14 @@ checkCommitReadiness() {
   ORG=$1
   shift 1
   setGlobals $ORG
-  echo "===================== Checking the commit readiness of the chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  printTask "===================== Checking the commit readiness of the chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
   local rc=1
   local COUNTER=1
   # continue to poll
   # we either get a successful response, or reach MAX RETRY
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
-    echo "Attempting to check the commit readiness of the chaincode definition on peer0${ORG}, Retry after $DELAY seconds."
+    printSubtask "Attempting to check the commit readiness of the chaincode definition on peer0${ORG}, Retry after $DELAY seconds."
     set -x
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
       --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
@@ -203,7 +201,7 @@ checkCommitReadiness() {
   done
   cat log.txt
   if test $rc -eq 0; then
-    echo "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+    printSubtask "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
   else
     echo
     echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
@@ -212,39 +210,18 @@ checkCommitReadiness() {
   fi
 }
 
-commitChaincodeDefinition() {
-  parsePeerConnectionParameters $@
-  res=$?
-  verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer org and  parameters "
-
-  # while 'peer chaincode' command can get the orderer endpoint from the
-  # peer (if join was successful), let's supply it directly as we know
-  # it using the "-o" option
-  set -x
-  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride /
-  orderer.hypersub.com --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME /
-  --name ${CC_NAME} $PEER_CONN_PARMS --version ${CC_VERSION} --init-required --sequence /
-  ${CC_SEQUENCE} >&log.txt
-  res=$?
-  set +x
-  cat log.txt
-  verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode definition committed on channel '$CHANNEL_NAME' ===================== "
-  echo
-}
-
 queryCommitted() {
   ORG=$1
   setGlobals $ORG
   EXPECTED_RESULT="Version: ${CC_VERSION}, Sequence: ${CC_SEQUENCE}, Endorsement Plugin: escc, Validation Plugin: vscc"
-  echo "===================== Querying chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  printTask "===================== Querying chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
   local rc=1
   local COUNTER=1
   # continue to poll
   # we either get a successful response, or reach MAX RETRY
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
-    echo "Attempting to Query committed status on peer0${ORG}, Retry after $DELAY seconds."
+    printSubtask "Attempting to Query committed status on peer0${ORG}, Retry after $DELAY seconds."
     set -x
     peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name ${CC_NAME} >&log.txt
     res=$?
@@ -256,7 +233,7 @@ queryCommitted() {
   echo
   cat log.txt
   if test $rc -eq 0; then
-    echo "===================== Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+    printInfo "===================== Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
     echo
   else
     echo
@@ -266,25 +243,33 @@ queryCommitted() {
   fi
 }
 
-chaincodeInvokeInit() {
-  parsePeerConnectionParameters $@
-  res=$?
-  verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
-  # while 'peer chaincode' command can get the orderer endpoint from the
-  # peer (if join was successful), let's supply it directly as we know
-  # it using the "-o" option
+chaincodeInvokeInitFromNexnet() {
+
+  setNexnetGlobals
   set -x
-  fcn_call='{"function":"'${CC_INIT_FCN}'","Args":[]}'
-  echo invoke fcn call:${fcn_call}
-  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CC_NAME} $PEER_CONN_PARMS --isInit -c ${fcn_call} >&log.txt
+   # fcn_call='{"function":"'${CC_INIT_FCN}'","Args":[]}'
+   fcn_call='{"function":"InitLedger", "Args":[]}'
+
+  printSubtask "invoke fcn call:${fcn_call}"
+  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
+    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CC_NAME} \
+    --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
+    --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
+    --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
+    -I -c '{"Args":[]}' >&log.txt
+     #--isInit -c "${fcn_Call}" '>&log.txt
+
   res=$?
   set +x
   cat log.txt
   verifyResult $res "Invoke execution on $PEERS failed "
-  echo "===================== Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' ===================== "
-  echo
+  printInfo "===================== Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' ===================== "
+  echo ""
 }
+
+#  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls true --cafile /home/balr/Developement/BachelorsFabric/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem -C channel1 -n mychaincode --peerAddresses localhost:7051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt --peerAddresses localhost:8051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt --isInit -c {"function": "InitLedger", "Args": []}
+
 
 chaincodeQuery() {
   ORG=$1
@@ -307,11 +292,11 @@ chaincodeQuery() {
   echo
   cat log.txt
   if test $rc -eq 0; then
-    echo "===================== Query successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+    printInfo "===================== Query successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
     echo
   else
     echo
-    echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
     echo
     exit 1
   fi
@@ -353,7 +338,7 @@ if [ "$CC_INIT_FCN" = "NA" ]; then
   echo
 else
   printTask " Invoking the chaincodes for all peers on channel 1"
-  chaincodeInvokeInit 1 2 3
+  chaincodeInvokeInitFromNexnet
 fi
 
 exit 0

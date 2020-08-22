@@ -43,8 +43,8 @@ function checkPrereqs() {
   if [[ $? -ne 0 || ! -d "$HYPERSUB_BASE/config" ]]; then
     printError "ERROR! Peer binary and configuration files not found.."
     echo
-    echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-    echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+    printInfo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
+    printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
     exit 1
   fi
   LOCAL_VERSION=$(peer version | sed -ne 's/ Version: //p')
@@ -55,8 +55,8 @@ function checkPrereqs() {
 
   if [ "$LOCAL_VERSION" != "$DOCKER_IMAGE_VERSION" ]; then
     printError "=================== WARNING ==================="
-    echo "  Local fabric binaries and docker images are  "
-    echo "  out of  sync. This may cause problems.       "
+    printError "  Local fabric binaries and docker images are  "
+    printError "  out of  sync. This may cause problems.       "
     printError "==============================================="
   fi
 
@@ -81,8 +81,8 @@ function checkPrereqs() {
     if [[ $? -ne 0 ]]; then
       printError "ERROR! fabric-ca-client binary not found.."
       echo
-      echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-      echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+      printError "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
+      printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
       exit 1
     fi
     CA_LOCAL_VERSION=$(fabric-ca-client version | sed -ne 's/ Version: //p')
@@ -92,8 +92,8 @@ function checkPrereqs() {
 
     if [ "$CA_LOCAL_VERSION" != "$CA_DOCKER_IMAGE_VERSION" ]; then
       printError "=================== WARNING ======================"
-      echo "  Local fabric-ca binaries and docker images are  "
-      echo "  out of sync. This may cause problems.           "
+      printError "  Local fabric-ca binaries and docker images are  "
+      printError "  out of sync. This may cause problems.           "
       printError "=================================================="
     fi
   fi

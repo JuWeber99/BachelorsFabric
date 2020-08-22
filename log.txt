@@ -1,2 +1,1 @@
-[33m2020-08-22 04:17:50.227 CEST [chaincodeCmd] validatePeerConnectionParameters -> WARN 001[0m received more TLS root cert files (3) than peer addresses (1)
-Error: error validating peer connection parameters: number of peer addresses (1) does not match the number of TLS root cert files (3)
+Error: endorsement failure during invoke. response: status:500 message:"error in simulation: failed to execute transaction 59a799fe9b6275abca3dd3178f9bec6be957fc32694e14536ac7c0fe6238f040: could not launch chaincode mychaincode_1.0:28602b45059af9f09cb47749becc901571aacebd4f9308352a258fd6ede49686: error starting container: error starting container: API error (404): network hypersub_poc not found" 
