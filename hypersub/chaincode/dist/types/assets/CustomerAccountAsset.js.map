@@ -1,1 +1,0 @@
-{"version":3,"file":"CustomerAccountAsset.js","sourceRoot":"","sources":["../../../src/types/assets/CustomerAccountAsset.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,6DAAoD;AAOpD,IAAa,eAAe,GAA5B,MAAa,eAAe;CAa3B,CAAA;AAVG;IADC,8BAAQ,CAAC,WAAW,EAAE,QAAQ,CAAC;;kDACP;AAGzB;IADC,8BAAQ,CAAC,WAAW,EAAE,SAAS,CAAC;;kDACN;AANlB,eAAe;IAD3B,4BAAM,EAAE;GACI,eAAe,CAa3B;AAbY,0CAAe"}
