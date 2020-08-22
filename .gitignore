@@ -24,3 +24,4 @@
 /hypersub/server/node_modules/
 /waste/waste.sh
 /contract/node_modules/
+/hypersub/chaincode/dist/
