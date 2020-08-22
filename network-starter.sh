@@ -136,6 +136,7 @@ function createOrganisations() {
 
 # Generate orderer system channel genesis block.
 function createConsortium() {
+
   which configtxgen
   if [ "$?" -ne 0 ]; then
     printError "configtxgen tool not found. exiting"
@@ -147,7 +148,7 @@ function createConsortium() {
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
   set -x
-  configtxgen -profile HypersubGenesis -channelID orderer-system-channel -outputBlock $HYPERSUB_BASE/system-genesis-block/genesis.block.pb
+  configtxgen -profile HypersubGenesis -channelID orderer-system-channel -outputBlock $HYPERSUB_BASE/channel-artifacts/genesis_block.pb
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -173,8 +174,10 @@ function networkUp() {
 echo
 . $HYPERSUB_BASE/network-cleaner.sh
 echo
+
 checkPrereqs
 networkUp
+
 sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
 $HYPERSUB_BASE/scripts/deployChaincode.sh
