@@ -15,7 +15,7 @@ General:
     ListenAddress: 127.0.0.1
     ListenPort: 7050
     TLS:
-        Enabled: false
+        Enabled: true
         # PrivateKey governs the file location of the private key of the TLS certificate.
         PrivateKey: ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/server.key
         # Certificate governs the file location of the server TLS certificate.

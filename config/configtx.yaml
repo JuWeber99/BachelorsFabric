@@ -26,8 +26,12 @@ Organizations:
         Type: Signature
         Rule: "OR('nexnetMSP.peer')"
     AnchorPeers:
-      - Host: peer0.nexnet.hypersub.com
-        Port: 7051
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &Xorg
     Name: Xorg
@@ -49,8 +53,12 @@ Organizations:
         Type: Signature
         Rule: "OR('xorgMSP.peer')"
     AnchorPeers:
-      - Host: peer0.xorg.hypersub.com
-        Port: 8051
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &Auditor
     Name: Auditor
@@ -71,8 +79,12 @@ Organizations:
         Type: Signature
         Rule: "OR('auditorMSP.peer')"
     AnchorPeers:
-      - Host: peer0.auditor.example.com
-        Port: 9051
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &DebtCollector
     Name: DebtCollector
@@ -93,8 +105,12 @@ Organizations:
         Type: Signature
         Rule: "OR('debtcollectorMSP.peer')"
     AnchorPeers:
-      - Host: peer0.debtcollector.hypersub.com
-        Port: 10051
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
 
 
   - &OrdererOrg
@@ -112,8 +128,7 @@ Organizations:
         Type: Signature
         Rule: "OR('ordererMSP.admin')"
     OrdererEndpoints:
-      - "127.0.0.1:7050"
-
+      - "orderer.hypersub.com:7050"
 
 Capabilities:
   Channel: &ChannelCapabilities
@@ -168,10 +183,10 @@ Application: &ApplicationDefaults
       Rule: "MAJORITY Admins"
     LifecycleEndorsement:
       Type: ImplicitMeta
-      Rule: "MAJORITY Endorsement"
+      Rule: "MAJORITY Admins"
     Endorsement:
       Type: ImplicitMeta
-      Rule: "MAJORITY Endorsement"
+      Rule: "MAJORITY Admins"
 
   Capabilities:
     <<: *ApplicationCapabilities
@@ -199,6 +214,8 @@ Orderer: &OrdererDefaultSettings
       HeartbeatTick: 1
       MaxInflightBlocks: 5
       SnapshotIntervalSize: 16 MB
+  Addresses:
+    - orderer.hypersub.com:7050
 
   BatchTimeout: 2s
   BatchSize:
@@ -218,7 +235,7 @@ Orderer: &OrdererDefaultSettings
       Rule: "MAJORITY Admins"
     BlockValidation:
       Type: ImplicitMeta
-      Rule: "MAJORITY Writers"
+      Rule: "ANY Writers"
 
 ################################################################################
 #

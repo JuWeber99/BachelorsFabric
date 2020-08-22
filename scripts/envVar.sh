@@ -15,14 +15,6 @@ export PEER0_DEBTCOLLECTOR_CA=$HYPERSUB_BASE/organizations/peerOrganizations/deb
 
 . $HYPERSUB_BASE/scripts/printer.sh
 
-# Set OrdererOrg.Admin globals
-setOrdererGlobals() {
-  export CORE_PEER_LOCALMSPID="ordererMSP"
-  export CORE_PEER_TLS_ROOTCERT_FILE=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
-  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp
-}
-
-# Set environment variables for the peer org
 setGlobals() {
   local USING_ORG=""
   if [ -z "$OVERRIDE_ORG" ]; then
@@ -68,6 +60,46 @@ setGlobals() {
   if [ "$VERBOSE" == "true" ]; then
     env | grep CORE
   fi
+}
+
+# Set OrdererOrg.Admin globals
+setOrdererGlobals() {
+  export CORE_PEER_LOCALMSPID="ordererMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/ordererOrganizations/hypersub.com/users/Admin@hypersub.com/msp
+}
+
+setXorgGlobals() {
+  export ORG_NAME="Xorg"
+  export CORE_PEER_LOCALMSPID="xorgMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XORG_CA
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/xorg.hypersub.com/users/Admin@xorg.hypersub.com/msp
+  export CORE_PEER_ADDRESS=localhost:8051
+}
+
+setAuditorGlobals() {
+  export ORG_NAME="Auditor"
+  export CORE_PEER_LOCALMSPID="auditorMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_AUDITOR_CA
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/auditor.hypersub.com/users/Admin@auditor.hypersub.com/msp
+  export CORE_PEER_ADDRESS=localhost:9051
+}
+
+setDebtCollectorGlobals() {
+  export ORG_NAME="DebtCollector"
+  export CORE_PEER_LOCALMSPID="debtcollectorMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_DEBTCOLLECTOR_CA
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/debtcollector.hypersub.com/users/Admin@debtcollector.hypersub.com/msp
+  export CORE_PEER_ADDRESS=localhost:10051
+}
+
+# Set environment variables for the peer org
+setNexnetGlobals() {
+  export ORG_NAME="Nexnet"
+  export CORE_PEER_LOCALMSPID="nexnetMSP"
+  export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_NEXNET_CA
+  export CORE_PEER_MSPCONFIGPATH=$HYPERSUB_BASE/organizations/peerOrganizations/nexnet.hypersub.com/users/Admin@nexnet.hypersub.com/msp
+  export CORE_PEER_ADDRESS=localhost:7051
 }
 
 # parsePeerConnectionParameters $@

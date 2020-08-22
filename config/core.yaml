@@ -16,7 +16,7 @@ peer:
 
     # The networkId allows for logical separation of networks and is used when
     # naming docker resources.
-    networkId: dev
+    networkId: hypersub
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
@@ -44,7 +44,7 @@ peer:
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
     # When set to true, will override peer address.
-    addressAutoDetect: false
+    addressAutoDetect: true
 
     # Keepalive settings for peer server and clients
     keepalive:
@@ -53,7 +53,7 @@ peer:
         interval: 7200s
         # Timeout is the duration the server waits for a response
         # from the client after sending a ping before closing the connection
-        timeout: 20s
+        timeout: 40s
         # MinInterval is the minimum permitted time between client pings.
         # If clients send pings more frequently, the peer server will
         # disconnect them
@@ -105,7 +105,7 @@ peer:
         # its own organization. Multiple peers or all peers in an organization
         # may be configured as org leaders, so that they all pull
         # blocks directly from ordering service.
-        orgLeader: true
+        orgLeader: false
 
         # Interval for membershipTracker polling
         membershipTrackerInterval: 5s

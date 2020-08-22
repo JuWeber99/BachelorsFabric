@@ -1,7 +1,7 @@
 # Copyright IBM Corp. All Rights Reserved.
 #
 # SPDX-License-Identifier: Apache-2.0
-# TODO: replace "latest" with "$IMAGE_TAG"
+# TODO: replace "1.4.8" with "$IMAGE_TAG"
 
 version: '2'
 
@@ -11,7 +11,7 @@ networks:
 services:
 
   ca_nexnet:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-nexnet
@@ -27,7 +27,7 @@ services:
       - hypersub
 
   ca_xorg:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-xorg
@@ -43,7 +43,7 @@ services:
       - hypersub
 
   ca_auditor:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-auditor
@@ -59,7 +59,7 @@ services:
       - hypersub
 
   ca_debtcollector:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-debtcollector
@@ -75,7 +75,7 @@ services:
       - hypersub
 
   ca_orderer:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-orderer

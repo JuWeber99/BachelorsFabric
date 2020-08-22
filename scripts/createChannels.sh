@@ -40,7 +40,7 @@ createAncorPeerTxOne() {
   done
 }
 
-##### Anchor Peer Transactions for channel1 #####
+##### Anchor Peer Transactions for channel2 #####
 createAncorPeerTxTwo() {
 
   for orgname in Nexnet Xorg DebtCollector; do
@@ -65,7 +65,9 @@ createChannel() {
   local rc=1
   local COUNTER=1
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    printError "waiting for retry for: $DELAY seconds"
+    if [ $COUNTER -gt 1 ]; then
+      printError "waiting for retry for: $DELAY seconds"
+    fi
     sleep $DELAY
     set -x
     peer channel create -o localhost:7050 -c $CHANNEL_NAME --ordererTLSHostnameOverride orderer.hypersub.com -f $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.tx --outputBlock $HYPERSUB_BASE/channel-artifacts/${CHANNEL_NAME}.block.pb --tls --cafile $ORDERER_CA >&log.txt
@@ -87,7 +89,9 @@ joinChannel() {
   local COUNTER=1
   ## Sometimes Join takes time, hence retry
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
-    printError "waiting for retry for: $DELAY seconds"
+    if [ $COUNTER -gt 1 ]; then
+      printError "waiting for retry for: $DELAY seconds"
+    fi
     sleep $DELAY
     set -x
     peer channel join -b $HYPERSUB_BASE/channel-artifacts/$CHANNEL_NAME.block.pb >&log.txt

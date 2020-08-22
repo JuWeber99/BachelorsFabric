@@ -15,6 +15,7 @@ VERBOSE=${12:-"true"}
 CC_RUNTIME_LANGUAGE="node"
 INIT_REQUIRED="--init-required"
 INIT_REQUIRED=""
+CC_SEQUENCE="1"
 
 ## Make sure that the path the chaincode exists if provided
 if [ ! -d "$CC_SRC_PATH" ]; then
@@ -78,13 +79,75 @@ queryInstalled() {
 
 # approveForMyOrg VERSION PEER ORG
 approveForNexnet() {
-  ORG=$1
-  setGlobals $ORG
-  set -x
+  setNexnetGlobals
   peer lifecycle chaincode approveformyorg -o localhost:7050 \
-    --ordererTLSHostnameOverride orderer.hypersub.com --tls $CORE_PEER_TLS_ENABLED \
-    --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} \
-    --package-id ${PACKAGE_ID} --sequence ${CC_SEQUENCE} --init-required ${CC_END_POLICY} ${CC_COLL_CONFIG} >&log.txt
+    --ordererTLSHostnameOverride orderer.hypersub.com --tls "$CORE_PEER_TLS_ENABLED" \
+    --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name "${CC_NAME}" --version ${CC_VERSION} \
+    --init-required --package-id "${PACKAGE_ID}" --sequence "${CC_SEQUENCE}" >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' failed"
+  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  echo
+}
+
+commitChaincodeDefinitionNexnet() {
+  setNexnetGlobals
+  set -x
+  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
+    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
+    --channelID $CHANNEL_NAME --name ${CC_NAME} \
+    --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
+    --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
+    --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
+    --version ${VERSION} --sequence ${CC_SEQUENCE} --init-required
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  echo
+}
+
+approveForXorg() {
+  setXorgGlobals
+  peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.hypersub.com --tls "$CORE_PEER_TLS_ENABLED" \
+    --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name "${CC_NAME}" --version ${CC_VERSION} \
+    --init-required --package-id "${PACKAGE_ID}" --sequence "${CC_SEQUENCE}" >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' failed"
+  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  echo
+}
+
+commitChaincodeDefinitionXorg() {
+  setXorgGlobals
+  set -x
+  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
+    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
+    --channelID $CHANNEL_NAME --name ${CC_NAME} \
+    --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
+    --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
+    --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
+    --version ${VERSION} --sequence ${CC_SEQUENCE} --init-required
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  echo
+}
+
+approveForAuditor() {
+  setAuditorGlobals
+  peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.hypersub.com --tls "$CORE_PEER_TLS_ENABLED" \
+    --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name "${CC_NAME}" --version ${CC_VERSION} \
+    --init-required --package-id "${PACKAGE_ID}" --sequence "${CC_SEQUENCE}" >&log.txt
   res=$?
   set +x
   cat log.txt
@@ -93,7 +156,25 @@ approveForNexnet() {
   echo
 }
 
-# checkCommitReadiness VERSION PEER ORG
+commitChaincodeDefinitionAuditor() {
+  setAuditorGlobals
+  set -x
+  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
+    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
+    --channelID $CHANNEL_NAME --name ${CC_NAME} \
+    --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
+    --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
+    --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
+    --version ${VERSION} --sequence ${CC_SEQUENCE} --init-required
+
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
+  echo
+}
+
 checkCommitReadiness() {
   ORG=$1
   shift 1
@@ -108,7 +189,7 @@ checkCommitReadiness() {
     echo "Attempting to check the commit readiness of the chaincode definition on peer0${ORG}, Retry after $DELAY seconds."
     set -x
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-     --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
+      --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
       --init-required ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
     res=$?
     set +x
@@ -129,7 +210,6 @@ checkCommitReadiness() {
   fi
 }
 
-# commitChaincodeDefinition VERSION PEER ORG (PEER ORG)...
 commitChaincodeDefinition() {
   parsePeerConnectionParameters $@
   res=$?
@@ -139,7 +219,10 @@ commitChaincodeDefinition() {
   # peer (if join was successful), let's supply it directly as we know
   # it using the "-o" option
   set -x
-  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} $PEER_CONN_PARMS --version ${CC_VERSION} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} >&log.txt
+  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride /
+  orderer.hypersub.com --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME /
+  --name ${CC_NAME} $PEER_CONN_PARMS --version ${CC_VERSION} --init-required --sequence /
+  ${CC_SEQUENCE} >&log.txt
   res=$?
   set +x
   cat log.txt
@@ -148,7 +231,6 @@ commitChaincodeDefinition() {
   echo
 }
 
-# queryCommitted ORG
 queryCommitted() {
   ORG=$1
   setGlobals $ORG
@@ -205,14 +287,14 @@ chaincodeInvokeInit() {
 chaincodeQuery() {
   ORG=$1
   setGlobals $ORG
-  echo "===================== Querying on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  printInfo " Querying on peer0${ORG} on channel '$CHANNEL_NAME'...  "
   local rc=1
   local COUNTER=1
   # continue to poll
   # we either get a successful response, or reach MAX RETRY
   while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
-    echo "Attempting to Query peer0${ORG}, Retry after $DELAY seconds."
+    printSubtask "Attempting to Query peer0${ORG}, Retry after $DELAY seconds."
     set -x
     peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"Args":["queryAllCars"]}' >&log.txt
     res=$?
@@ -234,41 +316,35 @@ chaincodeQuery() {
 }
 
 setup
-
-## package the chaincode
 packageChaincode 1
-
-## Install chaincode on peer0.org1 and peer0.org2
-echo "Installing chaincode on peer0.nexnet..."
+printTask "Installing chaincode on peer0.nexnet..."
 installChaincode 1
-echo "Install chaincode on peer0.org2..."
+printTask "Install chaincode on peer0.xorg..."
 installChaincode 2
+printTask "Install chaincode on peer0.auditor..."
+installChaincode 3
 
-## query whether the chaincode is installed
 queryInstalled 1
+queryInstalled 2
+queryInstalled 3
 
-## approve the definition for org1
-approveForNexnet 1
+approveForNexnet
+approveForXorg
+approveForAuditor
 
-## check whether the chaincode definition is ready to be committed
-## expect org1 to have approved and org2 not to
-checkCommitReadiness 1 "\"nexnetMSP\": true" "\"xorgMSP\": false"
-checkCommitReadiness 2 "\"nexnetMSP\": true" "\"xorgMSP\": false"
+checkCommitReadiness 1
+checkCommitReadiness 2
+checkCommitReadiness 3
 
-## now approve also for org2
-approveForMyOrg 2
+printTask "commit the chaincode-definition"
+commitChaincodeDefinitionNexnet
+commitChaincodeDefinitionXorg
+commitChaincodeDefinitionAuditor
 
-## check whether the chaincode definition is ready to be committed
-## expect them both to have approved
-checkCommitReadiness 1 "\"nexnetMSP\": true" "\"xorgMSP\": true"
-checkCommitReadiness 2 "\"nexnetMSP\": true" "\"xorgMSP\": true"
-
-## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition 1 2
-
-## query on both orgs to see that the definition committed successfully
+printTask "query on orgs to see that the definition has committed successfully"
 queryCommitted 1
 queryCommitted 2
+queryCommitted 3
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined
@@ -276,7 +352,8 @@ if [ "$CC_INIT_FCN" = "NA" ]; then
   printInfo "===================== Chaincode initialization is not required ===================== "
   echo
 else
-  chaincodeInvokeInit 1 2
+  printTask " Invoking the chaincodes for all peers on channel 1"
+  chaincodeInvokeInit 1 2 3
 fi
 
 exit 0

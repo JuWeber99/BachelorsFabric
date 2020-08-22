@@ -1,1 +1,1 @@
-Error: timed out waiting for txid on all peers
+Error: proposal failed with status: 500 - channel 'channel1' not found
