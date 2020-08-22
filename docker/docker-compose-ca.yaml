@@ -1,17 +1,18 @@
 # Copyright IBM Corp. All Rights Reserved.
 #
 # SPDX-License-Identifier: Apache-2.0
-# TODO: replace "latest" with "$IMAGE_TAG"
+# TODO: replace "1.4.8" with "$IMAGE_TAG"
 
-version: '2'
+version: '3.7'
 
 networks:
-  hypersub:
+  hypersub-net:
+    name: hypersub-net
 
 services:
 
   ca_nexnet:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-nexnet
@@ -24,10 +25,10 @@ services:
       - $HYPERSUB_BASE/organizations/fabric-ca/nexnet:/etc/hyperledger/fabric-ca-server
     container_name: ca_nexnet
     networks:
-      - hypersub
+      - hypersub-net
 
   ca_xorg:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-xorg
@@ -40,10 +41,10 @@ services:
       - $HYPERSUB_BASE/organizations/fabric-ca/xorg:/etc/hyperledger/fabric-ca-server
     container_name: ca_xorg
     networks:
-      - hypersub
+      - hypersub-net
 
   ca_auditor:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-auditor
@@ -56,10 +57,10 @@ services:
       - $HYPERSUB_BASE/organizations/fabric-ca/auditor:/etc/hyperledger/fabric-ca-server
     container_name: ca_auditor
     networks:
-      - hypersub
+      - hypersub-net
 
   ca_debtcollector:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-debtcollector
@@ -72,10 +73,10 @@ services:
       - $HYPERSUB_BASE/organizations/fabric-ca/debtcollector:/etc/hyperledger/fabric-ca-server
     container_name: ca_debtcollector
     networks:
-      - hypersub
+      - hypersub-net
 
   ca_orderer:
-    image: hyperledger/fabric-ca:latest
+    image: hyperledger/fabric-ca:1.4.8
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-orderer
@@ -88,4 +89,4 @@ services:
       - $HYPERSUB_BASE/organizations/fabric-ca/ordererOrg:/etc/hyperledger/fabric-ca-server
     container_name: ca_orderer
     networks:
-      - hypersub
+      - hypersub-net

@@ -7,22 +7,15 @@ import {PersonalDetails} from "../PersonalDetails";
 @Object()
 export class CustomerAccount {
 
-    @Property()
+    @Property("accountId", "string")
     public accountId: string;
 
-    @Property()
+    @Property("isRevoked", "boolean")
     public isRevoked?: boolean;
 
-    @Property()
     public personalDetails: Array<PersonalDetails>;
-
-    @Property()
     public bankingDetails: Array<BankingDetails<P2PDetails | SepaDetails>>;
-
-    @Property()
     public simDetails: Array<SimDetails>;
-
-    @Property()
     public statement: Statement;
 
 }

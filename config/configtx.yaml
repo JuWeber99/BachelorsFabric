@@ -26,14 +26,12 @@ Organizations:
         Type: Signature
         Rule: "OR('nexnetMSP.peer')"
     AnchorPeers:
-      - Host: 127.0.0.1
-        Port: 7051 #nexnet Anchor
-      #- Host: 127.0.0.1
-      #  Port: 8051 #XOrg Anchor
-      #- Host: 127.0.0.1
-      #  Port: 9051 # Auditor Anchor
-      #- Host: 127.0.0.1
-      #  Port: 10051 # debt collector Anchor
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &Xorg
     Name: Xorg
@@ -54,27 +52,19 @@ Organizations:
       Endorsement:
         Type: Signature
         Rule: "OR('xorgMSP.peer')"
-
-    OrdererEndpoints:
-      - "127.0.0.1:7050"
-
     AnchorPeers:
-      #- Host: 127.0.0.1
-      #  Port: 7051 #nexnet Anchor
-      #- Host: 127.0.0.1
-      #  Port: 9051 # Auditor Anchor
-      #- Host: 127.0.0.1
-      #  Port: 10051 # debt collector Anchor
-      - Host: 127.0.0.1
-        Port: 8051
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &Auditor
     Name: Auditor
     SkipAsForeign: false
     ID: auditorMSP
     MSPDir: ../organizations/peerOrganizations/auditor.hypersub.com/msp
-
-    # Auditors independent 
     Policies:
       Readers:
         Type: Signature
@@ -88,25 +78,19 @@ Organizations:
       Endorsement:
         Type: Signature
         Rule: "OR('auditorMSP.peer')"
-
-    OrdererEndpoints:
-      - "127.0.0.1:7050"
-
     AnchorPeers:
-      - Host: 127.0.0.1
-        Port: 9051
-      # - Host: 127.0.0.1
-      #   Port: 7051 #nexnet Anchor
-      # - Host: 127.0.0.1
-      #   Port: 8051 # Xorg Anchor
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.debtcollector.hypersub.com
+        Port: 10051
 
   - &DebtCollector
     Name: DebtCollector
     SkipAsForeign: false
     ID: debtcollectorMSP
     MSPDir: ../organizations/peerOrganizations/debtcollector.hypersub.com/msp
-
-    # DebtCollectors independent
     Policies:
       Readers:
         Type: Signature
@@ -120,17 +104,13 @@ Organizations:
       Endorsement:
         Type: Signature
         Rule: "OR('debtcollectorMSP.peer')"
-
-    OrdererEndpoints:
-      - "127.0.0.1:7050"
-
     AnchorPeers:
-      #- Host: 127.0.0.1
-      #  Port: 7051 #nexnet Anchor
-      #- Host: 127.0.0.1
-      #  Port: 8051 # Xorg Anchor
-      - Host: 127.0.0.1
-        Port: 10051
+      - Host: peer0.nexnet.hypersub.com
+        Port: 7051
+      - Host: peer0.xorg.hypersub.com
+        Port: 8051
+      - Host: peer0.auditor.hypersub.com
+        Port: 9051
 
 
   - &OrdererOrg
@@ -147,10 +127,8 @@ Organizations:
       Admins:
         Type: Signature
         Rule: "OR('ordererMSP.admin')"
-
     OrdererEndpoints:
-      - orderer.hypersub.com:7050
-
+      - "orderer.hypersub.com:7050"
 
 Capabilities:
   Channel: &ChannelCapabilities
@@ -169,6 +147,27 @@ Capabilities:
 #
 ################################################################################
 Application: &ApplicationDefaults
+  ACLs: &ACLsDefault
+    _lifecycle/CheckCommitReadiness: /Channel/Application/Writers
+    _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
+    _lifecycle/QueryChaincodeDefinition: /Channel/Application/Readers
+    _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Readers
+    lscc/ChaincodeExists: /Channel/Application/Readers
+    lscc/GetDeploymentSpec: /Channel/Application/Readers
+    lscc/GetChaincodeData: /Channel/Application/Readers
+    lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
+    qscc/GetChainInfo: /Channel/Application/Readers
+    qscc/GetBlockByNumber: /Channel/Application/Readers
+    qscc/GetBlockByHash: /Channel/Application/Readers
+    qscc/GetTransactionByID: /Channel/Application/Readers
+    qscc/GetBlockByTxID: /Channel/Application/Readers
+    cscc/GetConfigBlock: /Channel/Application/Readers
+    cscc/GetConfigTree: /Channel/Application/Readers
+    cscc/SimulateConfigTreeUpdate: /Channel/Application/Readers
+    peer/Propose: /Channel/Application/Writers
+    peer/ChaincodeToChaincode: /Channel/Application/Readers
+    event/Block: /Channel/Application/Readers
+    event/FilteredBlock: /Channel/Application/Readers
 
   Organizations:
 
@@ -201,8 +200,8 @@ Application: &ApplicationDefaults
 #
 ################################################################################
 Orderer: &OrdererDefaultSettings
-  OrdererType: etcdraft
 
+  OrdererType: etcdraft
   EtcdRaft:
     Consenters:
       - Host: orderer.hypersub.com
@@ -215,6 +214,8 @@ Orderer: &OrdererDefaultSettings
       HeartbeatTick: 1
       MaxInflightBlocks: 5
       SnapshotIntervalSize: 16 MB
+  Addresses:
+    - orderer.hypersub.com:7050
 
   BatchTimeout: 2s
   BatchSize:
@@ -234,7 +235,7 @@ Orderer: &OrdererDefaultSettings
       Rule: "MAJORITY Admins"
     BlockValidation:
       Type: ImplicitMeta
-      Rule: "MAJORITY Writers"
+      Rule: "ANY Writers"
 
 ################################################################################
 #
@@ -302,6 +303,7 @@ Profiles:
         - *Auditor
       Capabilities:
         <<: *ApplicationCapabilities
+
 
   Channel2:
     <<: *ChannelDefaultSettings

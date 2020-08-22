@@ -8,7 +8,7 @@ export enum BillDeliveryType {
 }
 
 
-export interface Bill {
+export class Bill {
     billId: string;
     contract : Subscription;
     startDate: Date | string;

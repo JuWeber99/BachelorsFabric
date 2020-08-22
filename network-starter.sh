@@ -43,8 +43,8 @@ function checkPrereqs() {
   if [[ $? -ne 0 || ! -d "$HYPERSUB_BASE/config" ]]; then
     printError "ERROR! Peer binary and configuration files not found.."
     echo
-    echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-    echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+    printInfo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
+    printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
     exit 1
   fi
   LOCAL_VERSION=$(peer version | sed -ne 's/ Version: //p')
@@ -55,8 +55,8 @@ function checkPrereqs() {
 
   if [ "$LOCAL_VERSION" != "$DOCKER_IMAGE_VERSION" ]; then
     printError "=================== WARNING ==================="
-    echo "  Local fabric binaries and docker images are  "
-    echo "  out of  sync. This may cause problems.       "
+    printError "  Local fabric binaries and docker images are  "
+    printError "  out of  sync. This may cause problems.       "
     printError "==============================================="
   fi
 
@@ -81,8 +81,8 @@ function checkPrereqs() {
     if [[ $? -ne 0 ]]; then
       printError "ERROR! fabric-ca-client binary not found.."
       echo
-      echo "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-      echo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+      printError "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
+      printInfo "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
       exit 1
     fi
     CA_LOCAL_VERSION=$(fabric-ca-client version | sed -ne 's/ Version: //p')
@@ -92,8 +92,8 @@ function checkPrereqs() {
 
     if [ "$CA_LOCAL_VERSION" != "$CA_DOCKER_IMAGE_VERSION" ]; then
       printError "=================== WARNING ======================"
-      echo "  Local fabric-ca binaries and docker images are  "
-      echo "  out of sync. This may cause problems.           "
+      printError "  Local fabric-ca binaries and docker images are  "
+      printError "  out of sync. This may cause problems.           "
       printError "=================================================="
     fi
   fi
@@ -136,6 +136,7 @@ function createOrganisations() {
 
 # Generate orderer system channel genesis block.
 function createConsortium() {
+
   which configtxgen
   if [ "$?" -ne 0 ]; then
     printError "configtxgen tool not found. exiting"
@@ -147,7 +148,7 @@ function createConsortium() {
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
   set -x
-  configtxgen -profile HypersubGenesis -channelID orderer-system-channel -outputBlock $HYPERSUB_BASE/system-genesis-block/genesis.block.pb
+  configtxgen -profile HypersubGenesis -channelID orderer-system-channel -outputBlock $HYPERSUB_BASE/channel-artifacts/genesis_block.pb
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -172,7 +173,11 @@ function networkUp() {
 
 echo
 . $HYPERSUB_BASE/network-cleaner.sh
+echo
+
 checkPrereqs
 networkUp
+
 sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
+$HYPERSUB_BASE/scripts/deployChaincode.sh

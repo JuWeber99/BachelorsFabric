@@ -1,6 +1,6 @@
 import {IsoCountryCodes} from "./IsoCountryCodes";
 
-export interface Address {
+export class Address {
     postalCode: string;
     residence: string;
     streetName: string;
