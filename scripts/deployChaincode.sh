@@ -243,13 +243,12 @@ queryCommitted() {
   fi
 }
 
-
 chaincodeInvokeInitFromNexnet() {
 
   setNexnetGlobals
   set -x
-   # fcn_call='{"function":"'${CC_INIT_FCN}'","Args":[]}'
-   fcn_call='{"function":"InitLedger", "Args":[]}'
+  # fcn_call='{"function":"'${CC_INIT_FCN}'","Args":[]}'
+  fcn_call='{"function":"InitLedger", "Args":[]}'
 
   printSubtask "invoke fcn call:${fcn_call}"
   peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
@@ -258,7 +257,6 @@ chaincodeInvokeInitFromNexnet() {
     --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
     -I -c '{"Args":[]}' >&log.txt
-     #--isInit -c "${fcn_Call}" '>&log.txt
 
   res=$?
   set +x
@@ -269,7 +267,6 @@ chaincodeInvokeInitFromNexnet() {
 }
 
 #  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls true --cafile /home/balr/Developement/BachelorsFabric/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem -C channel1 -n mychaincode --peerAddresses localhost:7051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt --peerAddresses localhost:8051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt --isInit -c {"function": "InitLedger", "Args": []}
-
 
 chaincodeQuery() {
   ORG=$1

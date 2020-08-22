@@ -1,7 +1,8 @@
-version: '2'
+version: '3.7'
 
 networks:
-  hypersub:
+  hypersub-net:
+    name: hypersub-net
 
 services:
   couchdb_nexnet:
@@ -13,7 +14,7 @@ services:
     ports:
       - "5984:5984"
     networks:
-      - hypersub
+      - hypersub-net
 
 
   peer0.nexnet.hypersub.com:
@@ -36,7 +37,7 @@ services:
       # reach all dbs on same local port
       - "6984:5984"
     networks:
-      - hypersub
+      - hypersub-net
 
 
   peer0.xorg.hypersub.com:
@@ -58,7 +59,7 @@ services:
       # reach all dbs on same local port
       - "7984:5984"
     networks:
-      - hypersub
+      - hypersub-net
 
 
   peer0.auditor.hypersub.com:
@@ -81,7 +82,7 @@ services:
       # reach all dbs on same local port
       - "8984:5984"
     networks:
-      - hypersub
+      - hypersub-net
 
   peer0.debtcollector.hypersub.com:
     environment:
