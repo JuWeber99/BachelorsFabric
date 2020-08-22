@@ -22,3 +22,6 @@
 /organizations/fabric-ca/xorg/
 /hypersub/application/server/src/.env
 /hypersub/server/node_modules/
+/waste/
+/contract/node_modules/
+/hypersub/chaincode/dist/data/
