@@ -92,7 +92,7 @@ approveForNexnet() {
   echo
 }
 
-commitChaincodeDefinitionNexnet() {
+commitChaincodeDefinitionFromNexnet() {
   setNexnetGlobals
   set -x
   peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
@@ -101,7 +101,7 @@ commitChaincodeDefinitionNexnet() {
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
     --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
-    --version ${VERSION} --sequence ${CC_SEQUENCE} --init-required
+    --version ${CC_VERSION} --sequence ${CC_SEQUENCE} --init-required
   res=$?
   set +x
   cat log.txt
@@ -109,6 +109,8 @@ commitChaincodeDefinitionNexnet() {
   echo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
+
+
 
 approveForXorg() {
   setXorgGlobals
@@ -190,7 +192,7 @@ checkCommitReadiness() {
     set -x
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
       --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
-      --init-required ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
+      --init-required --output json >&log.txt
     res=$?
     set +x
     let rc=0
@@ -332,15 +334,13 @@ approveForNexnet
 approveForXorg
 approveForAuditor
 
+printTask "CHECKING COMMIT READINESS"
 checkCommitReadiness 1
 checkCommitReadiness 2
 checkCommitReadiness 3
 
 printTask "commit the chaincode-definition"
-commitChaincodeDefinitionNexnet
-commitChaincodeDefinitionXorg
-commitChaincodeDefinitionAuditor
-
+commitChaincodeDefinitionFromNexnet
 printTask "query on orgs to see that the definition has committed successfully"
 queryCommitted 1
 queryCommitted 2

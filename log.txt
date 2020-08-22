@@ -1,1 +1,2 @@
-Error: proposal failed with status: 500 - channel 'channel1' not found
+[33m2020-08-22 04:17:50.227 CEST [chaincodeCmd] validatePeerConnectionParameters -> WARN 001[0m received more TLS root cert files (3) than peer addresses (1)
+Error: error validating peer connection parameters: number of peer addresses (1) does not match the number of TLS root cert files (3)
