@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-version: '2'
+version: '3.7'
 
 volumes:
   orderer.hypersub.com:
@@ -13,8 +13,8 @@ volumes:
   peer0.debtcollector.hypersub.com:
 
 networks:
-  hypersub:
-    driver: bridge
+  hypersub-net:
+    name: hypersub-net
 
 services:
 
@@ -26,10 +26,9 @@ services:
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block.pb
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis_block.pb
       - ORDERER_GENERAL_LOCALMSPID=ordererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
@@ -42,22 +41,24 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
     command: orderer
     volumes:
-        - ../system-genesis-block/genesis.block.pb:/var/hyperledger/orderer/genesis.block.pb
-        - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp:/var/hyperledger/orderer/msp
-        - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/:/var/hyperledger/orderer/tls
-        - orderer.hypersub.com:/var/hyperledger/production/orderer
+      - ../channel-artifacts/genesis_block.pb:/var/hyperledger/orderer/genesis_block.pb
+      - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp:/var/hyperledger/orderer/msp
+      - ../organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/tls/:/var/hyperledger/orderer/tls
+      - orderer.hypersub.com:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
     networks:
-      - hypersub
+      - hypersub-net
+
+
+  ### Peers ###
 
   peer0.nexnet.hypersub.com:
     container_name: peer0.nexnet.hypersub.com
     image: hyperledger/fabric-peer:2.2.0
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
-   #   - FABRIC_LOGGING_SPEC=INFO
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub-net
       - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=true
@@ -74,36 +75,30 @@ services:
       - CORE_PEER_LOCALMSPID=nexnetMSP
 
     volumes:
-        - /var/run/:/host/var/run/
-        - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/msp:/etc/hyperledger/fabric/msp
-        - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.nexnet.hypersub.com:/var/hyperledger/production
+      - /var/run/:/host/var/run/
+      - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/msp:/etc/hyperledger/fabric/msp
+      - ../organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls:/etc/hyperledger/fabric/tls
+      - peer0.nexnet.hypersub.com:/var/hyperledger/production
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
       - 7051:7051
     networks:
-      - hypersub
+      - hypersub-net
 
 
   peer0.xorg.hypersub.com:
     container_name: peer0.xorg.hypersub.com
     image: hyperledger/fabric-peer:2.2.0
     environment:
-      #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # the following setting starts chaincode containers on the same
-      # bridge network as the peers
-      # https://docs.docker.com/compose/networking/
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub-net
       - FABRIC_LOGGING_SPEC=INFO
-      #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      # Peer specific variabes
       - CORE_PEER_ID=peer0.xorg.hypersub.com
       - CORE_PEER_ADDRESS=peer0.xorg.hypersub.com:8051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
@@ -122,24 +117,21 @@ services:
     ports:
       - 8051:8051
     networks:
-      - hypersub
+      - hypersub-net
 
 
   peer0.auditor.hypersub.com:
     container_name: peer0.auditor.hypersub.com
     image: hyperledger/fabric-peer:2.2.0
     environment:
-      #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub-net
       - FABRIC_LOGGING_SPEC=INFO
-      #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      # Peer specific variabes
       - CORE_PEER_ID=peer0.auditor.hypersub.com
       - CORE_PEER_ADDRESS=peer0.auditor.hypersub.com:9051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
@@ -158,23 +150,20 @@ services:
     ports:
       - 9051:9051
     networks:
-      - hypersub
+      - hypersub-net
 
   peer0.debtcollector.hypersub.com:
     container_name: peer0.debtcollector.hypersub.com
     image: hyperledger/fabric-peer:2.2.0
     environment:
-      #Generic peer variables
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub_poc
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub-net
       - FABRIC_LOGGING_SPEC=INFO
-      #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      # Peer specific variabes
       - CORE_PEER_ID=peer0.debtcollector.hypersub.com
       - CORE_PEER_ADDRESS=peer0.debtcollector.hypersub.com:10051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
@@ -193,4 +182,4 @@ services:
     ports:
       - 10051:10051
     networks:
-      - hypersub
+      - hypersub-net
