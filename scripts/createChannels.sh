@@ -78,7 +78,7 @@ createChannel() {
   done
   cat log.txt
   verifyResult $res "Channel creation failed"
-  printInfo "===================== Channel '$CHANNEL_NAME' created ===================== "
+  printInfo " Channel '$CHANNEL_NAME' created  "
 }
 
 # joining the peers to the channel
@@ -122,7 +122,7 @@ updateAnchorPeers() {
   done
   cat log.txt
   verifyResult $res "Anchor peer update failed"
-  printInfo "===================== Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME' ===================== "
+  printInfo " Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME'  "
   sleep $DELAY
   echo
 }

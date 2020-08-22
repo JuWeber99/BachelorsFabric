@@ -1,2 +1,1 @@
-Committed chaincode definition for chaincode 'mychaincode' on channel 'channel1':
-Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [auditorMSP: true, nexnetMSP: true, xorgMSP: true]
+[34m2020-08-22 16:17:45.630 CEST [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001[0m Chaincode invoke successful. result: status:200 payload:"Default initiator successful." 

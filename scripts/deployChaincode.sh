@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CHANNEL_NAME=${1:-"channel1"}
-CC_NAME=${2:-"mychaincode"}
+CC_NAME=${2:-"customeraccountcc"}
 CC_SRC_PATH=${3:-"$HYPERSUB_BASE/hypersub/chaincode"}
 CC_VERSION=${5:-"1.0"}
 CC_SEQUENCE=${6:-"1"}
@@ -62,7 +62,6 @@ installChaincode() {
   echo
 }
 
-# queryInstalled PEER ORG
 queryInstalled() {
   ORG=$1
   setGlobals $ORG
@@ -77,7 +76,6 @@ queryInstalled() {
   echo
 }
 
-# approveForMyOrg VERSION PEER ORG
 approveForNexnet() {
   setNexnetGlobals
   peer lifecycle chaincode approveformyorg -o localhost:7050 \
@@ -246,11 +244,7 @@ queryCommitted() {
 chaincodeInvokeInitFromNexnet() {
 
   setNexnetGlobals
-  set -x
-  # fcn_call='{"function":"'${CC_INIT_FCN}'","Args":[]}'
-  fcn_call='{"function":"InitLedger", "Args":[]}'
-
-  printSubtask "invoke fcn call:${fcn_call}"
+  printSubtask "invoke $CC_NAME from organization: $ORG_NAME"
   peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
     --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CC_NAME} \
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
@@ -337,5 +331,4 @@ else
   printTask " Invoking the chaincodes for all peers on channel 1"
   chaincodeInvokeInitFromNexnet
 fi
-
 exit 0
