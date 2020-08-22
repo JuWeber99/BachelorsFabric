@@ -1,6 +1,6 @@
 import { Subscription } from "./Susbcription";
 import { PricedEvent } from "./PricedEvent";
-export interface SimDetails {
+export declare class SimDetails {
     identity: string | File;
     phoneNumber: string;
     contracts?: Array<Subscription>;

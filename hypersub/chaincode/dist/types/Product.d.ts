@@ -3,7 +3,7 @@ export declare enum ProductType {
     SUBSCRIPTION = "subscription",
     RATE_OPTION = "rate_option"
 }
-export interface Product {
+export declare class Product {
     productId: string;
     productType: ProductType;
     callThreshold: Duration;

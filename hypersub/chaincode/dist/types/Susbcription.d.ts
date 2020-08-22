@@ -1,7 +1,7 @@
 import { Product } from "./Product";
 import { RateOption } from "./RateOption";
 import { Duration } from "moment";
-export interface Subscription {
+export declare class Subscription {
     contractId: string;
     subscriptionProduct: Product;
     isActive: boolean;

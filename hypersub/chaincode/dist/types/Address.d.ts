@@ -1,5 +1,5 @@
 import { IsoCountryCodes } from "./IsoCountryCodes";
-export interface Address {
+export declare class Address {
     postalCode: string;
     residence: string;
     streetName: string;

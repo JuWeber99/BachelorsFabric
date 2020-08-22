@@ -1,5 +1,5 @@
 import { Product } from "./Product";
-export interface RateOption {
+export declare class RateOption {
     optionId: string;
     optionProduct: Product;
     isInclusive: boolean;

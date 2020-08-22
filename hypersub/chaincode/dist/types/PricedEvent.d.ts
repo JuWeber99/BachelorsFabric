@@ -5,7 +5,7 @@ export declare enum PricedEventType {
     SMS = "sms"
 }
 export declare type PricedEvent = CallEvent | SmsEvent | DataUsageEvent;
-export interface EventStructure {
+export declare class EventStructure {
     eventId: string;
     issueTimestamp: Date | string;
     amount?: number;
@@ -13,16 +13,16 @@ export interface EventStructure {
     pricedEventType: PricedEventType;
     additionalCosts?: number;
 }
-export interface CallEvent extends EventStructure {
+export declare class CallEvent extends EventStructure {
     pricedEventType: PricedEventType.CALL;
     targetPhoneNumber: string;
     callDuration: Duration;
 }
-export interface SmsEvent extends EventStructure {
+export declare class SmsEvent extends EventStructure {
     pricedEventType: PricedEventType.SMS;
     targetPhoneNumber: string;
 }
-export interface DataUsageEvent extends EventStructure {
+export declare class DataUsageEvent extends EventStructure {
     pricedEventType: PricedEventType.DATA_USAGE;
     usedAmountInMb: number;
 }

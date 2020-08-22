@@ -3,7 +3,7 @@ import {Statement} from "./Statement";
 import {BankingDetails, P2PDetails, SepaDetails} from "./BankingDetails";
 import {PersonalDetails} from "./PersonalDetails";
 
-export interface CustomerAccount {
+export class CustomerAccount {
 
     accountId: string;
 

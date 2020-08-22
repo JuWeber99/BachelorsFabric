@@ -14,29 +14,13 @@ const fabric_contract_api_1 = require("fabric-contract-api");
 let CustomerAccount = class CustomerAccount {
 };
 __decorate([
-    fabric_contract_api_1.Property(),
+    fabric_contract_api_1.Property("accountId", "string"),
     __metadata("design:type", String)
 ], CustomerAccount.prototype, "accountId", void 0);
 __decorate([
-    fabric_contract_api_1.Property(),
+    fabric_contract_api_1.Property("isRevoked", "boolean"),
     __metadata("design:type", Boolean)
 ], CustomerAccount.prototype, "isRevoked", void 0);
-__decorate([
-    fabric_contract_api_1.Property(),
-    __metadata("design:type", Array)
-], CustomerAccount.prototype, "personalDetails", void 0);
-__decorate([
-    fabric_contract_api_1.Property(),
-    __metadata("design:type", Array)
-], CustomerAccount.prototype, "bankingDetails", void 0);
-__decorate([
-    fabric_contract_api_1.Property(),
-    __metadata("design:type", Array)
-], CustomerAccount.prototype, "simDetails", void 0);
-__decorate([
-    fabric_contract_api_1.Property(),
-    __metadata("design:type", Object)
-], CustomerAccount.prototype, "statement", void 0);
 CustomerAccount = __decorate([
     fabric_contract_api_1.Object()
 ], CustomerAccount);

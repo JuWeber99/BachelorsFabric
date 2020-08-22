@@ -5,7 +5,7 @@ export declare enum BillDeliveryType {
     MAIL = "mail",
     APP_NOTIFICATION = "app_notification"
 }
-export interface Bill {
+export declare class Bill {
     billId: string;
     contract: Subscription;
     startDate: Date | string;
