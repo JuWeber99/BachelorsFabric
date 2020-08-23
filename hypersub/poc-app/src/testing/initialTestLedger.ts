@@ -8,18 +8,11 @@ import {RateOption} from "../types/RateOption";
 import moment from "moment";
 import {Bill, BillDeliveryType} from "../types/Bill";
 import {DTransaction} from "../types/DTransaction";
-import {
-    CallEvent,
-    DataUsageEvent,
-    PricedEvent,
-    PricedEventType,
-    SmsEvent
-} from "../types/PricedEvent";
+import {CallEvent, DataUsageEvent, PricedEventType, SmsEvent} from "../types/PricedEvent";
 import {PersonalDetails} from "../types/PersonalDetails";
 import {Statement} from "../types/Statement";
 import {SimDetails} from "../types/SimDetails";
 import {Address} from "../types/Address";
-import {testAddress} from "../../../server/data/initialTestLedger";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
@@ -41,14 +34,6 @@ export const testStandartSubscribtion: Product = {
 }
 // ##########################################
 
-
-export const testAddressUpdate: Address = {
-    postalCode: "11111",
-    residence: "UpdateCity",
-    streetName: "UpdateStreet",
-    houseNumber: "2",
-    country: testAddress.country
-}
 
 export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),

@@ -95,6 +95,14 @@ export const testAddress: Address = {
         residence: "Fürstenberg/Havel"
 }
 
+export const testAddressUpdate: Address = {
+    postalCode: "11111",
+    residence: "UpdateCity",
+    streetName: "UpdateStreet",
+    houseNumber: "2",
+    country: IsoCountryCodes.Germany
+}
+
 export const testPersonalDetails: PersonalDetails = {
     address: testAddress,
     birthday: moment({day: 14, month: 6, year: 1999}).toDate(),

@@ -17,12 +17,11 @@ services:
     volumes:
       - '../hypersub/server:/home/node/app'
       - '/home/node/app/node_modules'
+      - '../organizations/peerOrganizations/nexnet.hypersub.com/connection-nexnet.yaml:/home/node/app/gateway'
     command: npm start
     stdin_open: true
     networks:
       - poc-hypersub
-
-
 
   poc-client:
     container_name: poc-client
