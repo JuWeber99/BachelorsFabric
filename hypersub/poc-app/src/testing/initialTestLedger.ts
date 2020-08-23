@@ -18,6 +18,8 @@ import {
 import {PersonalDetails} from "../types/PersonalDetails";
 import {Statement} from "../types/Statement";
 import {SimDetails} from "../types/SimDetails";
+import {Address} from "../types/Address";
+import {testAddress} from "../../../server/data/initialTestLedger";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
@@ -39,11 +41,20 @@ export const testStandartSubscribtion: Product = {
 }
 // ##########################################
 
+
+export const testAddressUpdate: Address = {
+    postalCode: "11111",
+    residence: "UpdateCity",
+    streetName: "UpdateStreet",
+    houseNumber: "2",
+    country: testAddress.country
+}
+
 export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()) ,
+    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.CALL,
     taxRate: 19
 }
@@ -94,8 +105,8 @@ export const testBill: Bill = {
     billId: 1,
     billTransactions: [testTransaction],
     contract: testContract,
-    endDate:  moment(moment.now()).add(5, "months").calendar(),
-    startDate:  moment().calendar()
+    endDate: moment(moment.now()).add(5, "months").calendar(),
+    startDate: moment().calendar()
 }
 
 export const testPersonalDetails: PersonalDetails = {

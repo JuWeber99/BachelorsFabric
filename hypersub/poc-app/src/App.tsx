@@ -5,7 +5,8 @@ import {Payment} from "./components/Payment";
 import {BrowserRouter, Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
-import {testContract} from "./testing/initialTestLedger";
+import {testContract, testPersonalDetails} from "./testing/initialTestLedger";
+import PersonalDetailSettings from "./components/PersonalDetailSettings";
 
 function App()
 {
@@ -27,6 +28,9 @@ function App()
                 </Route>
                 <Route exact path={"/test"}>
                     <SubscriptionInformationCard subscriptionContract={testContract} />
+                </Route>
+                <Route exact path={"/updateTest"}>
+                    <PersonalDetailSettings details={testPersonalDetails}/>
                 </Route>
             </Switch>
         </div>
