@@ -31,15 +31,9 @@ export class CustomerAccountContract extends Contract {
     @Transaction()
     public async initLedger(ctx: CustomerAccountContractContext): Promise<void> {
         for (const customerAccount of testAccounts) {
-            let response = ctx.customerAccountList.addCustomerAccount(customerAccount);
-            console.info(`Account ${response.then((response: string) => response.accountId)} initialized`);
+            await ctx.customerAccountList.addCustomerAccount(customerAccount);
         }
     }
-
-    // @Transaction
-    // public async addRateOptionToCustomerAccount(ctx: Context, id: string): Promise<void> {
-    //
-    // }
 
     @Transaction(false)
     public async readCustomerAccount(ctx: CustomerAccountContractContext, id: string): Promise<CustomerAccount> {
@@ -53,7 +47,7 @@ export class CustomerAccountContract extends Contract {
         return customerAccount;
     }
 
-    @Transaction()
+    @Transaction(false)
     public async createTestAccountTwo(ctx: CustomerAccountContractContext) {
         let customerAccount = await ctx.customerAccountList.addCustomerAccount(testAccount2);
 

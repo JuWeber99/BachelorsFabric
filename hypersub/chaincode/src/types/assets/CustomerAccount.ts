@@ -9,15 +9,15 @@ import {testAccount2} from "../../../../server/testing/initialTestLedger";
 @Object()
 export class CustomerAccount extends State {
 
-    private _accountId: string;
-    private _isRevoked?: boolean;
-    private _personalDetails: Array<PersonalDetails>;
-    private _bankingDetails: Array<BankingDetails<P2PDetails | SepaDetails>>;
-    private _simDetails: Array<SimDetails>;
-    private _statement: Statement;
+    protected accountId: string;
+    protected isRevoked?: boolean;
+    protected personalDetails: Array<PersonalDetails>;
+    protected bankingDetails: Array<BankingDetails<P2PDetails | SepaDetails>>;
+    protected simDetails: Array<SimDetails>;
+    protected statement: Statement;
 
     constructor(obj: CustomerAccount) {
-        super(CustomerAccount.getClass(), [obj._accountId])
+        super(CustomerAccount.getClass(), [obj.accountId])
     }
 
     static getClass() {
@@ -25,52 +25,52 @@ export class CustomerAccount extends State {
     }
 
 
-    get accountId(): string {
-        return this._accountId;
+    getAccountId(): string {
+        return this.accountId;
     }
 
-    set accountId(value: string) {
-        this._accountId = value;
+    setSetAccountId(value: string) {
+        this.accountId = value;
     }
 
-    get isRevoked(): boolean {
-        return this._isRevoked;
+    getIsRevoked(): boolean {
+        return this.isRevoked;
     }
 
-    set isRevoked(value: boolean) {
-        this._isRevoked = value;
+    setIsRevoked(value: boolean) {
+        this.isRevoked = value;
     }
 
-    get personalDetails(): Array<PersonalDetails> {
-        return this._personalDetails;
+    getPersonalDetails(): Array<PersonalDetails> {
+        return this.personalDetails;
     }
 
-    set personalDetails(value: Array<PersonalDetails>) {
-        this._personalDetails = value;
+    setPersonalDetails(value: Array<PersonalDetails>) {
+        this.personalDetails = value;
     }
 
-    get bankingDetails(): Array<BankingDetails<P2PDetails | SepaDetails>> {
-        return this._bankingDetails;
+    getBankingDetails(): Array<BankingDetails<P2PDetails | SepaDetails>> {
+        return this.bankingDetails;
     }
 
-    set bankingDetails(value: Array<BankingDetails<P2PDetails | SepaDetails>>) {
-        this._bankingDetails = value;
+    setBankingDetails(value: Array<BankingDetails<P2PDetails | SepaDetails>>) {
+        this.bankingDetails = value;
     }
 
-    get simDetails(): Array<SimDetails> {
-        return this._simDetails;
+    getSimDetails(): Array<SimDetails> {
+        return this.simDetails;
     }
 
-    set simDetails(value: Array<SimDetails>) {
-        this._simDetails = value;
+    setSimDetails(value: Array<SimDetails>) {
+        this.simDetails = value;
     }
 
-    get statement(): Statement {
-        return this._statement;
+    getStatement(): Statement {
+        return this.statement;
     }
 
-    set statement(value: Statement) {
-        this._statement = value;
+    setStatement(value: Statement) {
+        this.statement = value;
     }
 
     static fromBuffer(buffer) {

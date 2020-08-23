@@ -37,13 +37,13 @@ async function main() {
         const contract = network.getContract('customeraccountcc');
 
         console.log(`Reading customer account with ID: 5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809`);
-        let readResponse = await contract.submitTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
+        let readResponse = await contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
         console.log("response: " + readResponse)
 
         console.log(`Creating test Account 2:`);
         console.log(`\t ` + JSON.stringify(testAccount2));
-        let createTestResponse = await contract.submitTransaction('createcreateTestAccountTwo', '')
-        console.log("response: " + createTestResponse)
+        let createResponse = await contract.evaluateTransaction('createTestAccountTwo')
+        console.log(createResponse)
 
         await gateway.disconnect();
     } catch
