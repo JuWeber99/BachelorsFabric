@@ -1,5 +1,3 @@
-import {Duration} from "moment";
-
 export enum ProductType {
     SUBSCRIPTION = "subscription",
     RATE_OPTION = "rate_option",
@@ -8,7 +6,7 @@ export enum ProductType {
 export class Product {
     productId: string;
     productType: ProductType;
-    callThreshold: Duration;
+    callThreshold: string;
     smsThreshold: number;
     dataUsageThresholdInMb: number;
 }

@@ -1,4 +1,3 @@
-import {Duration} from "moment";
 
 export enum PricedEventType {
     CALL = "call",
@@ -19,7 +18,7 @@ export class EventStructure {
 export class CallEvent extends EventStructure {
     pricedEventType: PricedEventType.CALL;
     targetPhoneNumber: string;
-    callDuration: Duration
+    callDuration: string
 }
 
 

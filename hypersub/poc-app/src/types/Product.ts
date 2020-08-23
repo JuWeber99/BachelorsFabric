@@ -8,7 +8,7 @@ export enum ProductType {
 export interface Product {
     productId: string;
     productType: ProductType;
-    callThreshold: Duration;
+    callThreshold: Duration | string;
     smsThreshold: number;
     dataUsageThresholdInMb: number;
     cost: number

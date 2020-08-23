@@ -9,7 +9,7 @@ export interface Subscription {
     isActive: boolean;
     startDate: Date | string;
     endDate: Date | string;
-    billingPeriod: Duration;
-    cancellationPeriod: Duration;
+    billingPeriod: Duration| string;
+    cancellationPeriod: Duration | string;
     bookedOptions?: Array<RateOption>
 }

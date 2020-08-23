@@ -5,7 +5,7 @@
 import {Gateway, Wallets} from 'fabric-network';
 import * as path from 'path';
 import * as fs from 'fs';
-import {testBill} from "../data/initialTestLedger";
+import {testAddress, testBill} from "../data/initialTestLedger";
 
 async function main() {
     try {
@@ -46,10 +46,8 @@ async function main() {
         let readRes2 = await contract.evaluateTransaction('readCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23');
         console.log(readRes2.toString())
 
-        let readRes3 = await contract.evaluateTransaction('createBillForCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23',
-                JSON.stringify(testBill.contract), testBill.startDate.toString(), testBill.endDate.toString(),
-                testBill.amount.toString(), JSON.stringify(testBill.billDeliveryTypes), JSON.stringify(testBill.billTransactions)
-            );
+        let readRes3 = await contract.submitTransaction('changeAddressForCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23',
+            testAddress.country, "11111", "Update City", "UpdateStreet", "2");
         console.log(readRes3.toString())
 
         await gateway.disconnect();

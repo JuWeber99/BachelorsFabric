@@ -7,7 +7,6 @@ export enum BillDeliveryType {
     APPNOTIFICATION = "appnotification"
 }
 
-
 export class Bill {
     public billId: number;
     public contract : Subscription;

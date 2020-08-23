@@ -15,7 +15,7 @@ import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
-    callThreshold: moment.duration(0),
+    callThreshold: moment.duration(0).toISOString(),
     dataUsageThresholdInMb: 0,
     smsThreshold: 50,
     productId: "7b2b1179a8953dc98acc70bd827d569352f3c4d8dcb98f9fbf089b45da51d455",
@@ -23,7 +23,7 @@ export const testSmsOption: Product = {
 }
 
 export const testStandartSubscribtion: Product = {
-    callThreshold: moment.duration(100, "minutes"),
+    callThreshold: moment.duration(100, "minutes").toISOString(),
     dataUsageThresholdInMb: 5000,
     smsThreshold: 200,
     productId: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -32,7 +32,7 @@ export const testStandartSubscribtion: Product = {
 // ##########################################
 
 export const testCallEvent: CallEvent = {
-    callDuration: moment.duration(116, "seconds"),
+    callDuration: moment.duration(116, "seconds").toISOString(),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
     pricedEventType: PricedEventType.CALL,
@@ -65,8 +65,8 @@ export const testContract: Subscription = {
     isActive: true,
     startDate: moment().calendar(),
     endDate: moment(moment.now()).add(5, "months").calendar(),
-    billingPeriod: moment.duration(30, "days"),
-    cancellationPeriod: moment.duration(7, "days"),
+    billingPeriod: moment.duration(30, "days").toISOString(),
+    cancellationPeriod: moment.duration(7, "days").toISOString(),
     bookedOptions: [testOptions]
 }
 

@@ -1,6 +1,5 @@
 import {Product} from "./Product";
 import {RateOption} from "./RateOption";
-import {Duration} from "moment";
 
 
 export class Subscription {
@@ -9,7 +8,7 @@ export class Subscription {
     isActive: boolean;
     startDate: Date | string;
     endDate?: Date | string;
-    billingPeriod: Duration;
-    cancellationPeriod: Duration;
+    billingPeriod: string;
+    cancellationPeriod: string;
     bookedOptions?: Array<RateOption>
 }
