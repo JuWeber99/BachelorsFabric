@@ -21,6 +21,7 @@ import {SimDetails} from "../types/SimDetails";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
+    cost: 10.00,
     callThreshold: moment.duration(0),
     dataUsageThresholdInMb: 0,
     smsThreshold: 50,
@@ -29,6 +30,7 @@ export const testSmsOption: Product = {
 }
 
 export const testStandartSubscribtion: Product = {
+    cost: 10.00,
     callThreshold: moment.duration(100, "minutes"),
     dataUsageThresholdInMb: 5000,
     smsThreshold: 200,

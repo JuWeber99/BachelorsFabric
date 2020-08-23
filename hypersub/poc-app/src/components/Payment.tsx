@@ -3,9 +3,13 @@ import {Tick} from "react-crude-animated-tick";
 import React, {RefObject, useEffect, useRef, useState} from "react"
 import "../styles/payment-checkout.css"
 import "../styles/payment-success.css"
-import {Redirect} from "react-router";
+import pic from "../contract.jpg"
+import SubscriptionInformationCard, {SubscriptionProps} from "./SubscriptionInformationCard";
 
-export const Payment = ({product}: any) => {
+
+export const globalCurrencyCodeEuro = "EUR"
+
+export const Payment = ({subscriptionContract}: SubscriptionProps) => {
     const [paidFor, setPaidFor] = useState(false);
     const [error, setError]: [any | null, any] = useState(null);
     const [loaded, setLoaded]: [boolean, any] = useState(false);
@@ -22,7 +26,8 @@ export const Payment = ({product}: any) => {
                     const tag = document.createElement('script');
                     tag.async = false;
                     tag.id = 'paypal-script';
-                    tag.src = 'https://www.paypal.com/sdk/js?client-id=Acuj5ntZTvSRHy0k09oJdkweHFl2TAdqYUpRFvQr_MTcmx6196nhIrfoUJ8XIQu_r_YMp2XVXDrj0Gks';
+                    tag.src = `https://www.paypal.com/sdk/js?&client-id=Acuj5ntZTvSRHy0k09oJdkweHFl2TAdqYUpRFvQr_MTcmx6196nhIrfoUJ8XIQu_r_YMp2XVXDrj0Gks&currency=${globalCurrencyCodeEuro}`
+
                     target.appendChild(tag);
                     tag.addEventListener('load', () => {
                         setLoaded(true)
@@ -40,10 +45,10 @@ export const Payment = ({product}: any) => {
                         return actions.order.create({
                             purchase_units: [
                                 {
-                                    description: product.description,
+                                    description: subscriptionContract.subscriptionProduct.productType.toString(),
                                     amount: {
-                                        currency_code: 'USD',
-                                        value: product.price,
+                                        currency_code: globalCurrencyCodeEuro,
+                                        value: subscriptionContract.subscriptionProduct.cost,
                                     },
                                 },
                             ],
@@ -61,13 +66,14 @@ export const Payment = ({product}: any) => {
                 })
                 .render(paypalRef.current);
         }
-    }, [loaded, product.description, product.price]);
+    }, [loaded, subscriptionContract.subscriptionProduct]);
 
     if (paidFor) {
         return (
             <div className={"payment-received"}>
                 <h1>Payment received!</h1>
-                <h2> Have fun with : {product.name}!</h2>
+                <h2> Have fun with your service!</h2>
+                <h2>Vertrags-Kennung: {subscriptionContract.contractId}!</h2>
                 <Tick size={200}/>
                 <button
                     onClick={() => {
@@ -90,10 +96,12 @@ export const Payment = ({product}: any) => {
                     Uh oh, an error occurred! {error?.message}
                 </div>
             }
-            <h1>
-                {product.description} for ${product.price}
-            </h1>
-            <img alt={product.description} src={product.image} />
+            <ul>
+                <h1>Checkout für Buchung von Serviceleistung der Art: {subscriptionContract.subscriptionProduct.productType} </h1>
+                <SubscriptionInformationCard subscriptionContract={subscriptionContract}/>
+            </ul>
+
+            <img src={pic} alt={"picture not available"}/>
             <div ref={paypalRef}/>
         </div>
     );

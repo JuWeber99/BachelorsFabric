@@ -1,5 +1,9 @@
 version: '3.7'
 
+networks:
+  poc-hypersub:
+    name: poc-hypersub
+
 services:
   poc-server:
     container_name: poc-server
@@ -36,6 +40,3 @@ services:
       - poc-hypersub
     stdin_open: true
 
-networks:
-  poc-hypersub:
-    name: poc-hypersub

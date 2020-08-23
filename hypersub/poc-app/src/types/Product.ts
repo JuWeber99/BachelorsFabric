@@ -11,4 +11,5 @@ export interface Product {
     callThreshold: Duration;
     smsThreshold: number;
     dataUsageThresholdInMb: number;
+    cost: number
 }
