@@ -25,3 +25,6 @@
 /waste/waste.sh
 /contract/node_modules/
 /hypersub/chaincode/dist/
+/hypersub/server/wallet/
+/hypersub/server/dist
+/hypersub/server/dist/*

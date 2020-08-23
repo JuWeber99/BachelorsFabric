@@ -25,6 +25,8 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/mychaincode.tar.gz
   rm -rf $HYPERSUB_BASE/customeraccountcc.tar.gz
   rm -rf $HYPERSUB_BASE/hypersub/chaincode/dist
+  rm -rf $HYPERSUB_BASE/hypersub/server/wallet
+  rm -rf $HYPERSUB_BASE/hypersub/server/dist
 
 }
 

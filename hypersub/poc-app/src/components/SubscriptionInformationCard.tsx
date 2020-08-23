@@ -2,7 +2,7 @@ import React from 'react';
 import "../styles/subscription-card.css"
 import {Subscription} from "../types/Susbcription";
 
-class SubscriptionInformationCardProps {
+export interface SubscriptionInformationCardProps {
     contract: Subscription
 }
 

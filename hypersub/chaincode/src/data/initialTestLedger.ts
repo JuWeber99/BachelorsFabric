@@ -115,7 +115,7 @@ export const testSim: SimDetails = {
 }
 
 
-export const testAccounts: Array<CustomerAccount> = [
+export const testAccounts: CustomerAccount =
     {
         accountId: "5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809", //random hash string
         bankingDetails: [{
@@ -130,10 +130,40 @@ export const testAccounts: Array<CustomerAccount> = [
         simDetails: [testSim],
         isRevoked: false
     }
-]
+
+export const testAccountsTwo: CustomerAccount =
+    {
+        accountId: "guhidasfg238r766grzseugc97dsaftg67sadfadsf23", //random hash string
+        bankingDetails: [{
+            paymentType: PaymentType.P2P,
+            details: {
+                payerId: "testPayerID",
+                paymentToken: "testPaymentToken"
+            }
+        }],
+        personalDetails: [testPersonalDetails],
+        statement: testStatement,
+        simDetails: [testSim],
+        isRevoked: false
+    }
+export const testAccountsThree: CustomerAccount =
+    {
+        accountId: "aaabbbcccdddeeefasdfhcsiqkfhjasdf", //random hash string
+        bankingDetails: [{
+            paymentType: PaymentType.P2P,
+            details: {
+                payerId: "testPayerID",
+                paymentToken: "testPaymentToken"
+            }
+        }],
+        personalDetails: [testPersonalDetails],
+        statement: testStatement,
+        simDetails: [testSim],
+        isRevoked: false
+    }
 
 
-export const testDebtors: Array<DebtorAccount> = [{
+export const testDebtors: DebtorAccount = {
     debtorId: "a2kH2w3A7MUUY0OK4k5z", //random hash string
     personalDetails: [{
         address: {
@@ -155,5 +185,4 @@ export const testDebtors: Array<DebtorAccount> = [{
         dueAmount: 0
     }
 }
-]
 

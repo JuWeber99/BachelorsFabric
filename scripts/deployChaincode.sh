@@ -501,16 +501,16 @@ approveForXorg
 approveForAuditor
 
 printTask "CHECKING COMMIT READINESS"
-checkCommitReadiness 1
-checkCommitReadiness 2
-checkCommitReadiness 3
+checkCommitReadinessNexnet
+checkCommitReadinessXorg
+checkCommitReadinessAuditor
 
 printTask "commit the chaincode-definition"
 commitChaincodeDefinitionFromNexnet
 printTask "query on orgs to see that the definition has committed successfully"
-queryCommitted 1
-queryCommitted 2
-queryCommitted 3
+queryCommittedNexnet
+queryCommittedXorg
+queryCommittedAuditor
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined

@@ -1,5 +1,5 @@
 import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
-import {testAccounts} from "./data/initialTestLedger";
+import {testAccounts, testAccountsThree, testAccountsTwo} from "./data/initialTestLedger";
 import {JsonUtil} from "./util";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 
@@ -11,33 +11,32 @@ export class CustomerAccountContract extends Contract {
 
     @Transaction()
     public async initLedger(ctx: Context): Promise<void> {
-        for (const customerAccount of testAccounts) {
-            await ctx.stub.putState(customerAccount.accountId, Buffer.from(JSON.stringify(customerAccount)))
-            console.info(`Account ${customerAccount.accountId} initialized`);
-        }
+        await ctx.stub.putState(testAccounts.accountId, JsonUtil.createBufferFromJSON(testAccounts));
+        console.info(`Account ${testAccounts.accountId} initialized`);
     }
 
     @Transaction()
-    public async createCustomerAccount(ctx: Context, customerAccount: CustomerAccount) {
-        await ctx.stub.putState(customerAccount.accountId, JsonUtil.createBufferFromJSON(customerAccount));
+    public async createCustomerTestAccount(ctx: Context) {
+        await ctx.stub.putState(testAccountsTwo.accountId, JsonUtil.createBufferFromJSON(testAccountsTwo));
+        console.log("placeholder")
+    };
+
+
+    @Transaction()
+    public async createCustomerTestAccountTwo(ctx: Context) {
+        await ctx.stub.putState(testAccountsThree.accountId, JsonUtil.createBufferFromJSON(testAccountsThree));
+        console.log("placeholder")
     };
 
     @Transaction(false)
     @Returns("string")
-    public async readCustomerAccount(ctx: Context, id?: string, customerAccount?: CustomerAccount): Promise<string> {
-        let jsonRepresentation;
-        if (id == null && customerAccount == null) {
-            throw new Error("no Parameter given")
-        } else if (id == null) {
-            jsonRepresentation = ctx.stub.getState(id);
-        } else if (customerAccount == null) {
-            jsonRepresentation = ctx.stub.getState(customerAccount.accountId);
+    public async readCustomerAccount(ctx: Context, accountId: string): Promise<string> {
+        const accountAsBytes = await ctx.stub.getState(accountId);
+        if (!accountAsBytes || accountAsBytes.length === 0) {
+            throw new Error(`${accountId} does not exist`);
         }
-
-        if (!jsonRepresentation || jsonRepresentation.length === 0) {
-            throw new Error("asset not found")
-        }
-        return jsonRepresentation.toString();
+        console.log(accountAsBytes.toString());
+        return accountAsBytes.toString();
     }
 }
 
