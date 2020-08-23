@@ -10,7 +10,6 @@ export type PricedEvent = CallEvent | SmsEvent | DataUsageEvent;
 
 export class EventStructure {
     eventId: string;
-    issueTimestamp: Date | string;
     amount?: number;
     taxRate?: number;
     pricedEventType: PricedEventType;

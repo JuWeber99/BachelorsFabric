@@ -35,7 +35,6 @@ export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()) ,
     pricedEventType: PricedEventType.CALL,
     taxRate: 19
 }
@@ -43,14 +42,12 @@ export const testCallEvent: CallEvent = {
 export const testDataUsageEvent: DataUsageEvent = {
     usedAmountInMb: 123,
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.DATA_USAGE,
 }
 
 export const testSMSEvent: SmsEvent = {
     targetPhoneNumber: "491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.SMS
 }
 
@@ -75,7 +72,6 @@ export const testContract: Subscription = {
 
 export const testTransaction: DTransaction = {
     amount: 300,
-    timestamp: new Date(),
     transactionId: "e71f9ae31c72971778b956b42040edf72415e5d638a65c31ebf66a47e67ab03c"
 
 }

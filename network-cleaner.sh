@@ -23,6 +23,8 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/channel-artifacts
   rm -rf $HYPERSUB_BASE/system-genesis-block
   rm -rf $HYPERSUB_BASE/mychaincode.tar.gz
+  rm -rf $HYPERSUB_BASE/customeraccountcc.tar.gz
+  rm -rf $HYPERSUB_BASE/hypersub/chaincode/dist
 
 }
 
