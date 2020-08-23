@@ -24,7 +24,7 @@ DATABASE="couchdb"
 function startCA_Containers() {
   IMAGE_TAG=${CA_IMAGETAG}
   docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
-  sleep 10
+  sleep 5
 }
 
 function startNode_Containers() {
