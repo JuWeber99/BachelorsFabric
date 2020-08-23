@@ -79,7 +79,7 @@ export const testTransaction: DTransaction = {
 export const testBill: Bill = {
     amount: 0,
     billDeliveryTypes: [BillDeliveryType.EMAIL],
-    billId: "311120699c855e163b663f649c3543dbd8c717c5b33d956c2442c713fba51983",
+    billId: 1,
     billTransactions: [testTransaction],
     contract: testContract,
     endDate:  moment(moment.now()).add(5, "months").calendar(),
