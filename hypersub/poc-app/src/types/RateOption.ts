@@ -1,6 +1,6 @@
 import {Product} from "./Product";
 
-export class RateOption {
+export interface RateOption {
     optionId: string;
     optionProduct: Product;
     isInclusive: boolean;

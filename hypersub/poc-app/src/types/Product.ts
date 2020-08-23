@@ -5,7 +5,7 @@ export enum ProductType {
     RATE_OPTION = "rate_option",
 }
 
-export class Product {
+export interface Product {
     productId: string;
     productType: ProductType;
     callThreshold: Duration;

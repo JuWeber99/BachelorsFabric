@@ -1,6 +1,6 @@
 import {Address} from "./Address";
 
-export class PersonalDetails {
+export interface PersonalDetails {
     name: string;
     forename: string;
     birthday: Date;

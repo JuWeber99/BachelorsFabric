@@ -8,7 +8,7 @@ export enum PricedEventType {
 
 export type PricedEvent = CallEvent | SmsEvent | DataUsageEvent;
 
-export class EventStructure {
+export interface EventStructure {
     eventId: string;
     issueTimestamp: Date | string;
     amount?: number;
@@ -17,20 +17,20 @@ export class EventStructure {
     additionalCosts?: number;
 }
 
-export class CallEvent extends EventStructure {
+export interface CallEvent extends EventStructure {
     pricedEventType: PricedEventType.CALL;
     targetPhoneNumber: string;
     callDuration: Duration
 }
 
 
-export class SmsEvent extends EventStructure {
+export interface SmsEvent extends EventStructure {
     pricedEventType: PricedEventType.SMS;
     targetPhoneNumber: string;
 }
 
 
-export class DataUsageEvent extends EventStructure {
+export interface DataUsageEvent extends EventStructure {
     pricedEventType: PricedEventType.DATA_USAGE;
     usedAmountInMb: number;
 }

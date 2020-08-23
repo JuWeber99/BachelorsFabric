@@ -1,6 +1,6 @@
 import {Bill} from "./Bill";
 
-export class Statement {
+export interface Statement {
     walletId: string;
     currentBills?: Array<Bill>
     dueAmount?: number;

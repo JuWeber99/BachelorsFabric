@@ -2,7 +2,7 @@ import {PersonalDetails} from "./PersonalDetails";
 import {Statement} from "./Statement";
 
 
-export class DebtorAccount {
+export interface DebtorAccount {
 
     debtorId: string;
 

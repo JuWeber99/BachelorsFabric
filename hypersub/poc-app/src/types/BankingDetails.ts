@@ -6,17 +6,17 @@ export enum PaymentType {
     CRYPTO = "CRYPTO"
 }
 
-export class BankingDetails<T extends P2PDetails | SepaDetails> {
+export interface BankingDetails<T extends P2PDetails | SepaDetails> {
     paymentType: PaymentType;
     details: T
 }
 
-export class P2PDetails {
+export interface P2PDetails {
     payerId: string;
     paymentToken: string;
 }
 
-export class SepaDetails {
+export interface SepaDetails {
     iban: string;
     bic: string;
     countryCode: IsoCountryCodes;
