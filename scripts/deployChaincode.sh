@@ -35,44 +35,110 @@ setup() {
   echo Finished compiling TypeScript code into JavaScript
 }
 
-packageChaincode() {
-  ORG=$1
-  setGlobals $ORG
+packageChaincodeNexnet() {
+  setNexnetGlobals
   set -x
   peer lifecycle chaincode package ${CC_NAME}.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label ${CC_NAME}_${CC_VERSION} >&log.txt
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode packaging on peer0${ORG} has failed"
-  printInfo "Chaincode is packaged on peer0${ORG}"
+  verifyResult $res "Chaincode packaging on peer0${ORG_NAME} has failed"
+  printInfo "Chaincode is packaged on peer0${ORG_NAME}"
+  echo
+}
+packageChaincodeAuditor() {
+  setAuditorGlobals
+  set -x
+  peer lifecycle chaincode package ${CC_NAME}.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label ${CC_NAME}_${CC_VERSION} >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode packaging on peer0${ORG_NAME} has failed"
+  printInfo "Chaincode is packaged on peer0${ORG_NAME}"
+  echo
+}
+packageChaincodeXorg() {
+  setXorgGlobals
+  set -x
+  peer lifecycle chaincode package ${CC_NAME}.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label ${CC_NAME}_${CC_VERSION} >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode packaging on peer0${ORG_NAME} has failed"
+  printInfo "Chaincode is packaged on peer0${ORG_NAME}"
   echo
 }
 
-# installChaincode PEER ORG
-installChaincode() {
-  ORG=$1
-  setGlobals $ORG
+installChaincodeNexnet() {
+  setNexnetGlobals
   set -x
   peer lifecycle chaincode install ${CC_NAME}.tar.gz >&log.txt
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode installation on peer0${ORG} has failed"
-  printInfo "===================== Chaincode is installed on peer0${ORG} ===================== "
+  verifyResult $res "Chaincode installation on peer0${ORG_NAME} has failed"
+  printInfo "===================== Chaincode is installed on peer0${ORG_NAME} ===================== "
   echo
 }
 
-queryInstalled() {
-  ORG=$1
-  setGlobals $ORG
+installChaincodeXorg() {
+  setXorgGlobals
+  set -x
+  peer lifecycle chaincode install ${CC_NAME}.tar.gz >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode installation on peer0${ORG_NAME} has failed"
+  printInfo "===================== Chaincode is installed on peer0${ORG_NAME} ===================== "
+  echo
+}
+
+installChaincodeAuditor() {
+  setAuditorGlobals
+  peer lifecycle chaincode install ${CC_NAME}.tar.gz >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  verifyResult $res "Chaincode installation on peer0${ORG_NAME} has failed"
+  printInfo "===================== Chaincode is installed on peer0${ORG_NAME} ===================== "
+  echo
+}
+
+queryInstalledNexnet() {
+  setNexnetGlobals
   set -x
   peer lifecycle chaincode queryinstalled >&log.txt
   res=$?
   set +x
   cat log.txt
   PACKAGE_ID=$(sed -n "/${CC_NAME}_${CC_VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
-  verifyResult $res "Query installed on peer0${ORG} has failed"
-  printInfo "===================== Query installed successful on peer0${ORG} on channel ===================== "
+  verifyResult $res "Query installed on peer0${ORG_NAME} has failed"
+  printInfo "===================== Query installed successful on peer0${ORG_NAME} on channel ===================== "
+  echo
+}
+
+queryInstalledXorg() {
+  setXorgGlobals
+  set -x
+  peer lifecycle chaincode queryinstalled >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  PACKAGE_ID=$(sed -n "/${CC_NAME}_${CC_VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
+  verifyResult $res "Query installed on peer0${ORG_NAME} has failed"
+  printInfo "===================== Query installed successful on peer0${ORG_NAME} on channel ===================== "
+  echo
+}
+queryInstalledAuditor() {
+  setAuditorGlobals
+  set -x
+  peer lifecycle chaincode queryinstalled >&log.txt
+  res=$?
+  set +x
+  cat log.txt
+  PACKAGE_ID=$(sed -n "/${CC_NAME}_${CC_VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
+  verifyResult $res "Query installed on peer0${ORG_NAME} has failed"
+  printInfo "===================== Query installed successful on peer0${ORG_NAME} on channel ===================== "
   echo
 }
 
@@ -103,7 +169,7 @@ commitChaincodeDefinitionFromNexnet() {
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition commit failed on peer0${ORG_NAME} on channel '$CHANNEL_NAME' failed"
   printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
@@ -135,7 +201,7 @@ commitChaincodeDefinitionXorg() {
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode definition commit failed on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition commit failed on peer0${ORG_NAME} on channel '$CHANNEL_NAME' failed"
   printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
@@ -149,7 +215,7 @@ approveForAuditor() {
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition approved on peer0${ORG_NAME} on channel '$CHANNEL_NAME' failed"
   printInfo "===================== Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
   echo
 }
@@ -168,15 +234,13 @@ commitChaincodeDefinitionAuditor() {
   res=$?
   set +x
   cat log.txt
-  verifyResult $res "Chaincode definition approved on peer0${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition approved on peer0${ORG_NAME} on channel '$CHANNEL_NAME' failed"
   printInfo "===================== Chaincode definition approved on peer0.$ORG_NAME on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
-checkCommitReadiness() {
-  ORG=$1
-  shift 1
-  setGlobals $ORG
+checkCommitReadinessNexnet() {
+  setNexnetGlobals
   printTask "===================== Checking the commit readiness of the chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
   local rc=1
   local COUNTER=1
@@ -202,15 +266,80 @@ checkCommitReadiness() {
     printSubtask "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
   else
     echo
-    echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
     echo
     exit 1
   fi
 }
 
-queryCommitted() {
-  ORG=$1
-  setGlobals $ORG
+checkCommitReadinessXorg() {
+  setXorgGlobals
+  printTask "===================== Checking the commit readiness of the chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  local rc=1
+  local COUNTER=1
+  # continue to poll
+  # we either get a successful response, or reach MAX RETRY
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    sleep $DELAY
+    printSubtask "Attempting to check the commit readiness of the chaincode definition on peer0${ORG}, Retry after $DELAY seconds."
+    set -x
+    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
+      --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
+      --init-required --output json >&log.txt
+    res=$?
+    set +x
+    let rc=0
+    for var in "$@"; do
+      grep "$var" log.txt &>/dev/null || let rc=1
+    done
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  cat log.txt
+  if test $rc -eq 0; then
+    printSubtask "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+  else
+    echo
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    echo
+    exit 1
+  fi
+}
+
+checkCommitReadinessAuditor() {
+  setAuditorGlobals
+  printTask "===================== Checking the commit readiness of the chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  local rc=1
+  local COUNTER=1
+  # continue to poll
+  # we either get a successful response, or reach MAX RETRY
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    sleep $DELAY
+    printSubtask "Attempting to check the commit readiness of the chaincode definition on peer0${ORG}, Retry after $DELAY seconds."
+    set -x
+    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
+      --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} \
+      --init-required --output json >&log.txt
+    res=$?
+    set +x
+    let rc=0
+    for var in "$@"; do
+      grep "$var" log.txt &>/dev/null || let rc=1
+    done
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  cat log.txt
+  if test $rc -eq 0; then
+    printSubtask "===================== Checking the commit readiness of the chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+  else
+    echo
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Check commit readiness result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    echo
+    exit 1
+  fi
+}
+
+queryCommittedAuditor() {
+  setAuditorGlobals
   EXPECTED_RESULT="Version: ${CC_VERSION}, Sequence: ${CC_SEQUENCE}, Endorsement Plugin: escc, Validation Plugin: vscc"
   printTask "===================== Querying chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
   local rc=1
@@ -231,11 +360,74 @@ queryCommitted() {
   echo
   cat log.txt
   if test $rc -eq 0; then
-    printInfo "===================== Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' ===================== "
+    printInfo "= Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' = "
     echo
   else
     echo
-    echo $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    echo
+    exit 1
+  fi
+}
+queryCommittedXorg() {
+  setXorgGlobals
+  EXPECTED_RESULT="Version: ${CC_VERSION}, Sequence: ${CC_SEQUENCE}, Endorsement Plugin: escc, Validation Plugin: vscc"
+  printTask "===================== Querying chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  local rc=1
+  local COUNTER=1
+  # continue to poll
+  # we either get a successful response, or reach MAX RETRY
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    sleep $DELAY
+    printSubtask "Attempting to Query committed status on peer0${ORG}, Retry after $DELAY seconds."
+    set -x
+    peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name ${CC_NAME} >&log.txt
+    res=$?
+    set +x
+    test $res -eq 0 && VALUE=$(cat log.txt | grep -o '^Version: '$CC_VERSION', Sequence: [0-9]*, Endorsement Plugin: escc, Validation Plugin: vscc')
+    test "$VALUE" = "$EXPECTED_RESULT" && let rc=0
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  echo
+  cat log.txt
+  if test $rc -eq 0; then
+    printInfo "= Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' = "
+    echo
+  else
+    echo
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
+    echo
+    exit 1
+  fi
+}
+
+queryCommittedNexnet() {
+  setNexnetGlobals
+  EXPECTED_RESULT="Version: ${CC_VERSION}, Sequence: ${CC_SEQUENCE}, Endorsement Plugin: escc, Validation Plugin: vscc"
+  printTask "===================== Querying chaincode definition on peer0${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  local rc=1
+  local COUNTER=1
+  # continue to poll
+  # we either get a successful response, or reach MAX RETRY
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    sleep $DELAY
+    printSubtask "Attempting to Query committed status on peer0${ORG}, Retry after $DELAY seconds."
+    set -x
+    peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name ${CC_NAME} >&log.txt
+    res=$?
+    set +x
+    test $res -eq 0 && VALUE=$(cat log.txt | grep -o '^Version: '$CC_VERSION', Sequence: [0-9]*, Endorsement Plugin: escc, Validation Plugin: vscc')
+    test "$VALUE" = "$EXPECTED_RESULT" && let rc=0
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  echo
+  cat log.txt
+  if test $rc -eq 0; then
+    printInfo "= Query chaincode definition successful on peer0${ORG} on channel '$CHANNEL_NAME' = "
+    echo
+  else
+    echo
+    printError $'\e[1;31m'"!!!!!!!!!!!!!!! After $MAX_RETRY attempts, Query chaincode definition result on peer0${ORG} is INVALID !!!!!!!!!!!!!!!!"$'\e[0m'
     echo
     exit 1
   fi
@@ -250,17 +442,15 @@ chaincodeInvokeInitFromNexnet() {
     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
     --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_AUDITOR_CA \
-    -I -c '{"Args":[]}' >&log.txt
+    -I -c '{"Function":"initLedger","Args":[]}' >&log.txt
 
   res=$?
   set +x
   cat log.txt
   verifyResult $res "Invoke execution on $PEERS failed "
-  printInfo "===================== Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' ===================== "
+  printInfo "= Invoke transaction successful on $PEERS on channel '$CHANNEL_NAME' = "
   echo ""
 }
-
-#  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com --tls true --cafile /home/balr/Developement/BachelorsFabric/organizations/ordererOrganizations/hypersub.com/orderers/orderer.hypersub.com/msp/tlscacerts/tlsca.hypersub.com-cert.pem -C channel1 -n mychaincode --peerAddresses localhost:7051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/peers/peer0.nexnet.hypersub.com/tls/ca.crt --peerAddresses localhost:8051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/xorg.hypersub.com/peers/peer0.xorg.hypersub.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/auditor.hypersub.com/peers/peer0.auditor.hypersub.com/tls/ca.crt --isInit -c {"function": "InitLedger", "Args": []}
 
 chaincodeQuery() {
   ORG=$1
@@ -294,17 +484,17 @@ chaincodeQuery() {
 }
 
 setup
-packageChaincode 1
+packageChaincodeNexnet
 printTask "Installing chaincode on peer0.nexnet..."
-installChaincode 1
+installChaincodeNexnet
 printTask "Install chaincode on peer0.xorg..."
-installChaincode 2
+installChaincodeXorg
 printTask "Install chaincode on peer0.auditor..."
-installChaincode 3
+installChaincodeAuditor
 
-queryInstalled 1
-queryInstalled 2
-queryInstalled 3
+queryInstalledNexnet
+queryInstalledXorg
+queryInstalledAuditor
 
 approveForNexnet
 approveForXorg
