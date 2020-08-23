@@ -10,6 +10,17 @@ app.get("/", (req, res) => {
     res.send("Hello World")
 })
 
+
+app.get("/read", (res, req) => {
+
+})
+
+app.get("/read", (res, req) => {
+
+})
+
+
 app.listen( 3031, () => {
     console.log("server started on port"+ 8080 +"!")
 })
+

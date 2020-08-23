@@ -1,43 +1,64 @@
 import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
 import {testAccounts} from "./data/initialTestLedger";
 import {JsonUtil} from "./util";
-import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
+import {CustomerAccount} from "./types/assets/CustomerAccount";
+import {CustomerAccountList} from "./types/assets/CustomerAccountList";
+import {testAccount2} from "../../server/testing/initialTestLedger";
+
+
+class CustomerAccountContractContext extends Context {
+    public customerAccountList: CustomerAccountList;
+
+    constructor() {
+        super();
+        this.customerAccountList = new CustomerAccountList(this)
+    }
+}
 
 @Info(
     {title: "CustomerAccountContract", description: "Smart contract for managing customer accounts"}
 )
 export class CustomerAccountContract extends Contract {
 
+    constructor() {
+        super("nexnet.hypersub.customeraccount");
+    }
 
-    @Transaction()
-    public async initLedger(ctx: Context): Promise<void> {
-        for (const customerAccount of testAccounts) {
-            await ctx.stub.putState(customerAccount.accountId, Buffer.from(JSON.stringify(customerAccount)))
-            console.info(`Account ${customerAccount.accountId} initialized`);
-        }
+    createContext(): Context {
+        return new CustomerAccountContractContext()
     }
 
     @Transaction()
-    public async createCustomerAccount(ctx: Context, customerAccount: CustomerAccount) {
-        await ctx.stub.putState(customerAccount.accountId, JsonUtil.createBufferFromJSON(customerAccount));
-    };
+    public async initLedger(ctx: CustomerAccountContractContext): Promise<void> {
+        for (const customerAccount of testAccounts) {
+            let response = ctx.customerAccountList.addCustomerAccount(customerAccount);
+            console.info(`Account ${response.then((response: string) => response.accountId)} initialized`);
+        }
+    }
+
+    // @Transaction
+    // public async addRateOptionToCustomerAccount(ctx: Context, id: string): Promise<void> {
+    //
+    // }
 
     @Transaction(false)
-    @Returns("string")
-    public async readCustomerAccount(ctx: Context, id?: string, customerAccount?: CustomerAccount): Promise<string> {
-        let jsonRepresentation;
-        if (id == null && customerAccount == null) {
-            throw new Error("no Parameter given")
-        } else if (id == null) {
-            jsonRepresentation = ctx.stub.getState(id);
-        } else if (customerAccount == null) {
-            jsonRepresentation = ctx.stub.getState(customerAccount.accountId);
-        }
+    public async readCustomerAccount(ctx: CustomerAccountContractContext, id: string): Promise<CustomerAccount> {
+        let customerAccountKey = CustomerAccount.makeKey([id])
+        let customerAccount = ctx.customerAccountList.getCustomerAccount(customerAccountKey);
 
-        if (!jsonRepresentation || jsonRepresentation.length === 0) {
-            throw new Error("asset not found")
+        if (customerAccount === null) {
+            throw new Error("NO ANSWER : NULL")
         }
-        return jsonRepresentation.toString();
+        console.log(customerAccount)
+        return customerAccount;
     }
+
+    @Transaction()
+    public async createTestAccountTwo(ctx: CustomerAccountContractContext) {
+        let customerAccount = await ctx.customerAccountList.addCustomerAccount(testAccount2);
+
+        return customerAccount;
+    }
+
 }
 

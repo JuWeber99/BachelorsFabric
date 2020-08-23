@@ -124,5 +124,12 @@ $HYPERSUB_BASE/scripts/deployChaincode.sh
 
 startApplication_Containers
 
-#/home/balr/Developement/caching/.npm-global/bin/ts-node $HYPERSUB_BASE/hypersub/server/src/enrollAdmin.ts
+PREV_DIR=${PWD}
+
+export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
+cd $HYPERSUB_BASE/hypersub/server/src
+ts-node enrollAdmin.ts
+ts-node enrollRegisterUser.ts
+ts-node invokeApiCall.ts
+cd $PREV_DIR
 #/home/balr/Developement/caching/.npm-global/bin/ts-node $HYPERSUB_BASE/hypersub/server/src/enrollRegisterUser.ts

@@ -3,7 +3,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "dist",
-    "target": "es2017",
+    "target": "ES6",
     "moduleResolution": "node",
     "module": "commonjs",
     "declaration": true,
