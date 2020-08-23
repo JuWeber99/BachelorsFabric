@@ -7,4 +7,5 @@ USER node
 RUN npm install
 COPY --chown=node:node . .
 COPY . ./
+CMD [ "node", "/home/node/app/dist/index.js"]
 
