@@ -13,7 +13,7 @@ async function main() {
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(),'..', 'wallet');
+        const walletPath = path.join(process.cwd(), '..', 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -33,11 +33,17 @@ async function main() {
 
         const contract = network.getContract('customeraccountcc');
 
-        await contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
-        await contract.submitTransaction('createCustomerTestAccount');
-        await contract.submitTransaction('createCustomerTestTwoAccount');
-        await contract.evaluateTransaction('readCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23');
+        let readRes1 = await contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
+        console.log(readRes1.toString())
 
+        let createRes1 = await contract.submitTransaction('createCustomerTestAccount');
+        console.log(createRes1.toString())
+
+        let createRes2 = await contract.submitTransaction('createCustomerTestAccountTwo');
+        console.log(createRes2.toString())
+
+        let readRes2 = await contract.evaluateTransaction('readCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23');
+        console.log(readRes2.toString())
 
         await gateway.disconnect();
     } catch

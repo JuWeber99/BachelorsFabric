@@ -1,4 +1,3 @@
-import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 import {PaymentType} from "../types/BankingDetails";
 import {IsoCountryCodes} from "../types/IsoCountryCodes";
 import {DebtorAccount} from "../types/assets/DebtorAccount";
@@ -12,6 +11,7 @@ import {CallEvent, DataUsageEvent, PricedEventType, SmsEvent} from "../types/Pri
 import {PersonalDetails} from "../types/PersonalDetails";
 import {Statement} from "../types/Statement";
 import {SimDetails} from "../types/SimDetails";
+import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {

@@ -4,16 +4,16 @@ import {DTransaction} from "./DTransaction";
 export enum BillDeliveryType {
     EMAIL = "email",
     MAIL = "mail",
-    APP_NOTIFICATION = "app_notification"
+    APPNOTIFICATION = "appnotification"
 }
 
 
 export class Bill {
-    billId: string;
-    contract : Subscription;
-    startDate: Date | string;
-    endDate: Date | string;
-    amount: number;
-    billTransactions?: Array<DTransaction>
-    billDeliveryTypes: Array<BillDeliveryType>
+    public billId: string;
+    public contract : Subscription;
+    public startDate: Date | string;
+    public endDate: Date | string;
+    public amount: number;
+    public billTransactions?: Array<DTransaction>
+    public billDeliveryTypes: Array<BillDeliveryType>
 }
