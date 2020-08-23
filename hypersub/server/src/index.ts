@@ -11,5 +11,5 @@ app.get("/", (req, res) => {
 })
 
 app.listen( 3031, () => {
-    console.log("server started on port"+ 8080 +"!")
+    console.log("server started on port"+ 3031 +"!")
 })

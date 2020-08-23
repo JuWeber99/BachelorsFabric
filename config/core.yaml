@@ -541,7 +541,7 @@ chaincode:
 
     node:
         # This is an image based on node:$(NODE_VER)-alpine
-        runtime: $(DOCKER_NS)/fabric-nodeenv:latest
+        runtime: $(DOCKER_NS)/fabric-nodeenv:2.2
 
     # List of directories to treat as external builders and launchers for
     # chaincode. The external builder detection processing will iterate over the
@@ -615,7 +615,7 @@ ledger:
     # stateDatabase - options are "goleveldb", "CouchDB"
     # goleveldb - default state database stored in goleveldb.
     # CouchDB - store state database in CouchDB
-    stateDatabase: goleveldb
+    stateDatabase: CouchDB
     # Limit on the number of records to return per query
     totalQueryLimit: 100000
     couchDBConfig:

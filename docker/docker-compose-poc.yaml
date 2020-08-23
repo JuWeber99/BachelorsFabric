@@ -18,9 +18,10 @@ services:
       - '../hypersub/server:/home/node/app'
       - '/home/node/app/node_modules'
     command: npm start
+    stdin_open: true
     networks:
       - poc-hypersub
-    stdin_open: true
+
 
 
   poc-client:
@@ -36,7 +37,8 @@ services:
       - '../hypersub/poc-app:/home/node/app'
       - '/home/node/app/node_modules'
     command: npm start
+    stdin_open: true
     networks:
       - poc-hypersub
-    stdin_open: true
+
 

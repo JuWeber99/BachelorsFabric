@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "fabric-ca-client": "^2.1.0",
     "fabric-network": "^2.1.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",

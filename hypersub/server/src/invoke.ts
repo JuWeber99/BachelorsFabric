@@ -46,8 +46,9 @@ async function main() {
         let readRes2 = await contract.evaluateTransaction('readCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23');
         console.log(readRes2.toString())
 
-        let readRes3 = await contract.submitTransaction('changeAddressForCustomerAccount', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23',
-            testAddress.country, "11111", "Update City", "UpdateStreet", "2");
+        console.log("calling cafca")
+        let readRes3 = await contract.submitTransaction('cafca', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
+            "11111", "UpdateCity", "UpdateStreet", "2", testAddress.country);
         console.log(readRes3.toString())
 
         await gateway.disconnect();
