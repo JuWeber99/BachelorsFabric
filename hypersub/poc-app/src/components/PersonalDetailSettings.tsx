@@ -43,31 +43,25 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     }
 
     function callReadCustomerAccount(accountId: string) {
-        console.log("url: "+`http://localhost:3031/api/readCustomerAccount/${accountId}`)
+        console.log("url: " + `http://localhost:3031/api/readCustomerAccount/${accountId}`)
         fetch(`http://localhost:3031/api/readCustomerAccount/${accountId}`)
-            .then((response) => {
-                if (response.status === 200)
-                    console.log(response.json())
-                return response.json()
-            }).then((customerAccount: CustomerAccount) => {
-                setPersonalDetails(customerAccount.personalDetails)
-                setPersonFetched(true)
-                console.log("success fetching data")
-            }
-        ).catch((err) => {
+            .then((response) => response.json())
+            .then((customerAccount: CustomerAccount) => {
+                    setPersonalDetails(customerAccount.personalDetails)
+                    setPersonFetched(true)
+                    console.log("success fetching data")
+                }
+            ).catch((err) => {
             return new Error("ERROR" + err);
         })
     }
 
 
     function callReadInitial() {
-        fetch(`http://localhost:3031/api/readInitialLedger`)
-            .then((response) => {
-                console.log(response)
-                if (response.status === 200)
-                    console.log(response.json())
-                return response.json()
-            }).then((customerAccount: CustomerAccount) => {
+        fetch(`http://localhost:3031/api/readInitialWithoutPromise`)
+            .then((response) => response.json())
+            .then((customerAccount: CustomerAccount) => {
+                console.log(customerAccount)
                 setPersonalDetails(customerAccount.personalDetails)
                 setPersonFetched(true)
                 console.log("success fetching data")

@@ -7,7 +7,7 @@ COMPOSE_FILE_COUCH=$HYPERSUB_BASE/docker/docker-compose-db.yaml
 COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
 
 function networkDown() {
-
+  killall npm
   #clean up containers
   docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
   docker network prune -f
@@ -28,6 +28,12 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/hypersub/server/wallet
   rm -rf $HYPERSUB_BASE/hypersub/server/dist
   rm -rf $HYPERSUB_BASE/hypersub/server/gateway
+#
+#  CURRENT_DIR=${PWD}
+#
+#  cd $HYPERSUB_BASE/hypersub/server/src && npm stop
+#  cd $HYPERSUB_BASE/hypersub/poc-app && npm stop
+
 
 }
 

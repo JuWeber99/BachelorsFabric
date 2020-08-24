@@ -131,4 +131,5 @@ ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
 npm start &
 cd $HYPERSUB_BASE/hypersub/poc-app/src
-npm start &
+npm start
+

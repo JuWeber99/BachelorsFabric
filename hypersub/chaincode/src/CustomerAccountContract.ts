@@ -37,26 +37,19 @@ export class CustomerAccountContract extends Contract {
     };
 
     public async changeCustomerAddress(ctx: CustomerAccountContext,
-                       accountId,
-                       name,
-                       forename,
-                       postalCode: string,
-                       residence: string,
-                       streetName: string,
-                       houseNumber: string,
-                       country: string): Promise<void> {
-
-        console.log(accountId, country, name, forename, postalCode, residence, streetName, houseNumber, country)
+                                       accountId,
+                                       name,
+                                       forename,
+                                       postalCode: string,
+                                       residence: string,
+                                       streetName: string,
+                                       houseNumber: string,
+                                       country: string): Promise<void> {
 
         const customerAccountAsBytes = await ctx.stub.getState(accountId);
         const customerAccount: CustomerAccount = ctx.deserialize(customerAccountAsBytes)
 
-        const personIndex = customerAccount.personalDetails
-            .findIndex(person => (person.forename == forename && person.name == name))
-        if (personIndex === -1) {
-            throw new Error("A Person with them names does not exists!")
-        }
-        const person = customerAccount.personalDetails[personIndex];
+        const person = await this.getPersonFromCustomerAccount(ctx, accountId, name, forename);
 
         const newAddress = {
             postalCode,
@@ -76,8 +69,24 @@ export class CustomerAccountContract extends Contract {
         if (!accountAsBytes || accountAsBytes.length === 0) {
             throw new Error(`${accountId} does not exist`);
         }
-        console.log(accountAsBytes.toString());
         return accountAsBytes.toString();
+    }
+
+    public async getPersonFromCustomerAccount(ctx: CustomerAccountContext, accountId, name, forename) {
+
+        const customerAccountAsBytes = await ctx.stub.getState(accountId);
+
+        if (!customerAccountAsBytes || customerAccountAsBytes.length === 0) {
+            throw new Error(`${accountId} does not exist`);
+        }
+        const customerAccount: CustomerAccount = ctx.deserialize(customerAccountAsBytes)
+
+        const personIndex = customerAccount.personalDetails
+            .findIndex(person => (person.forename == forename && person.name == name))
+        if (personIndex === -1) {
+            throw new Error("A Person with them names does not exists!")
+        }
+        return customerAccount.personalDetails[personIndex];
     }
 }
 
