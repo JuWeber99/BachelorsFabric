@@ -24,6 +24,18 @@ function App() {
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>
                 </Route>
+                <Route exact path={"/personal2"}>
+                    <PersonalDetailSettings
+                        accountId={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
+                        name={testAccounts.personalDetails[0].name}
+                        forename={testAccounts.personalDetails[0].forename}/>
+                </Route>
+                <Route exact path={"/personal3"}>
+                    <PersonalDetailSettings
+                        accountId={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
+                        name={testAccounts.personalDetails[0].name}
+                        forename={testAccounts.personalDetails[0].forename}/>
+                </Route>
                 <Route exact path={"/payment"}>
                     <Payment subscriptionContract={testContract}/>
                 </Route>

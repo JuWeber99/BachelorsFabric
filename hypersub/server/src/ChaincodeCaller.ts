@@ -1,4 +1,5 @@
 import {Contract, Network} from "fabric-network";
+import {testAccounts} from "../../poc-app/src/testing/initialTestLedger";
 
 export class ChainCodeCaller {
 
@@ -56,9 +57,17 @@ export class ChainCodeCaller {
         return ChainCodeCaller.deserializeResponse(response)
     }
 
-    async changeCustomerAddress(): Promise<void> {
+    async changeCustomerAddressFor(accountId: string, name: string, forename: string): Promise<void> {
         console.log("calling changeCustomerAddress")
-        await this.contract.submitTransaction('changeCustomerAddress', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
+        console.log("params:")
+        console.log(`account: ${accountId}\nname: ${name}\nforename: ${forename}`)
+        await this.contract.submitTransaction('changeCustomerAddress', accountId, name, forename,
+            "11111", "UpdateCity", "UpdateStreet", "2", "DE");
+    }
+
+    async changeCustomerAddressTest(): Promise<void> {
+        console.log("calling changeCustomerAddress")
+        await this.contract.submitTransaction('changeCustomerAddress', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809', "Weber", "Julian",
             "11111", "UpdateCity", "UpdateStreet", "2", "DE");
     }
 

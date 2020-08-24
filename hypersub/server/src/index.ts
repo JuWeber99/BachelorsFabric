@@ -12,14 +12,27 @@ app.get("/api/changeCustomerAddress", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        await caller.changeCustomerAddress();
+        await caller.changeCustomerAddressTest();
         res.status(200).send("Changed Address!")
         caller.disconnect();
     } catch (apiError) {
         res.status(400).send(apiError)
     }
 })
-// /:accountId/:name/:forename
+
+
+app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        await caller.changeCustomerAddressFor(req.params.accountId, req.params.name, req.params.forename);
+        res.status(200).send("Changed Address!")
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
+
 
 app.get('/api/createTestAccount', async (req, res) => {
     try {
