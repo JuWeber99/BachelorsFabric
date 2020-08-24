@@ -1,7 +1,6 @@
 import React from 'react';
 import {PersonalDetails} from "../types/PersonalDetails";
 import "../styles/personal-details.css"
-import {testAddressUpdate} from "../testing/initialTestLedger";
 
 export interface PersonalDetailSettingProps {
     details: PersonalDetails

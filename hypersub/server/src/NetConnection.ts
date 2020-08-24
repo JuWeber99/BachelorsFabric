@@ -5,27 +5,26 @@
 import {Gateway, Network, Wallets} from 'fabric-network';
 import * as path from 'path';
 import * as fs from 'fs';
+import {ccpPath} from "./enrollRegisterUser";
 
 
 export const populateNetworkConnection = async (): Promise<Network> => {
 
-    const ccpPath = path.resolve(__dirname, '..', 'gateway');
+    console.log("populate connection ...")
     const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
     const walletPath = path.join(process.cwd(), '..', 'wallet');
-    const wallet = await Wallets.newFileSystemWallet(walletPath)
-        .catch((err) => {
-            throw new Error(err)
-        });
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     console.log(`Wallet path: ${walletPath}`);
-    const identity = await wallet.get('testUser');
+    const identity = await wallet.get('Context');
+
     if (!identity) {
-        console.log('An identity for the user "testUser" does not exist in the wallet');
+        console.log('An identity for the user "test" does not exist in the wallet');
         console.log('Run the enrollRegisterUser.ts application before retrying');
         return;
     }
     const gateway = new Gateway();
-    await gateway.connect(ccp, {wallet, identity: 'testUser', discovery: {enabled: true, asLocalhost: true}});
+    await gateway.connect(ccp, {wallet, identity: 'test', discovery: {enabled: true, asLocalhost: true}});
     const network = await gateway.getNetwork('channel1');
 
     if (!network || network === null) {

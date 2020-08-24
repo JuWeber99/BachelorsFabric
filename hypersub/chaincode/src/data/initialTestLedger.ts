@@ -13,6 +13,7 @@ import {Statement} from "../types/Statement";
 import {SimDetails} from "../types/SimDetails";
 import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 
+
 // PRODUCTS #################################
 export const testSmsOption: Product = {
     callThreshold: moment.duration(0).toISOString(),
@@ -30,6 +31,7 @@ export const testStandartSubscribtion: Product = {
     productType: ProductType.SUBSCRIPTION
 }
 // ##########################################
+
 
 export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds").toISOString(),

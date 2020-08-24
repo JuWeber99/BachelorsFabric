@@ -1,4 +1,4 @@
-import {Context, Contract, Info} from 'fabric-contract-api';
+import {Context, Contract} from 'fabric-contract-api';
 import {testAccounts, testAccountsThree, testAccountsTwo} from "./data/initialTestLedger";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 
@@ -36,7 +36,7 @@ export class CustomerAccountContract extends Contract {
         await ctx.stub.putState(testAccountsThree.accountId, ctx.serialize(testAccountsThree));
     };
 
-    public async cafca(ctx: CustomerAccountContext,
+    public async changeCustomerAddress(ctx: CustomerAccountContext,
                        accountId,
                        name,
                        forename,

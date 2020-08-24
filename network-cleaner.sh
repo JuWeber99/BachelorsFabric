@@ -27,6 +27,7 @@ function networkDown() {
   rm -rf $HYPERSUB_BASE/hypersub/chaincode/dist
   rm -rf $HYPERSUB_BASE/hypersub/server/wallet
   rm -rf $HYPERSUB_BASE/hypersub/server/dist
+  rm -rf $HYPERSUB_BASE/hypersub/server/gateway
 
 }
 

@@ -1,27 +1,26 @@
 version: '3.7'
 
 networks:
-  poc-hypersub:
-    name: poc-hypersub
+  hypersub-net:
+    name: hypersub-net
 
-services:
-  poc-server:
-    container_name: poc-server
-    build:
-      context: ../hypersub/server
-      dockerfile: Dockerfile
-    ports:
-      - 3031:3031
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - '../hypersub/server:/home/node/app'
-      - '/home/node/app/node_modules'
-      - '../organizations/peerOrganizations/nexnet.hypersub.com/connection-nexnet.yaml:/home/node/app/gateway'
-    command: npm start
-    stdin_open: true
-    networks:
-      - poc-hypersub
+#services:
+#  poc-server:
+#    container_name: poc-server
+#    build:
+#      context: ../hypersub/server
+#      dockerfile: Dockerfile
+#    ports:
+#      - 3031:3031
+#    environment:
+#      - CHOKIDAR_USEPOLLING=true
+#    volumes:
+#      - '../hypersub/server:/home/node/app'
+#      - '/home/node/app/node_modules'
+#    command: npm start
+#    stdin_open: true
+#    networks:
+#      - hypersub-net
 
   poc-client:
     container_name: poc-client
@@ -38,6 +37,6 @@ services:
     command: npm start
     stdin_open: true
     networks:
-      - poc-hypersub
+      - hypersub-net
 
 

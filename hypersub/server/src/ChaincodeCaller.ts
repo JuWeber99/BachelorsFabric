@@ -1,6 +1,4 @@
 import {Contract, Network} from "fabric-network";
-import {populateNetworkConnection as netConnection} from "./NetConnection";
-import {testAddress} from "../data/initialTestLedger";
 
 export class ChainCodeCaller {
 
@@ -26,40 +24,36 @@ export class ChainCodeCaller {
         this.chaincodeId = chaincodeId;
     }
 
-    callChaincode(func: Function): Promise<any> {
-        let contract = this.getNetwork().getContract(this.getChaincodeId())
-        return
-    }
 
-    async readInitialLedger() {
+    async readInitialLedger(): Promise<string> {
         console.log("reading the initialLedger")
-        let readRes1 = await this.contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
-        console.log(readRes1.toString())
+        let response = await this.contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
+        return response.toString()
     }
 
-    async createCustomerTestAccount() {
+    async createCustomerTestAccount(): Promise<void> {
         console.log("calling createCustomerTestAccount")
-        let createRes1 = await this.contract.submitTransaction('createCustomerTestAccount');
-        console.log(createRes1.toString())
+        let response = await this.contract.submitTransaction('createCustomerTestAccount');
+        console.log(response.toString())
     }
 
-    async createCustomerTestAccountTwo() {
+    async createCustomerTestAccountTwo(): Promise<void> {
         console.log("calling createCustomerTestAccountTwo")
-        let createRes2 = await this.contract.submitTransaction('createCustomerTestAccountTwo');
-        console.log(createRes2.toString())
+        let response = await this.contract.submitTransaction('createCustomerTestAccountTwo');
+        console.log(response.toString())
     }
 
-    async readCustomerAccount(accountId: string) {
+    async readCustomerAccount(accountId: string): Promise<string> {
         console.log("calling changeCustomerAddress")
-        let readRes2 = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
-        console.log(readRes2.toString())
+        let response = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
+        return response.toString()
     }
 
-    async changeCustomerAddress() {
+    async changeCustomerAddress(): Promise<void> {
         console.log("calling changeCustomerAddress")
-        let readRes3 = await this.contract.submitTransaction('cafca', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
-            "11111", "UpdateCity", "UpdateStreet", "2", testAddress.country);
-        console.log(readRes3.toString())
+        let response = await this.contract.submitTransaction('cafca', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
+            "11111", "UpdateCity", "UpdateStreet", "2", "DE");
+        console.log(response.toString())
     }
 
 }

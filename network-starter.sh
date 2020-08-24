@@ -130,5 +130,4 @@ export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-#ts-node invoke.ts
-cd $PREV_DIR
+npm start
