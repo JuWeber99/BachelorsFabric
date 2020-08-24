@@ -1,1 +1,1 @@
-[34m2020-08-24 22:14:05.225 CEST [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001[0m Chaincode invoke successful. result: status:200 
+[34m2020-08-24 23:24:20.948 CEST [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 001[0m Chaincode invoke successful. result: status:200 

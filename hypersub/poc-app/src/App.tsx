@@ -12,7 +12,7 @@ function App() {
     return (
         <div className={"app-container"}>
             <Switch>
-                <Route exact path={"/"}>
+                <Route exact path={"/home"}>
                     <Home/>
                 </Route>
                 <Route exact path={"/infoCard"}>
@@ -20,18 +20,21 @@ function App() {
                 </Route>
                 <Route exact path={"/personal"}>
                     <PersonalDetailSettings
+                        key={testAccounts.accountId}
                         accountId={testAccounts.accountId}
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>
                 </Route>
                 <Route exact path={"/personal2"}>
                     <PersonalDetailSettings
+                        key={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
                         accountId={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>
                 </Route>
                 <Route exact path={"/personal3"}>
                     <PersonalDetailSettings
+                        key={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
                         accountId={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>

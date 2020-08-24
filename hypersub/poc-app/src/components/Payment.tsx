@@ -106,7 +106,7 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
             {
                 !loaded &&
                 <React.Fragment>
-                    <h3> Loading PayPal connectino ...</h3>
+                    <h3> Loading PayPal connection ...</h3>
                     <img src={loadingSpinner}/>
                 </React.Fragment>
             }

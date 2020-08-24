@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {PersonalDetails} from "../types/PersonalDetails";
 import "../styles/personal-details.css"
 import {CustomerAccount} from "../types/CustomerAccountAsset";
-import loadingSpinner from "../Spinner-1s-200px.gif"
 import infinSpinner from "../Infinity-1.1s-200px.gif"
+import errorImage from "../error.png"
+import {Link} from "react-router-dom";
 
 
 export interface PersonalDetailSettingProps {
@@ -20,7 +21,7 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     const [personalDetails, setPersonalDetails]: [PersonalDetails | null, any] = useState(null)
     const [personIndex, setPersonIndex]: [number, any] = useState(-1)
     const [doLoad, setShowSpinner]: [boolean, any] = useState(true)
-
+    const [error, setError]: [boolean, any] = useState(false)
 
     async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
         let personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
@@ -66,7 +67,13 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
             setPersonalDetails(details)
         }
 
-        fetchCorrectPersonalDetails().then(() => setPersonFetched(true)).then(() => setShowSpinner(false))
+        fetchCorrectPersonalDetails()
+            .then(() => setPersonFetched(true))
+            .then(() => setShowSpinner(false))
+            .catch((err) => {
+                setError(true)
+                setShowSpinner(false)
+            })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [personFetched])
 
@@ -78,9 +85,12 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
 
         if (callUpdate) {
 
-            fetchUpdate().then(() => {
-                setPersonFetched(false)
-            })
+            fetchUpdate()
+                .then(() => setPersonFetched(false))
+                .catch((err) => {
+                    setError(true)
+                    setShowSpinner(false)
+                })
         }
     }, [callUpdate, callUpdateLedgerTest])
 
@@ -89,7 +99,8 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
         <React.Fragment>
             {
                 !doLoad &&
-                    personFetched &&
+                personFetched &&
+                !error &&
                 <div className={"personal-settings"}>
                     <h1> Persönliche Informationen </h1>
                     <ul>
@@ -111,13 +122,24 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
                     <button onClick={() => {
                         setShowSpinner(true)
                         setCallUpdate(true)
-                    }}> Teste Update-Ledger API</button>
+                    }}> Teste Update-Ledger API
+                    </button>
                     <button onClick={() => callCreateTestAccount(1)}> Erstelle Test-User 1</button>
                     <button onClick={() => callCreateTestAccount(2)}> Erstelle Test-User 2</button>
                 </div>
             }
             {
-                doLoad && <img style={{marginTop: "20%"}} src={infinSpinner}/>
+                !error && doLoad && <img style={{marginTop: "20%"}} src={infinSpinner}/>
+            }
+            {
+                error &&
+                    <div className={"resource-missing"}>
+                        <h1>RESSOURCE NICHT VORHANDEN!</h1>
+                        <img src={errorImage} width={200} height={200}/>
+                        <button> <Link to={"/personal"}>Zur initialen Ressource</Link> </button>
+                        <button> <Link to={"/home"}>Go back Home</Link> </button>
+                    </div>
+
             }
         </React.Fragment>
     );
