@@ -19,6 +19,7 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     const [personFetched, setPersonFetched]: [boolean, any] = useState(false);
     const [personalDetails, setPersonalDetails]: [PersonalDetails | null, any] = useState(null)
     const [personIndex, setPersonIndex]: [number, any] = useState(-1)
+    const [doLoad, setShowSpinner]: [boolean, any] = useState(true)
 
 
     async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
@@ -65,7 +66,7 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
             setPersonalDetails(details)
         }
 
-        fetchCorrectPersonalDetails().then(() => setPersonFetched(true))
+        fetchCorrectPersonalDetails().then(() => setPersonFetched(true)).then(() => setShowSpinner(false))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [personFetched])
 
@@ -87,7 +88,8 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     return (
         <React.Fragment>
             {
-                personFetched &&
+                !doLoad &&
+                    personFetched &&
                 <div className={"personal-settings"}>
                     <h1> Persönliche Informationen </h1>
                     <ul>
@@ -106,13 +108,16 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
                             <b>Straße/Hausnummer: </b> {personalDetails!.address.streetName} - {personalDetails!.address.houseNumber}
                         </p>
                     </ul>
-                    <button onClick={() => setCallUpdate(true)}> Teste Update-Ledger API</button>
+                    <button onClick={() => {
+                        setShowSpinner(true)
+                        setCallUpdate(true)
+                    }}> Teste Update-Ledger API</button>
                     <button onClick={() => callCreateTestAccount(1)}> Erstelle Test-User 1</button>
                     <button onClick={() => callCreateTestAccount(2)}> Erstelle Test-User 2</button>
                 </div>
             }
             {
-                !personFetched && <img style={{marginTop: "20%"}} src={infinSpinner}/>
+                doLoad && <img style={{marginTop: "20%"}} src={infinSpinner}/>
             }
         </React.Fragment>
     );
