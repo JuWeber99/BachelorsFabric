@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from "react-router-dom";
 
+process.title="poc-client"
+
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter basename={"/"}>

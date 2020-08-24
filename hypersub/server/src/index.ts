@@ -1,12 +1,7 @@
 import express from "express";
 import cors from "cors"
-import bodyParser from "body-parser"
 import {populateNetworkConnection} from "./NetConnection";
 import {ChainCodeCaller} from "./ChaincodeCaller";
-import fs from "fs";
-import {ccpPath} from "./enrollAdmin";
-import path from "path";
-import {Gateway, Wallets} from "fabric-network";
 
 const app = express();
 process.title = "poc-server";
@@ -17,7 +12,7 @@ app.get("/api/changeCustomerAddress", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        const result = await caller.changeCustomerAddress();
+        await caller.changeCustomerAddress();
         res.status(200).send("Changed Address!")
         caller.disconnect();
     } catch (apiError) {
@@ -39,11 +34,11 @@ app.get('/api/createTestAccount', async (req, res) => {
 })
 
 
-app.get('/api/createTestAccountTwo', async (req, res) => {
+app.get('/api/ct2', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        await caller.createCustomerTestAccount();
+        await caller.createCustomerTestAccountTwo();
         res.status(200).send("Test Account created")
         caller.disconnect();
     } catch (apiError) {
@@ -56,8 +51,8 @@ app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        const result = caller.readCustomerAccount(req.params.accountId);
-        res.status(200).json()
+        const result = caller.readCustomerAccount("5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809");
+        res.status(200).json(result)
         console.log("readCustomerAccount successfully")
         caller.disconnect();
     } catch (apiError) {
@@ -70,11 +65,26 @@ app.get('/api/readInitialLedger', async (req, res) => {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
         const result = await caller.readInitialLedger();
-        res.status(200).json(JSON.parse(result))
+        res.status(200).json(result)
         caller.disconnect();
     } catch (apiError) {
         res.status(400).send(apiError)
     }
+})
+app.get('/api/getPersonFromCustomerAccount/:accountId/:name/:forename', async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        const result = await caller.getPersonFromCustomerAccount(req.params.accountId, req.params.name, req.params.forename);
+        res.status(200).json(result)
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
+
+app.get("/", (req, res) => {
+    res.send("Hello World")
 })
 
 // app.get('/api/readInitialWithoutPromise', (req, res) => {
@@ -88,8 +98,6 @@ app.get('/api/readInitialLedger', async (req, res) => {
 //     })
 //     // caller.disconnect();
 // })
-
-
 
 
 app.listen(3031);

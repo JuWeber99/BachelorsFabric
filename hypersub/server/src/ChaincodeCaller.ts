@@ -28,22 +28,24 @@ export class ChainCodeCaller {
         this.getNetwork().getGateway().disconnect();
     }
 
+    static deserializeResponse(response: Buffer) {
+        return JSON.parse(response.toString())
+    }
+
     async readInitialLedger(): Promise<string> {
         console.log("reading the initialLedger")
         let response = await this.contract.evaluateTransaction('readCustomerAccount', '5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809');
-        return response.toString()
+        return ChainCodeCaller.deserializeResponse(response)
     }
 
     async createCustomerTestAccount(): Promise<void> {
         console.log("calling createCustomerTestAccount")
-        let response = await this.contract.submitTransaction('createCustomerTestAccount');
-        console.log(response.toString())
+        await this.contract.submitTransaction('createCustomerTestAccount');
     }
 
     async createCustomerTestAccountTwo(): Promise<void> {
         console.log("calling createCustomerTestAccountTwo")
-        let response = await this.contract.submitTransaction('createCustomerTestAccountTwo');
-        console.log(response.toString())
+        await this.contract.submitTransaction('createCustomerTestAccountTwo');
     }
 
     async readCustomerAccount(accountId: string): Promise<string> {
@@ -54,9 +56,16 @@ export class ChainCodeCaller {
 
     async changeCustomerAddress(): Promise<void> {
         console.log("calling changeCustomerAddress")
-        let response = await this.contract.submitTransaction('changeCustomerAddress', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
+        await this.contract.submitTransaction('changeCustomerAddress', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
             "11111", "UpdateCity", "UpdateStreet", "2", "DE");
-        console.log(response.toString())
+    }
+
+    async getPersonFromCustomerAccount(accountId: string, name: string, forename: string) {
+        console.log("calling getPersonFromCustomerAccount")
+        console.log("target account: " + accountId)
+        console.log(`targeting Person named: ${forename} ${name}`)
+        let response = await this.contract.evaluateTransaction("getPersonFromCustomerAccount", accountId, name, forename);
+        return response.toString();
     }
 
 }

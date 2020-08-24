@@ -8,6 +8,7 @@ COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
 
 function networkDown() {
   killall npm
+  killall node
   #clean up containers
   docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
   docker network prune -f
@@ -34,6 +35,7 @@ function networkDown() {
 #  cd $HYPERSUB_BASE/hypersub/server/src && npm stop
 #  cd $HYPERSUB_BASE/hypersub/poc-app && npm stop
 
+pkill --signal SIGINT poc-server
 
 }
 
