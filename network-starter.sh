@@ -24,7 +24,7 @@ DATABASE="couchdb"
 function startCA_Containers() {
   IMAGE_TAG=${CA_IMAGETAG}
   docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
-  sleep 10
+  sleep 5
 }
 
 function startNode_Containers() {
@@ -122,7 +122,6 @@ sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
 $HYPERSUB_BASE/scripts/deployChaincode.sh
 
-startApplication_Containers
 
 PREV_DIR=${PWD}
 
@@ -130,6 +129,7 @@ export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-ts-node invokeApiCall.ts
-cd $PREV_DIR
-#/home/balr/Developement/caching/.npm-global/bin/ts-node $HYPERSUB_BASE/hypersub/server/src/enrollRegisterUser.ts
+npm start &
+cd $HYPERSUB_BASE/hypersub/poc-app/src
+npm start
+

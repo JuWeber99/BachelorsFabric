@@ -1,4 +1,3 @@
-import {Duration} from "moment";
 
 export enum PricedEventType {
     CALL = "call",
@@ -8,29 +7,28 @@ export enum PricedEventType {
 
 export type PricedEvent = CallEvent | SmsEvent | DataUsageEvent;
 
-export interface EventStructure {
+export class EventStructure {
     eventId: string;
-    issueTimestamp: Date | string;
     amount?: number;
     taxRate?: number;
     pricedEventType: PricedEventType;
     additionalCosts?: number;
 }
 
-export interface CallEvent extends EventStructure {
+export class CallEvent extends EventStructure {
     pricedEventType: PricedEventType.CALL;
     targetPhoneNumber: string;
-    callDuration: Duration
+    callDuration: string
 }
 
 
-export interface SmsEvent extends EventStructure {
+export class SmsEvent extends EventStructure {
     pricedEventType: PricedEventType.SMS;
     targetPhoneNumber: string;
 }
 
 
-export interface DataUsageEvent extends EventStructure {
+export class DataUsageEvent extends EventStructure {
     pricedEventType: PricedEventType.DATA_USAGE;
     usedAmountInMb: number;
 }

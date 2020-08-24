@@ -7,70 +7,24 @@ export enum BillDeliveryType {
     APPNOTIFICATION = "appnotification"
 }
 
-
 export class Bill {
-    protected billId: string;
-    protected contract : Subscription;
-    protected startDate: Date | string;
-    protected endDate: Date | string;
-    protected amount: number;
-    protected billTransactions?: Array<DTransaction>
-    protected billDeliveryTypes: Array<BillDeliveryType>
+    public billId: number;
+    public contract : Subscription;
+    public startDate: Date | string;
+    public endDate: Date | string;
+    public amount: number;
+    public billTransactions?: Array<DTransaction>
+    public billDeliveryTypes: Array<BillDeliveryType>
 
-
-    getBillId(): string {
-        return this.billId;
+    constructor(obj: Bill) {
+        this.billId = obj.billId
+        this.contract = obj.contract
+        this.startDate = obj.startDate
+        this.endDate = obj.endDate
+        this.amount = obj.amount
+        this.billTransactions = obj.billTransactions
+        this.billDeliveryTypes = obj.billDeliveryTypes
     }
 
-    setBillId(value: string) {
-        this.billId = value;
-    }
 
-    getContract(): Subscription {
-        return this.contract;
-    }
-
-    setContract(value: Subscription) {
-        this.contract = value;
-    }
-
-    getStartDate(): Date | string {
-        return this.startDate;
-    }
-
-    setStartDate(value: Date | string) {
-        this.startDate = value;
-    }
-
-    getEndDate(): Date | string {
-        return this.endDate;
-    }
-
-    setEndDate(value: Date | string) {
-        this.endDate = value;
-    }
-
-    getAmount(): number {
-        return this.amount;
-    }
-
-    setAmount(value: number) {
-        this.amount = value;
-    }
-
-    getBillTransactions(): Array<DTransaction> {
-        return this.billTransactions;
-    }
-
-    setBillTransactions(value: Array<DTransaction>) {
-        this.billTransactions = value;
-    }
-
-    getBillDeliveryTypes(): Array<BillDeliveryType> {
-        return this.billDeliveryTypes;
-    }
-
-    setBillDeliveryTypes(value: Array<BillDeliveryType>) {
-        this.billDeliveryTypes = value;
-    }
 }

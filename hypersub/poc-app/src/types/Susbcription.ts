@@ -8,8 +8,8 @@ export interface Subscription {
     subscriptionProduct: Product;
     isActive: boolean;
     startDate: Date | string;
-    endDate?: Date | string;
+    endDate: Date | string;
     billingPeriod: Duration;
-    cancellationPeriod: Duration;
+    cancellationPeriod: Duration | string;
     bookedOptions?: Array<RateOption>
 }

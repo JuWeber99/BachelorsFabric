@@ -8,19 +8,15 @@ import {RateOption} from "../types/RateOption";
 import moment from "moment";
 import {Bill, BillDeliveryType} from "../types/Bill";
 import {DTransaction} from "../types/DTransaction";
-import {
-    CallEvent,
-    DataUsageEvent,
-    PricedEvent,
-    PricedEventType,
-    SmsEvent
-} from "../types/PricedEvent";
+import {CallEvent, DataUsageEvent, PricedEventType, SmsEvent} from "../types/PricedEvent";
 import {PersonalDetails} from "../types/PersonalDetails";
 import {Statement} from "../types/Statement";
 import {SimDetails} from "../types/SimDetails";
+import {Address} from "../types/Address";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
+    cost: 10.00,
     callThreshold: moment.duration(0),
     dataUsageThresholdInMb: 0,
     smsThreshold: 50,
@@ -29,6 +25,7 @@ export const testSmsOption: Product = {
 }
 
 export const testStandartSubscribtion: Product = {
+    cost: 10.00,
     callThreshold: moment.duration(100, "minutes"),
     dataUsageThresholdInMb: 5000,
     smsThreshold: 200,
@@ -37,11 +34,12 @@ export const testStandartSubscribtion: Product = {
 }
 // ##########################################
 
+
 export const testCallEvent: CallEvent = {
     callDuration: moment.duration(116, "seconds"),
     targetPhoneNumber: "+491637143713",
     eventId: "2925e881732c69cf3b09317cb070a6a811505c9c",
-    issueTimestamp: new Date(moment.now()) ,
+    issueTimestamp: new Date(moment.now()),
     pricedEventType: PricedEventType.CALL,
     taxRate: 19
 }
@@ -89,11 +87,11 @@ export const testTransaction: DTransaction = {
 export const testBill: Bill = {
     amount: 0,
     billDeliveryTypes: [BillDeliveryType.EMAIL],
-    billId: "311120699c855e163b663f649c3543dbd8c717c5b33d956c2442c713fba51983",
+    billId: 1,
     billTransactions: [testTransaction],
     contract: testContract,
-    endDate:  moment(moment.now()).add(5, "months").calendar(),
-    startDate:  moment().calendar()
+    endDate: moment(moment.now()).add(5, "months").calendar(),
+    startDate: moment().calendar()
 }
 
 export const testPersonalDetails: PersonalDetails = {
@@ -125,7 +123,7 @@ export const testSim: SimDetails = {
 }
 
 
-export const testAccounts: Array<CustomerAccount> = [
+export const testAccounts: CustomerAccount =
     {
         accountId: "5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809", //random hash string
         bankingDetails: [{
@@ -140,7 +138,6 @@ export const testAccounts: Array<CustomerAccount> = [
         simDetails: [testSim],
         isRevoked: false
     }
-]
 
 
 export const testDebtors: Array<DebtorAccount> = [{

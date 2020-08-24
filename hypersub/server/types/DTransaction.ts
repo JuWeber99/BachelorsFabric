@@ -1,8 +1,6 @@
-import {Runtime} from "inspector";
 
-export interface DTransaction {
+export class DTransaction {
     transactionId: string;
     amount: number;
-    timestamp: Date | string;
     errors? : Array<string>;
 }

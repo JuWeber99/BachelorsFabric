@@ -1,0 +1,12 @@
+.personal-settings {
+    display: flex;
+    flex-direction: column;
+    text-align: justify-all;
+    justify-content: center;
+    background: rgba(243, 243, 243, 0.65);
+
+}
+
+.address-data {
+    background: rgba(175, 25, 25, 0.35);
+}

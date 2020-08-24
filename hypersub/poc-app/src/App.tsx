@@ -1,33 +1,43 @@
 import React from 'react';
 import './styles/App.css';
-import chair from './chair.jpg';
 import "./styles/payment-success.css"
 import {Payment} from "./components/Payment";
 import {BrowserRouter, Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
-import {testContract} from "./testing/initialTestLedger";
+import {testAccounts, testContract, testPersonalDetails} from "./testing/initialTestLedger";
+import PersonalDetailSettings, {PersonalDetailSettingProps} from "./components/PersonalDetailSettings";
 
 function App() {
-    const product = {
-        price: 777.77,
-        name: 'comfy chair',
-        description: 'fancy chair, like new',
-        image: chair,
-    };
-
-
     return (
         <div className={"app-container"}>
             <Switch>
-                <Route exact path={"/payment"}>
-                    <Payment product={product}/>
-                </Route>
                 <Route exact path={"/"}>
                     <Home/>
                 </Route>
-                <Route exact path={"/test"}>
-                    <SubscriptionInformationCard contract={testContract} />
+                <Route exact path={"/infoCard"}>
+                    <SubscriptionInformationCard subscriptionContract={testContract}/>
+                </Route>
+                <Route exact path={"/personal"}>
+                    <PersonalDetailSettings
+                        accountId={testAccounts.accountId}
+                        name={testAccounts.personalDetails[0].name}
+                        forename={testAccounts.personalDetails[0].forename}/>
+                </Route>
+                <Route exact path={"/personal2"}>
+                    <PersonalDetailSettings
+                        accountId={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
+                        name={testAccounts.personalDetails[0].name}
+                        forename={testAccounts.personalDetails[0].forename}/>
+                </Route>
+                <Route exact path={"/personal3"}>
+                    <PersonalDetailSettings
+                        accountId={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
+                        name={testAccounts.personalDetails[0].name}
+                        forename={testAccounts.personalDetails[0].forename}/>
+                </Route>
+                <Route exact path={"/payment"}>
+                    <Payment subscriptionContract={testContract}/>
                 </Route>
             </Switch>
         </div>

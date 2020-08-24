@@ -1,15 +1,14 @@
 import {Product} from "./Product";
 import {RateOption} from "./RateOption";
-import {Duration} from "moment";
-
+import {Object} from "fabric-contract-api";
 
 export class Subscription {
     contractId: string;
     subscriptionProduct: Product;
     isActive: boolean;
-    startDate: Date | string;
-    endDate?: Date | string;
-    billingPeriod: Duration;
-    cancellationPeriod: Duration;
+    startDate: string;
+    endDate?: string;
+    billingPeriod: string;
+    cancellationPeriod: string;
     bookedOptions?: Array<RateOption>
 }

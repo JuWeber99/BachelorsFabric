@@ -53,7 +53,7 @@ peer:
         interval: 7200s
         # Timeout is the duration the server waits for a response
         # from the client after sending a ping before closing the connection
-        timeout: 40s
+        timeout: 20s
         # MinInterval is the minimum permitted time between client pings.
         # If clients send pings more frequently, the peer server will
         # disconnect them
@@ -66,7 +66,7 @@ peer:
             interval: 60s
             # Timeout is the duration the client waits for a response from
             # peer nodes before closing the connection
-            timeout: 20s
+            timeout: 30s
         # DeliveryClient keepalive settings for communication with ordering
         # nodes.
         deliveryClient:
@@ -76,7 +76,7 @@ peer:
             interval: 60s
             # Timeout is the duration the client waits for a response from
             # ordering nodes before closing the connection
-            timeout: 20s
+            timeout: 30s
 
 
     # Gossip related configuration
@@ -541,7 +541,7 @@ chaincode:
 
     node:
         # This is an image based on node:$(NODE_VER)-alpine
-        runtime: $(DOCKER_NS)/fabric-nodeenv:latest
+        runtime: $(DOCKER_NS)/fabric-nodeenv:2.2
 
     # List of directories to treat as external builders and launchers for
     # chaincode. The external builder detection processing will iterate over the
@@ -615,7 +615,7 @@ ledger:
     # stateDatabase - options are "goleveldb", "CouchDB"
     # goleveldb - default state database stored in goleveldb.
     # CouchDB - store state database in CouchDB
-    stateDatabase: goleveldb
+    stateDatabase: CouchDB
     # Limit on the number of records to return per query
     totalQueryLimit: 100000
     couchDBConfig:

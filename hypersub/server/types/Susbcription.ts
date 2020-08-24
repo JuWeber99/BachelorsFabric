@@ -1,15 +1,14 @@
 import {Product} from "./Product";
 import {RateOption} from "./RateOption";
-import {Duration} from "moment";
 
 
-export interface Subscription {
+export class Subscription {
     contractId: string;
     subscriptionProduct: Product;
     isActive: boolean;
     startDate: Date | string;
     endDate?: Date | string;
-    billingPeriod: Duration;
-    cancellationPeriod: Duration;
+    billingPeriod: string;
+    cancellationPeriod: string;
     bookedOptions?: Array<RateOption>
 }

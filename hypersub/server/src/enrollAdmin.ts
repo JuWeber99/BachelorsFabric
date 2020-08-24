@@ -7,10 +7,12 @@ import { Wallets, X509Identity } from 'fabric-network';
 import * as fs from 'fs';
 import * as path from 'path';
 
+export const ccpPath = path.resolve(__dirname, '..', '..', '..','organizations','peerOrganizations','nexnet.hypersub.com', 'connection-nexnet.json');
+
+
 async function main() {
     try {
         // load the network configuration
-        const ccpPath = path.resolve(__dirname, '..', '..', '..','organizations','peerOrganizations','nexnet.hypersub.com', 'connection-nexnet.json');
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
         // Create a new CA client for interacting with the CA.
@@ -19,7 +21,7 @@ async function main() {
         const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'wallet');
+        const walletPath = path.join(process.cwd(),'..', 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 

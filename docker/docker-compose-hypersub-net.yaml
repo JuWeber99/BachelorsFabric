@@ -59,6 +59,7 @@ services:
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hypersub-net
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_PROFILE_ENABLED=true
@@ -70,7 +71,6 @@ services:
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
       - CORE_PEER_CHAINCODEADDRESS=peer0.nexnet.hypersub.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=nexnetMSP
 
@@ -105,7 +105,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.xorg.hypersub.com:8052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=xorgMSP
     volumes:
       - /var/run/:/host/var/run/
@@ -138,7 +137,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.auditor.hypersub.com:9052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.auditor.hypersub.com:9051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xorg.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=auditorMSP
     volumes:
       - /var/run/:/host/var/run/
@@ -170,7 +168,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.debtcollector.hypersub.com:10052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.debtcollector.hypersub.com:10051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:10051
       - CORE_PEER_LOCALMSPID=debtcollectorMSP
     volumes:
       - /var/run/:/host/var/run/

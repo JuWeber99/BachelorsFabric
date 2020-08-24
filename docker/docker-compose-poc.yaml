@@ -1,23 +1,10 @@
 version: '3.7'
 
-services:
-  poc-server:
-    container_name: poc-server
-    build:
-      context: ../hypersub/server
-      dockerfile: Dockerfile
-    ports:
-      - 3031:3031
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - '../hypersub/server:/home/node/app'
-      - '/home/node/app/node_modules'
-    command: npm start
-    networks:
-      - poc-hypersub
-    stdin_open: true
+networks:
+  hypersub-net:
+    name: hypersub-net
 
+services:
 
   poc-client:
     container_name: poc-client
@@ -32,10 +19,8 @@ services:
       - '../hypersub/poc-app:/home/node/app'
       - '/home/node/app/node_modules'
     command: npm start
-    networks:
-      - poc-hypersub
     stdin_open: true
+    networks:
+      - hypersub-net
 
-networks:
-  poc-hypersub:
-    name: "poc-hypersub"
+
