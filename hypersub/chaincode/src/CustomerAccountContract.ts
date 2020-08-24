@@ -1,8 +1,6 @@
 import {Context, Contract} from 'fabric-contract-api';
 import {testAccounts, testAccountsThree, testAccountsTwo} from "./data/initialTestLedger";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
-import {PersonalDetails} from "./types/PersonalDetails";
-import {CustomerAccountTypes} from "./types/CustomerAccountTypes";
 
 class CustomerAccountContext extends Context {
 
@@ -51,30 +49,29 @@ export class CustomerAccountContract extends Contract {
                                        streetName: string,
                                        houseNumber: string,
                                        country: string): Promise<void> {
+
+        const newAddress = {
+            postalCode: postalCode,
+            residence: residence,
+            streetName: streetName,
+            houseNumber: houseNumber,
+            country: country
+        }
+
         const customerAccountAsBytes = await ctx.stub.getState(accountId);
         const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountAsBytes)
         const personIndex = await this.findPersonalDetailIndex(ctx, accountId, name, forename);
-        const person = customerAccount.personalDetails[personIndex];
-        const newAddress = {
-            postalCode,
-            residence,
-            streetName,
-            houseNumber,
-            country
-        }
-        person.address = newAddress
+        customerAccount.personalDetails[personIndex].address = newAddress
         await ctx.stub.putState(accountId, ctx.toBuffer(customerAccount))
     }
 
-
     public async readCustomerAccount(ctx: CustomerAccountContext, accountId: string): Promise<string> {
         const accountAsBytes = await ctx.stub.getState(accountId);
-        if (!accountAsBytes || accountAsBytes.length === 0) {
+        if (accountAsBytes.length === 0) {
             throw new Error(`${accountId} does not exist`);
         }
         return accountAsBytes.toString();
     }
-
 
     public async findPersonalDetailIndex(ctx: CustomerAccountContext, accountId, name, forename): Promise<number> {
         const customerAccountAsBytes = await ctx.stub.getState(accountId);
@@ -83,7 +80,10 @@ export class CustomerAccountContract extends Contract {
         }
         const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountAsBytes)
         const personIndex = customerAccount.personalDetails
-            .findIndex(person => (person.forename == forename && person.name == name))
+            .findIndex(person => {
+                return person.forename.toString().toString().toLowerCase() === forename.toString().toLowerCase() &&
+                    person.name.toString().toLowerCase() === name.toString().toLowerCase();
+            })
         if (personIndex === -1) {
             throw new Error("A Person with them names does not exists!")
         }

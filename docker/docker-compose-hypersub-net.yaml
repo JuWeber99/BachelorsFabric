@@ -71,7 +71,6 @@ services:
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
       - CORE_PEER_CHAINCODEADDRESS=peer0.nexnet.hypersub.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=nexnetMSP
 
@@ -106,7 +105,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.xorg.hypersub.com:8052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xorg.hypersub.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=xorgMSP
     volumes:
       - /var/run/:/host/var/run/
@@ -139,7 +137,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.auditor.hypersub.com:9052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.auditor.hypersub.com:9051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xorg.hypersub.com:7051
       - CORE_PEER_LOCALMSPID=auditorMSP
     volumes:
       - /var/run/:/host/var/run/
@@ -171,7 +168,6 @@ services:
       - CORE_PEER_CHAINCODEADDRESS=peer0.debtcollector.hypersub.com:10052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.debtcollector.hypersub.com:10051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.nexnet.hypersub.com:10051
       - CORE_PEER_LOCALMSPID=debtcollectorMSP
     volumes:
       - /var/run/:/host/var/run/

@@ -49,9 +49,11 @@ export class ChainCodeCaller {
     }
 
     async readCustomerAccount(accountId: string): Promise<string> {
-        console.log("calling readCustomerAccount")
+        console.log("calling readCustomerAccount for id: "+accountId)
         let response = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
-        return response.toString()
+        console.log("Found something: +")
+        console.log(ChainCodeCaller.deserializeResponse(response))
+        return ChainCodeCaller.deserializeResponse(response)
     }
 
     async changeCustomerAddress(): Promise<void> {
@@ -60,11 +62,11 @@ export class ChainCodeCaller {
             "11111", "UpdateCity", "UpdateStreet", "2", "DE");
     }
 
-    async getPersonFromCustomerAccount(accountId: string, name: string, forename: string) {
-        console.log("calling getPersonFromCustomerAccount")
+    async findPersonalDetailIndex(accountId: string, name: string, forename: string) {
+        console.log("calling findPersonalDetailIndex")
         console.log("target account: " + accountId)
         console.log(`targeting Person named: ${forename} ${name}`)
-        let response = await this.contract.evaluateTransaction("getPersonFromCustomerAccount", accountId, name, forename);
+        let response = await this.contract.evaluateTransaction("findPersonalDetailIndex", accountId, name, forename);
         return response.toString();
     }
 

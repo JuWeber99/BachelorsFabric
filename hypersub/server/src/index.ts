@@ -51,9 +51,8 @@ app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        const result = caller.readCustomerAccount("5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809");
+        const result = await caller.readCustomerAccount(req.params.accountId);
         res.status(200).json(result)
-        console.log("readCustomerAccount successfully")
         caller.disconnect();
     } catch (apiError) {
         res.status(400).send(apiError)
@@ -71,11 +70,11 @@ app.get('/api/readInitialLedger', async (req, res) => {
         res.status(400).send(apiError)
     }
 })
-app.get('/api/getPersonFromCustomerAccount/:accountId/:name/:forename', async (req, res) => {
+app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        const result = await caller.getPersonFromCustomerAccount(req.params.accountId, req.params.name, req.params.forename);
+        const result = await caller.findPersonalDetailIndex(req.params.accountId, req.params.name, req.params.forename);
         res.status(200).json(result)
         caller.disconnect();
     } catch (apiError) {
