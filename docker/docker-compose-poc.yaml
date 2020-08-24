@@ -4,7 +4,7 @@ networks:
   hypersub-net:
     name: hypersub-net
 
-#services:
+services:
 #  poc-server:
 #    container_name: poc-server
 #    build:

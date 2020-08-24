@@ -7,10 +7,12 @@ import { Wallets, X509Identity } from 'fabric-network';
 import * as fs from 'fs';
 import * as path from 'path';
 
+export const ccpPath = path.resolve(__dirname, '..', '..', '..','organizations','peerOrganizations','nexnet.hypersub.com', 'connection-nexnet.json');
+
+
 async function main() {
     try {
         // load the network configuration
-        const ccpPath = path.resolve(__dirname, '..', '..', '..','organizations','peerOrganizations','nexnet.hypersub.com', 'connection-nexnet.json');
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
         // Create a new CA client for interacting with the CA.

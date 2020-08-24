@@ -3,13 +3,13 @@ import {Contract, Network} from "fabric-network";
 export class ChainCodeCaller {
 
     private network: Network
-    private chaincodeId: string
+    private chaincodeId;
     private contract: Contract;
 
     constructor(network: Network) {
         this.network = network;
         this.chaincodeId = "customeraccountcc"
-        this.contract = this.network.getContract(this.chaincodeId);
+        this.contract = network.getContract(this.chaincodeId)
     }
 
     getNetwork() {
@@ -24,6 +24,9 @@ export class ChainCodeCaller {
         this.chaincodeId = chaincodeId;
     }
 
+    disconnect() {
+        this.getNetwork().getGateway().disconnect();
+    }
 
     async readInitialLedger(): Promise<string> {
         console.log("reading the initialLedger")
