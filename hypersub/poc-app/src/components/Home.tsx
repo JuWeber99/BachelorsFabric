@@ -13,6 +13,7 @@ const Home = (props: any) => {
                 <button onClick={() => props.history.push("personal")}> Zur Ansicht der Persönlichen Informationen
                 </button>
                 <button onClick={() => props.history.push("infoCard")}> Zur Vertragsübersicht</button>
+                <button onClick={() => props.history.push("/data")}> Alle Daten für initialen Testuser </button>
             </div>
         </div>
     );

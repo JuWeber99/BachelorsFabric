@@ -2,18 +2,22 @@ import React from 'react';
 import './styles/App.css';
 import "./styles/payment-success.css"
 import {Payment} from "./components/Payment";
-import {BrowserRouter, Link, Route, Switch} from "react-router-dom"
+import {Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
-import {testAccounts, testContract, testPersonalDetails} from "./testing/initialTestLedger";
-import PersonalDetailSettings, {PersonalDetailSettingProps} from "./components/PersonalDetailSettings";
+import {testAccounts, testContract} from "./testing/initialTestLedger";
+import PersonalDetailSettings from "./components/PersonalDetailSettings";
+import AllCustomerDetails from "./components/AllCustomerDetails";
 
 function App() {
     return (
         <div className={"app-container"}>
             <Switch>
-                <Route exact path={"/home"}>
+                <Route exact path={"/"}>
                     <Home/>
+                </Route>
+                <Route exact path={"/data"}>
+                    <AllCustomerDetails accountId={testAccounts.accountId}/>
                 </Route>
                 <Route exact path={"/infoCard"}>
                     <SubscriptionInformationCard subscriptionContract={testContract}/>
@@ -43,6 +47,8 @@ function App() {
                     <Payment subscriptionContract={testContract}/>
                 </Route>
             </Switch>
+
+            <button className={"tohome-btn"}> <Link to={"/"}> Hier gehts "nach Hause" </Link></button>
         </div>
     );
 }

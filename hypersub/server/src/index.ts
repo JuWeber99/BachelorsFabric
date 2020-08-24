@@ -95,10 +95,6 @@ app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, r
     }
 })
 
-app.get("/", (req, res) => {
-    res.send("Hello World")
-})
-
 // app.get('/api/readInitialWithoutPromise', (req, res) => {
 //     populateNetworkConnection().then((network) =>
 //         new ChainCodeCaller(network))

@@ -4,13 +4,14 @@ import "../styles/personal-details.css"
 import {CustomerAccount} from "../types/CustomerAccountAsset";
 import infinSpinner from "../Infinity-1.1s-200px.gif"
 import errorImage from "../error.png"
-import {Link} from "react-router-dom";
+import {Link, Redirect, withRouter} from "react-router-dom";
 
 
 export interface PersonalDetailSettingProps {
     accountId: string,
     name: string,
     forename: string
+    props?: any
 }
 
 
@@ -24,7 +25,7 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     const [error, setError]: [boolean, any] = useState(false)
 
     async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
-        let personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
+        const personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
             .then((response) => response.json())
             .then((personIndex: number) => personIndex)
         return personIndex;
@@ -124,8 +125,12 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
                         setCallUpdate(true)
                     }}> Teste Update-Ledger API
                     </button>
-                    <button onClick={() => callCreateTestAccount(1)}> Erstelle Test-User 1</button>
-                    <button onClick={() => callCreateTestAccount(2)}> Erstelle Test-User 2</button>
+                    <button onClick={() => {
+                        callCreateTestAccount(1)
+                    }}> <Link to={"/personal2"}>Erstelle Test-User 1</Link>
+                    </button>
+                    <button onClick={() => callCreateTestAccount(2)}><Link to={"/personal3"}>Erstelle Test-User 2</Link>
+                    </button>
                 </div>
             }
             {
@@ -133,13 +138,12 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
             }
             {
                 error &&
-                    <div className={"resource-missing"}>
-                        <h1>RESSOURCE NICHT VORHANDEN!</h1>
-                        <img src={errorImage} width={200} height={200}/>
-                        <button> <Link to={"/personal"}>Zur initialen Ressource</Link> </button>
-                        <button> <Link to={"/home"}>Go back Home</Link> </button>
-                    </div>
-
+                <div className={"resource-missing"}>
+                    <h1>RESSOURCE NICHT VORHANDEN!</h1>
+                    <img src={errorImage} width={200} height={200}/>
+                    <button><Link to={"/personal"}>Zur initialen Ressource</Link></button>
+                    <button><Link to={"/"}>Zurück zu Home</Link></button>
+                </div>
             }
         </React.Fragment>
     );
