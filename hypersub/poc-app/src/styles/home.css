@@ -1,0 +1,29 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+
+.home-buttons {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 20px ;
+    background: rgba(175, 25, 25, 0.35);
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.home-buttons > button {
+    margin: 5px;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.home-buttons > button:hover {
+    background-color: rgb(3, 3, 3);
+    color: aliceblue;
+    border-radius: 10px;
+}

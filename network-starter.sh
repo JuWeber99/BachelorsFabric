@@ -122,7 +122,6 @@ sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
 $HYPERSUB_BASE/scripts/deployChaincode.sh
 
-startApplication_Containers
 
 PREV_DIR=${PWD}
 
@@ -130,4 +129,6 @@ export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-npm start
+npm start &
+cd $HYPERSUB_BASE/hypersub/poc-app/src
+npm start &

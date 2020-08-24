@@ -3,9 +3,8 @@ import {Tick} from "react-crude-animated-tick";
 import React, {RefObject, useEffect, useRef, useState} from "react"
 import "../styles/payment-checkout.css"
 import "../styles/payment-success.css"
-import pic from "../contract.jpg"
 import SubscriptionInformationCard, {SubscriptionProps} from "./SubscriptionInformationCard";
-
+import loadingSpinner from "../Spinner-1s-200px.gif"
 
 export const globalCurrencyCodeEuro = "EUR"
 
@@ -13,6 +12,7 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
     const [paidFor, setPaidFor] = useState(false);
     const [error, setError]: [any | null, any] = useState(null);
     const [loaded, setLoaded]: [boolean, any] = useState(false);
+
     const paypalRef: ((instance: HTMLDivElement | null) => void) | RefObject<HTMLDivElement> | null = useRef(null);
 
 
@@ -68,6 +68,7 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
         }
     }, [loaded, subscriptionContract.subscriptionProduct]);
 
+
     if (paidFor) {
         return (
             <div className={"payment-received"}>
@@ -97,11 +98,18 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
                 </div>
             }
             <ul>
-                <h1>Checkout für Buchung von Serviceleistung der Art: {subscriptionContract.subscriptionProduct.productType} </h1>
+                <h1>Checkout für Buchung von Serviceleistung der
+                    Art: {subscriptionContract.subscriptionProduct.productType} </h1>
                 <SubscriptionInformationCard subscriptionContract={subscriptionContract}/>
             </ul>
 
-            <img src={pic} alt={"picture not available"}/>
+            {
+                !loaded &&
+                <React.Fragment>
+                    <h3> Loading PayPal connectino ...</h3>
+                    <img src={loadingSpinner}/>
+                </React.Fragment>
+            }
             <div ref={paypalRef}/>
         </div>
     );

@@ -123,7 +123,7 @@ export const testSim: SimDetails = {
 }
 
 
-export const testAccounts: Array<CustomerAccount> = [
+export const testAccounts: CustomerAccount =
     {
         accountId: "5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809", //random hash string
         bankingDetails: [{
@@ -138,7 +138,6 @@ export const testAccounts: Array<CustomerAccount> = [
         simDetails: [testSim],
         isRevoked: false
     }
-]
 
 
 export const testDebtors: Array<DebtorAccount> = [{

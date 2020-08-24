@@ -47,14 +47,14 @@ export class ChainCodeCaller {
     }
 
     async readCustomerAccount(accountId: string): Promise<string> {
-        console.log("calling changeCustomerAddress")
+        console.log("calling readCustomerAccount")
         let response = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
         return response.toString()
     }
 
     async changeCustomerAddress(): Promise<void> {
         console.log("calling changeCustomerAddress")
-        let response = await this.contract.submitTransaction('cafca', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
+        let response = await this.contract.submitTransaction('changeCustomerAddress', 'guhidasfg238r766grzseugc97dsaftg67sadfadsf23', "Weber", "Julian",
             "11111", "UpdateCity", "UpdateStreet", "2", "DE");
         console.log(response.toString())
     }

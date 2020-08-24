@@ -30,3 +30,5 @@
 /hypersub/server/dist/*
 /customeraccountcc.tar.gz
 /waste/CustomerAccountContractTest.ts
+/hypersub/poc-app/src/Spinner-1s-200px.gif
+/hypersub/server/package-lock.json

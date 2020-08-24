@@ -12,18 +12,58 @@ const app = express();
 app.use(cors())
 
 
-app.get("/api/testUpdate", async (req, res) => {
+app.get("/api/changeCustomerAddress", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
-        const result = await caller.readInitialLedger();
-        res.status(200).json({response: result.toString()})
+        const result = await caller.changeCustomerAddress();
+        res.status(200).send("Changed Address!")
         caller.disconnect();
     } catch (apiError) {
         res.status(400).send(apiError)
     }
 })
 
+// /:accountId/:name/:forename
+
+app.get('/api/createTestAccount', async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        await caller.createCustomerTestAccount();
+        res.status(200).send("Test Account created")
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
+
+
+app.get('/api/createTestAccountTwo', async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        await caller.createCustomerTestAccount();
+        res.status(200).send("Test Account created")
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
+
+
+app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        const result = await caller.readCustomerAccount(req.params.accountId);
+        res.status(200).json({response: result.toString()})
+        console.log("readCustomerAccount successfully")
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
 
 app.get('/api/readInitialLedger', async (req, res) => {
     try {
@@ -36,6 +76,7 @@ app.get('/api/readInitialLedger', async (req, res) => {
         res.status(400).send(apiError)
     }
 })
+
 
 // app.get("/api/test", async (req, res) => {
 //     // const netConnection = await populateNetworkConnection();
