@@ -1,6 +1,8 @@
 import {Context, Contract} from 'fabric-contract-api';
 import {testAccounts, testAccountsThree, testAccountsTwo} from "./data/initialTestLedger";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
+import {PersonalDetails} from "./types/PersonalDetails";
+import {CustomerAccountTypes} from "./types/CustomerAccountTypes";
 
 class CustomerAccountContext extends Context {
 
@@ -8,12 +10,16 @@ class CustomerAccountContext extends Context {
         super();
     }
 
-    public serialize = (jayson: CustomerAccount) => {
+    public toBuffer = (jayson: any) => {
         return Buffer.from(JSON.stringify(jayson));
     }
 
-    public deserialize = (buffer: Uint8Array): CustomerAccount => {
+    public fromBuffer = (buffer: Uint8Array): any => {
         return JSON.parse(buffer.toString())
+    }
+
+    public fromStringToJson(input: string): any {
+        return JSON.parse(input);
     }
 }
 
@@ -25,15 +31,15 @@ export class CustomerAccountContract extends Contract {
 
 
     public async initLedger(ctx: CustomerAccountContext) {
-        await ctx.stub.putState(testAccounts.accountId, ctx.serialize(testAccounts));
+        await ctx.stub.putState(testAccounts.accountId, ctx.toBuffer(testAccounts));
     }
 
     public async createCustomerTestAccount(ctx: CustomerAccountContext) {
-        await ctx.stub.putState(testAccountsTwo.accountId, ctx.serialize(testAccountsTwo));
+        await ctx.stub.putState(testAccountsTwo.accountId, ctx.toBuffer(testAccountsTwo));
     };
 
     public async createCustomerTestAccountTwo(ctx: CustomerAccountContext) {
-        await ctx.stub.putState(testAccountsThree.accountId, ctx.serialize(testAccountsThree));
+        await ctx.stub.putState(testAccountsThree.accountId, ctx.toBuffer(testAccountsThree));
     };
 
     public async changeCustomerAddress(ctx: CustomerAccountContext,
@@ -45,12 +51,10 @@ export class CustomerAccountContract extends Contract {
                                        streetName: string,
                                        houseNumber: string,
                                        country: string): Promise<void> {
-
         const customerAccountAsBytes = await ctx.stub.getState(accountId);
-        const customerAccount: CustomerAccount = ctx.deserialize(customerAccountAsBytes)
-
-        const person = await this.getPersonFromCustomerAccount(ctx, accountId, name, forename);
-
+        const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountAsBytes)
+        const personIndex = await this.findPersonalDetailIndex(ctx, accountId, name, forename);
+        const person = customerAccount.personalDetails[personIndex];
         const newAddress = {
             postalCode,
             residence,
@@ -59,10 +63,9 @@ export class CustomerAccountContract extends Contract {
             country
         }
         person.address = newAddress
-
-        await ctx.stub.putState(accountId, ctx.serialize(customerAccount))
-
+        await ctx.stub.putState(accountId, ctx.toBuffer(customerAccount))
     }
+
 
     public async readCustomerAccount(ctx: CustomerAccountContext, accountId: string): Promise<string> {
         const accountAsBytes = await ctx.stub.getState(accountId);
@@ -72,21 +75,19 @@ export class CustomerAccountContract extends Contract {
         return accountAsBytes.toString();
     }
 
-    public async getPersonFromCustomerAccount(ctx: CustomerAccountContext, accountId, name, forename) {
 
+    public async findPersonalDetailIndex(ctx: CustomerAccountContext, accountId, name, forename): Promise<number> {
         const customerAccountAsBytes = await ctx.stub.getState(accountId);
-
         if (!customerAccountAsBytes || customerAccountAsBytes.length === 0) {
             throw new Error(`${accountId} does not exist`);
         }
-        const customerAccount: CustomerAccount = ctx.deserialize(customerAccountAsBytes)
-
+        const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountAsBytes)
         const personIndex = customerAccount.personalDetails
             .findIndex(person => (person.forename == forename && person.name == name))
         if (personIndex === -1) {
             throw new Error("A Person with them names does not exists!")
         }
-        return customerAccount.personalDetails[personIndex];
+        return personIndex;
     }
 }
 
