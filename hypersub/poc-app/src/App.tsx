@@ -8,11 +8,11 @@ import SubscriptionInformationCard from "./components/SubscriptionInformationCar
 import {testAccounts, testContract} from "./testing/initialTestLedger";
 import PersonalDetailSettings from "./components/PersonalDetailSettings";
 import AllCustomerDetails from "./components/AllCustomerDetails";
-import SubscriptionPayment from "./components/SubscriptionPayment";
 import {Button} from "@material-ui/core";
 import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
-import {CheckoutForm} from "./components/StripAdditionals";
+import SubscriptionPayment from "./components/SubscriptionPayment";
+import {CheckoutForm} from "./components/StripeCheckout";
 
 const stripePromise = loadStripe("pk_test_51HJpsyGLRl9OMbnVYEBLVhqQtpP0uW1AZRUEYitU8IeqWILXRNeUz3v3nUtFoTjakB7qgJiG5F8uBFPXgTLKHAc1002ZXeeV6j");
 

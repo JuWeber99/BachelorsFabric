@@ -3,15 +3,17 @@ import cors from "cors"
 import {populateNetworkConnection} from "./NetConnection";
 import {ChainCodeCaller} from "./ChaincodeCaller";
 import {Stripe} from "stripe"
+import bodyParser from "body-parser";
 
 var stripe = new Stripe('sk_test_51HJpsyGLRl9OMbnVDfUbtvIbo9zZiy1af7oGJIqYmEMkb5fEE1PDFu3o1RMTHYJrGeNZHIObb6TOkDeDQWkFzm3T00OxXXxlVu',
-        {
-            apiVersion: "2020-03-02",
-        });
+    {
+        apiVersion: "2020-03-02",
+    });
 
 const app = express();
 process.title = "poc-server";
 app.use(cors())
+app.use(bodyParser.json())
 
 
 app.get("/api/changeCustomerAddress", async (req, res) => {
@@ -109,19 +111,17 @@ app.get("/", (req, res) => {
 
 app.post('/sub', async (req, res) => {
 
-    console.log(req.body)
-
-    const body = req.body;
+    const {email, payment_method} = req.body
+    let client_secret;
     try {
         const customer = await stripe.customers.create({
-            payment_method: body.payment_method,
-            email: body.email,
+            payment_method: payment_method,
+            email: email,
             invoice_settings: {
-                default_payment_method: body.payment_method,
+                default_payment_method: payment_method,
             },
         })
 
-        console.log(customer)
 
         const subscription = await stripe.subscriptions.create({
             customer: customer.id,
@@ -132,11 +132,12 @@ app.post('/sub', async (req, res) => {
         console.log(subscription)
 
         const status = subscription['latest_invoice']['payment_intent']['status']
-        const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+        client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
 
         res.json({'client_secret': client_secret, 'status': status});
+
     } catch (err) {
-        console.log(err)
+        res.json({status: "error"})
     }
 })
 

@@ -2,7 +2,6 @@ import {CardElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import React, {useState} from "react";
 import "../styles/stripe.css"
 import axios from "axios";
-import {stringify} from "querystring";
 
 
 const CARD_OPTIONS = {
@@ -104,6 +103,7 @@ export const CheckoutForm = () => {
         const stripe = useStripe();
         const elements = useElements();
         const [error, setError]: any = useState(null);
+        const [paymentError, setPaymentError]: [boolean, any] = useState(false)
         const [cardComplete, setCardComplete]: any = useState(false);
         const [processing, setProcessing]: any = useState(false);
         const [paymentMethod, setPaymentMethod]: any = useState(null);
@@ -113,50 +113,85 @@ export const CheckoutForm = () => {
             name: '',
         });
 
-        const handleSubmit = async (event) => {
+        const handleSubmitSub = async (event) => {
             event.preventDefault();
 
             if (!stripe || !elements) {
-                // Stripe.js has not loaded yet. Make sure to disable
-                // form submission until Stripe.js has loaded.
                 return;
             }
 
+
             if (error) {
-                elements.getElement('card')!.focus();
+                elements.getElement('card')?.focus()
                 return;
             }
 
             if (cardComplete) {
+                console.log("card complete")
                 setProcessing(true);
             }
+
 
             const payload = await stripe.createPaymentMethod({
                 type: 'card',
                 card: elements.getElement(CardElement)!,
-                billing_details: billingDetails,
+                billing_details: {
+                    email: billingDetails.email,
+                    name: billingDetails.name,
+                    phone: billingDetails.phone
+                },
             });
 
             if (payload.error) {
                 setError(payload.error);
+                console.log("payload error")
             } else {
                 setPaymentMethod(payload.paymentMethod);
-            }
-            const postbody = {
-                payment_method: payload.paymentMethod!.id,
-                email: billingDetails.email
+                const serverResponse = await axios.post('http://localhost:3031/sub',
+                    {'payment_method': payload.paymentMethod!.id, 'email': billingDetails.email});
+
+                const {client_secret, status} = serverResponse.data;
+                console.log(status)
+
+                if (status === "error") {
+                    console.log("an Error occurred")
+                    setError({
+                            message: "error"
+                    })
+                    setPaymentError(true)
+                    setProcessing(false)
+                    console.log(paymentMethod)
+                    return
+                }
+
+                if (status === 'requires_action') {
+                    stripe.confirmCardPayment(client_secret).then(function (result) {
+                        if (result.error) {
+                            console.log('There was an issue!');
+                            console.log(result.error);
+                            setError(result.error);
+                            setPaymentError(true)
+                            setProcessing(false)
+                            // Display error message in your UI.
+                            // The card was declined (i.e. insufficient funds, card has expired, etc)
+                        } else {
+                            console.log('You got the money!');
+                            setProcessing(false)
+                            setPaymentError(false)
+                            // Show a success message to your customer
+                        }
+                    });
+                } else {
+                    console.log('You got the money!');
+                    setProcessing(false)
+                    setPaymentError(false)
+
+                    // No additional information was needed
+                    // Show a success message to your customer
+                }
             }
 
-            console.log(postbody)
 
-            // const res = await fetch('http://localhost:3031/sub', {
-            //     method: 'post',
-            //     body: JSON.stringify(postbody)
-            // }).then((response) => response.json());
-            //
-            // console.log(res)
-            // const {client_secret, status} = res.data;
-            setProcessing(false)
         };
 
         const reset = () => {
@@ -170,7 +205,7 @@ export const CheckoutForm = () => {
             });
         };
 
-        return paymentMethod ? (
+        return paymentMethod && !paymentError ? (
             <div className="Result">
                 <div className="ResultTitle" role="alert">
                     Payment successful
@@ -182,7 +217,7 @@ export const CheckoutForm = () => {
                 <ResetButton onClick={reset}/>
             </div>
         ) : (
-            <form className="Form" onSubmit={handleSubmit}>
+            <form className="Form" onSubmit={handleSubmitSub}>
                 <fieldset className="FormGroup">
                     <Field
                         label="Name"
@@ -229,7 +264,9 @@ export const CheckoutForm = () => {
                         }}
                     />
                 </fieldset>
+
                 {error && <ErrorMessage>{error.message}</ErrorMessage>}
+
                 <SubmitButton processing={processing} error={error} disabled={!stripe}>
                     Subscripe
                 </SubmitButton>
