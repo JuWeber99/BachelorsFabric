@@ -151,12 +151,12 @@ export const CheckoutForm = () => {
                     {'payment_method': payload.paymentMethod!.id, 'email': billingDetails.email});
 
                 const {client_secret, status} = serverResponse.data;
-                console.log(status)
 
-                if (status === "error") {
+                if (serverResponse.data.error) {
                     console.log("an Error occurred")
                     setError({
-                            message: "error"
+                            message: serverResponse.data.error.message,
+                            statusCode: serverResponse.data.error.statusCode
                     })
                     setPaymentError(true)
                     setProcessing(false)
@@ -265,7 +265,7 @@ export const CheckoutForm = () => {
                     />
                 </fieldset>
 
-                {error && <ErrorMessage>{error.message}</ErrorMessage>}
+                {error && <ErrorMessage>{error.statusCode}: {error.message}</ErrorMessage>}
 
                 <SubmitButton processing={processing} error={error} disabled={!stripe}>
                     Subscripe

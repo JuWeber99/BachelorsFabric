@@ -137,7 +137,13 @@ app.post('/sub', async (req, res) => {
         res.json({'client_secret': client_secret, 'status': status});
 
     } catch (err) {
-        res.json({status: "error"})
+        console.log(err)
+        res.json({
+            error: {
+                message: err.message,
+                statusCode: err.statusCode
+            }
+        })
     }
 })
 
