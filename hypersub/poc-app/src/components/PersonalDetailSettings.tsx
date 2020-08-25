@@ -8,15 +8,29 @@ import {Link, Redirect, withRouter} from "react-router-dom";
 import {Button} from "@material-ui/core";
 
 
-export interface PersonalDetailSettingProps {
+export interface PersonalDetailProps {
     accountId: string,
     name: string,
     forename: string
     props?: any
 }
 
+export async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
+    const personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
+        .then((response) => response.json())
+        .then((personIndex: number) => personIndex)
+    return personIndex;
+}
 
-const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSettingProps) => {
+export async function getPersonalDetailsForCustomerOnSite(accountId: string, personIndex: number): Promise<PersonalDetails> {
+    let result = await fetch(`http://localhost:3031/api/readCustomerAccount/${accountId}`)
+        .then((response) => response.json())
+        .then((customerAccount: CustomerAccount) => customerAccount.personalDetails[personIndex])
+    return result
+}
+
+
+const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailProps) => {
 
     const [callUpdate, setCallUpdate]: [boolean, any] = useState(false);
     const [personFetched, setPersonFetched]: [boolean, any] = useState(false);
@@ -25,12 +39,6 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
     const [doLoad, setShowSpinner]: [boolean, any] = useState(true)
     const [error, setError]: [boolean, any] = useState(false)
 
-    async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
-        const personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
-            .then((response) => response.json())
-            .then((personIndex: number) => personIndex)
-        return personIndex;
-    }
 
     function callCreateTestAccount(oneOrTwo: 1 | 2): Promise<boolean> {
         let path = ""
@@ -46,13 +54,6 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
         return success;
     }
 
-
-    async function getPersonalDetailsForCustomerOnSite(accountId: string, personIndex: number): Promise<PersonalDetails> {
-        let result = await fetch(`http://localhost:3031/api/readCustomerAccount/${accountId}`)
-            .then((response) => response.json())
-            .then((customerAccount: CustomerAccount) => customerAccount.personalDetails[personIndex])
-        return result
-    }
 
     async function callUpdateLedgerTest(): Promise<boolean> {
         let success = await fetch(`http://localhost:3031/api/changeCustomerAddress/${accountId}/${name}/${forename}`)

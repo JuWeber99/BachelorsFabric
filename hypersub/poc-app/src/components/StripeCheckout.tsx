@@ -1,7 +1,11 @@
 import {CardElement, useElements, useStripe} from "@stripe/react-stripe-js";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../styles/stripe.css"
 import axios from "axios";
+import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite, PersonalDetailProps} from "./PersonalDetailSettings";
+import {PersonalDetails} from "../types/PersonalDetails";
+import {IsoCountryCodes} from "../types/IsoCountryCodes";
+import infinSpinner from "../Infinity-1.1s-200px.gif";
 
 
 const CARD_OPTIONS = {
@@ -99,19 +103,33 @@ const ResetButton = ({onClick}) => (
     </button>
 );
 
-export const CheckoutForm = () => {
+export const CheckoutForm = ({accountId, name, forename}: PersonalDetailProps) => {
         const stripe = useStripe();
         const elements = useElements();
+        const [doLoad, setShowSpinner]: [boolean, any] = useState(true)
+
+        const [personFetched, setPersonFetched]: [boolean, any] = useState(false);
+        const [personalDetails, setPersonalDetails]: [PersonalDetails, any] = useState({
+            name: '',
+            forename: '',
+            birthday: '',
+            mailAddress: '',
+            telephoneContact: '',
+            address: {
+                postalCode: '',
+                residence: '',
+                streetName: '',
+                houseNumber: '',
+                country: IsoCountryCodes.Germany
+            }
+        })
+        const [personIndex, setPersonIndex]: [number, any] = useState(-1)
+
         const [error, setError]: any = useState(null);
         const [paymentError, setPaymentError]: [boolean, any] = useState(false)
         const [cardComplete, setCardComplete]: any = useState(false);
         const [processing, setProcessing]: any = useState(false);
         const [paymentMethod, setPaymentMethod]: any = useState(null);
-        const [billingDetails, setBillingDetails]: any = useState({
-            email: '',
-            phone: '',
-            name: '',
-        });
 
         const handleSubmitSub = async (event) => {
             event.preventDefault();
@@ -136,9 +154,9 @@ export const CheckoutForm = () => {
                 type: 'card',
                 card: elements.getElement(CardElement)!,
                 billing_details: {
-                    email: billingDetails.email,
-                    name: billingDetails.name,
-                    phone: billingDetails.phone
+                    email: personalDetails.mailAddress,
+                    name: personalDetails.name,
+                    phone: personalDetails.telephoneContact
                 },
             });
 
@@ -148,15 +166,15 @@ export const CheckoutForm = () => {
             } else {
                 setPaymentMethod(payload.paymentMethod);
                 const serverResponse = await axios.post('http://localhost:3031/sub',
-                    {'payment_method': payload.paymentMethod!.id, 'email': billingDetails.email});
+                    {'payment_method': payload.paymentMethod!.id, 'email': personalDetails.mailAddress});
 
                 const {client_secret, status} = serverResponse.data;
 
                 if (serverResponse.data.error) {
                     console.log("an Error occurred")
                     setError({
-                            message: serverResponse.data.error.message,
-                            statusCode: serverResponse.data.error.statusCode
+                        message: serverResponse.data.error.message,
+                        statusCode: serverResponse.data.error.statusCode
                     })
                     setPaymentError(true)
                     setProcessing(false)
@@ -190,22 +208,40 @@ export const CheckoutForm = () => {
                     // Show a success message to your customer
                 }
             }
-
-
         };
 
         const reset = () => {
             setError(null);
             setProcessing(false);
             setPaymentMethod(null);
-            setBillingDetails({
-                email: '',
-                phone: '',
-                name: '',
+            setPersonalDetails({
+                email: personalDetails.mailAddress,
+                phone: personalDetails.telephoneContact,
+                name: personalDetails.name + " " + personalDetails.forename,
             });
         };
 
-        return paymentMethod && !paymentError ? (
+
+        useEffect(() => {
+            async function fetchCorrectPersonalDetails() {
+                const index = await callFindPersonIndex(accountId, name, forename);
+                setPersonIndex(index)
+                const details = await getPersonalDetailsForCustomerOnSite(accountId, index);
+                setPersonalDetails(details)
+            }
+
+            fetchCorrectPersonalDetails()
+                .then(() => setPersonFetched(true))
+                .then(() => setShowSpinner(false))
+                .catch((err) => {
+                    setError(true)
+                    setShowSpinner(false)
+                })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [personFetched])
+
+
+        return paymentMethod && !paymentError && !doLoad ? (
             <div className="Result">
                 <div className="ResultTitle" role="alert">
                     Payment successful
@@ -216,7 +252,7 @@ export const CheckoutForm = () => {
                 </div>
                 <ResetButton onClick={reset}/>
             </div>
-        ) : (
+        ) : !doLoad ?  (
             <form className="Form" onSubmit={handleSubmitSub}>
                 <fieldset className="FormGroup">
                     <Field
@@ -226,9 +262,9 @@ export const CheckoutForm = () => {
                         placeholder="Test User"
                         required
                         autoComplete="name"
-                        value={billingDetails.name}
+                        value={personalDetails.name}
                         onChange={(e) => {
-                            setBillingDetails({...billingDetails, name: e.target.value});
+                            setPersonalDetails({...personalDetails, name: e.target.value.toString().split(" ")[1], forename: e.target.value.toString().split(" ")[0] });
                         }}
                     />
                     <Field
@@ -238,9 +274,9 @@ export const CheckoutForm = () => {
                         placeholder="test@testmail.com"
                         required
                         autoComplete="email"
-                        value={billingDetails.email}
+                        value={personalDetails.mailAddress}
                         onChange={(e) => {
-                            setBillingDetails({...billingDetails, email: e.target.value});
+                            setPersonalDetails({...personalDetails, mailAddress: e.target.value});
                         }}
                     />
                     <Field
@@ -250,9 +286,9 @@ export const CheckoutForm = () => {
                         placeholder="(941) 555-0123"
                         required
                         autoComplete="tel"
-                        value={billingDetails.phone}
+                        value={personalDetails.telephoneContact}
                         onChange={(e) => {
-                            setBillingDetails({...billingDetails, phone: e.target.value});
+                            setPersonalDetails({...personalDetails, telephoneContact: e.target.value});
                         }}
                     />
                 </fieldset>
@@ -271,7 +307,7 @@ export const CheckoutForm = () => {
                     Subscripe
                 </SubmitButton>
             </form>
-        );
+        ): <img style={{marginTop: "20%"}} src={infinSpinner}/>;
     }
 ;
 
