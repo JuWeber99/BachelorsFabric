@@ -103,7 +103,7 @@ const ResetButton = ({onClick}) => (
     </button>
 );
 
-export const CheckoutForm = ({accountId, name, forename}: PersonalDetailProps) => {
+export const SubscriptionCheckout = ({accountId, name, forename}: PersonalDetailProps) => {
         const stripe = useStripe();
         const elements = useElements();
         const [doLoad, setShowSpinner]: [boolean, any] = useState(true)

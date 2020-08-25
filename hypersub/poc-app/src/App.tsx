@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/App.css';
 import "./styles/payment-success.css"
-import {Payment} from "./components/Payment";
+import {InstantCheckout} from "./components/InstantCheckout";
 import {Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
@@ -11,7 +11,7 @@ import AllCustomerDetails from "./components/AllCustomerDetails";
 import {Button} from "@material-ui/core";
 import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
-import {CheckoutForm} from "./components/StripeCheckout";
+import {SubscriptionCheckout} from "./components/StripeCheckout";
 
 const stripePromise = loadStripe("pk_test_51HJpsyGLRl9OMbnVYEBLVhqQtpP0uW1AZRUEYitU8IeqWILXRNeUz3v3nUtFoTjakB7qgJiG5F8uBFPXgTLKHAc1002ZXeeV6j");
 
@@ -51,18 +51,18 @@ function App() {
                         forename={testAccounts.personalDetails[0].forename}/>
                 </Route>
                 <Route exact path={"/paypal"}>
-                    <Payment subscriptionContract={testContract}/>
+                    <InstantCheckout subscriptionContract={testContract}/>
                 </Route>
                 <Route exact path={"/stripe"}>
                     <Elements stripe={stripePromise}>
-                        <CheckoutForm  key={testAccounts.accountId}
-                                       accountId={testAccounts.accountId}
-                                       name={testAccounts.personalDetails[0].name}
-                                       forename={testAccounts.personalDetails[0].forename}/>
+                        <SubscriptionCheckout key={testAccounts.accountId}
+                                              accountId={testAccounts.accountId}
+                                              name={testAccounts.personalDetails[0].name}
+                                              forename={testAccounts.personalDetails[0].forename}/>
                     </Elements>
                 </Route>
             </Switch>
-            <Button color={"primary"} style={{marginTop: "10%"}}> <Link to={"/"}> Hier gehts "nach Hause" </Link></Button>
+            <Button color={"primary"} className={"btn"}> <Link to={"/"}> Hier gehts "nach Hause" </Link></Button>
         </div>
 
     );

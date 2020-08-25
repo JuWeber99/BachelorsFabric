@@ -9,7 +9,7 @@ import { Button } from "@material-ui/core";
 
 export const globalCurrencyCodeEuro = "EUR"
 
-export const Payment = ({subscriptionContract}: SubscriptionProps) => {
+export const InstantCheckout = ({subscriptionContract}: SubscriptionProps) => {
     const [paidFor, setPaidFor] = useState(false);
     const [error, setError]: [any | null, any] = useState(null);
     const [loaded, setLoaded]: [boolean, any] = useState(false);
@@ -99,8 +99,7 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
                 </div>
             }
             <ul>
-                <h1>Checkout für Buchung von Serviceleistung der
-                    Art: {subscriptionContract.subscriptionProduct.productType} </h1>
+                <h1>Checkout für sofortige Zahlung</h1>
                 <SubscriptionInformationCard subscriptionContract={subscriptionContract}/>
             </ul>
 

@@ -9,6 +9,7 @@ export interface SubscriptionProps {
 const SubscriptionInformationCard = ({subscriptionContract}: SubscriptionProps) => {
     return (
         <div className={"subscription-card"}>
+            <h3>{subscriptionContract.subscriptionProduct.productType}</h3>
             <h3>Produkt-Kennung: {subscriptionContract.subscriptionProduct.productId} </h3>
             <h3>Kosten: {subscriptionContract.subscriptionProduct.cost}€</h3>
             <h3>Start-Datum: {subscriptionContract.startDate.toString()} </h3>
