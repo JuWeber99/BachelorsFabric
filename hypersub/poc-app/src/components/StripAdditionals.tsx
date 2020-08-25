@@ -2,6 +2,7 @@ import {CardElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import React, {useState} from "react";
 import "../styles/stripe.css"
 import axios from "axios";
+import {stringify} from "querystring";
 
 
 const CARD_OPTIONS = {
@@ -100,131 +101,142 @@ const ResetButton = ({onClick}) => (
 );
 
 export const CheckoutForm = () => {
-    const stripe = useStripe();
-    const elements = useElements();
-    const [error, setError]: any = useState(null);
-    const [cardComplete, setCardComplete]: any = useState(false);
-    const [processing, setProcessing]: any = useState(false);
-    const [paymentMethod, setPaymentMethod]: any = useState(null);
-    const [billingDetails, setBillingDetails]: any = useState({
-        email: '',
-        phone: '',
-        name: '',
-    });
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        if (!stripe || !elements) {
-            // Stripe.js has not loaded yet. Make sure to disable
-            // form submission until Stripe.js has loaded.
-            return;
-        }
-
-        if (error) {
-            elements.getElement('card')!.focus();
-            return;
-        }
-
-        if (cardComplete) {
-            setProcessing(true);
-        }
-
-        const payload = await stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement)!,
-            billing_details: billingDetails,
-        });
-
-        setProcessing(false);
-
-        if (payload.error) {
-            setError(payload.error);
-        } else {
-            setPaymentMethod(payload.paymentMethod);
-            const res = await axios.post('http://localhost:3031/sub',
-                {'payment_method': payload.paymentMethod?.id, 'email': billingDetails.email});
-            const {client_secret, status} = res.data;
-        }
-    };
-
-    const reset = () => {
-        setError(null);
-        setProcessing(false);
-        setPaymentMethod(null);
-        setBillingDetails({
+        const stripe = useStripe();
+        const elements = useElements();
+        const [error, setError]: any = useState(null);
+        const [cardComplete, setCardComplete]: any = useState(false);
+        const [processing, setProcessing]: any = useState(false);
+        const [paymentMethod, setPaymentMethod]: any = useState(null);
+        const [billingDetails, setBillingDetails]: any = useState({
             email: '',
             phone: '',
             name: '',
         });
-    };
 
-    return paymentMethod ? (
-        <div className="Result">
-            <div className="ResultTitle" role="alert">
-                Payment successful
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            if (!stripe || !elements) {
+                // Stripe.js has not loaded yet. Make sure to disable
+                // form submission until Stripe.js has loaded.
+                return;
+            }
+
+            if (error) {
+                elements.getElement('card')!.focus();
+                return;
+            }
+
+            if (cardComplete) {
+                setProcessing(true);
+            }
+
+            const payload = await stripe.createPaymentMethod({
+                type: 'card',
+                card: elements.getElement(CardElement)!,
+                billing_details: billingDetails,
+            });
+
+            if (payload.error) {
+                setError(payload.error);
+            } else {
+                setPaymentMethod(payload.paymentMethod);
+            }
+            const postbody = {
+                payment_method: payload.paymentMethod!.id,
+                email: billingDetails.email
+            }
+
+            console.log(postbody)
+
+            // const res = await fetch('http://localhost:3031/sub', {
+            //     method: 'post',
+            //     body: JSON.stringify(postbody)
+            // }).then((response) => response.json());
+            //
+            // console.log(res)
+            // const {client_secret, status} = res.data;
+            setProcessing(false)
+        };
+
+        const reset = () => {
+            setError(null);
+            setProcessing(false);
+            setPaymentMethod(null);
+            setBillingDetails({
+                email: '',
+                phone: '',
+                name: '',
+            });
+        };
+
+        return paymentMethod ? (
+            <div className="Result">
+                <div className="ResultTitle" role="alert">
+                    Payment successful
+                </div>
+                <div className="ResultMessage">
+                    Thanks for trying Stripe Elements. No money was charged, but we
+                    generated a PaymentMethod: {paymentMethod.id}
+                </div>
+                <ResetButton onClick={reset}/>
             </div>
-            <div className="ResultMessage">
-                Thanks for trying Stripe Elements. No money was charged, but we
-                generated a PaymentMethod: {paymentMethod.id}
-            </div>
-            <ResetButton onClick={reset}/>
-        </div>
-    ) : (
-        <form className="Form" onSubmit={handleSubmit}>
-            <fieldset className="FormGroup">
-                <Field
-                    label="Name"
-                    id="name"
-                    type="text"
-                    placeholder="Test User"
-                    required
-                    autoComplete="name"
-                    value={billingDetails.name}
-                    onChange={(e) => {
-                        setBillingDetails({...billingDetails, name: e.target.value});
-                    }}
-                />
-                <Field
-                    label="Email"
-                    id="email"
-                    type="email"
-                    placeholder="test@testmail.com"
-                    required
-                    autoComplete="email"
-                    value={billingDetails.email}
-                    onChange={(e) => {
-                        setBillingDetails({...billingDetails, email: e.target.value});
-                    }}
-                />
-                <Field
-                    label="Phone"
-                    id="phone"
-                    type="tel"
-                    placeholder="(941) 555-0123"
-                    required
-                    autoComplete="tel"
-                    value={billingDetails.phone}
-                    onChange={(e) => {
-                        setBillingDetails({...billingDetails, phone: e.target.value});
-                    }}
-                />
-            </fieldset>
-            <fieldset className="FormGroup">
-                <CardField
-                    onChange={(e) => {
-                        setError(e.error);
-                        setCardComplete(e.complete);
-                    }}
-                />
-            </fieldset>
-            {error && <ErrorMessage>{error.message}</ErrorMessage>}
-            <SubmitButton processing={processing} error={error} disabled={!stripe}>
-                Subscripe
-            </SubmitButton>
-        </form>
-    );
-};
+        ) : (
+            <form className="Form" onSubmit={handleSubmit}>
+                <fieldset className="FormGroup">
+                    <Field
+                        label="Name"
+                        id="name"
+                        type="text"
+                        placeholder="Test User"
+                        required
+                        autoComplete="name"
+                        value={billingDetails.name}
+                        onChange={(e) => {
+                            setBillingDetails({...billingDetails, name: e.target.value});
+                        }}
+                    />
+                    <Field
+                        label="Email"
+                        id="email"
+                        type="email"
+                        placeholder="test@testmail.com"
+                        required
+                        autoComplete="email"
+                        value={billingDetails.email}
+                        onChange={(e) => {
+                            setBillingDetails({...billingDetails, email: e.target.value});
+                        }}
+                    />
+                    <Field
+                        label="Phone"
+                        id="phone"
+                        type="tel"
+                        placeholder="(941) 555-0123"
+                        required
+                        autoComplete="tel"
+                        value={billingDetails.phone}
+                        onChange={(e) => {
+                            setBillingDetails({...billingDetails, phone: e.target.value});
+                        }}
+                    />
+                </fieldset>
+                <fieldset className="FormGroup">
+                    <CardField
+                        onChange={(e) => {
+                            setError(e.error);
+                            setCardComplete(e.complete);
+                        }}
+                    />
+                </fieldset>
+                {error && <ErrorMessage>{error.message}</ErrorMessage>}
+                <SubmitButton processing={processing} error={error} disabled={!stripe}>
+                    Subscripe
+                </SubmitButton>
+            </form>
+        );
+    }
+;
 
 const ELEMENTS_OPTIONS = {
     fonts: [

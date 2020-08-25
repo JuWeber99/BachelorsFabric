@@ -108,26 +108,36 @@ app.get("/", (req, res) => {
 
 
 app.post('/sub', async (req, res) => {
-    const {email, payment_method} = req.body;
 
-    const customer = await stripe.customers.create({
-        payment_method: payment_method,
-        email: email,
-        invoice_settings: {
-            default_payment_method: payment_method,
-        },
-    });
+    console.log(req.body)
 
-    const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{plan: 'prod_HtdGtm65srvqmm'}],
-        expand: ['latest_invoice.payment_intent']
-    });
+    const body = req.body;
+    try {
+        const customer = await stripe.customers.create({
+            payment_method: body.payment_method,
+            email: body.email,
+            invoice_settings: {
+                default_payment_method: body.payment_method,
+            },
+        })
 
-    const status = subscription['latest_invoice']['payment_intent']['status']
-    const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+        console.log(customer)
 
-    res.json({'client_secret': client_secret, 'status': status});
+        const subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+            items: [{plan: 'price_1HJpzkGLRl9OMbnVAKim8Kbz'}],
+            expand: ['latest_invoice.payment_intent']
+        });
+
+        console.log(subscription)
+
+        const status = subscription['latest_invoice']['payment_intent']['status']
+        const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+
+        res.json({'client_secret': client_secret, 'status': status});
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 
