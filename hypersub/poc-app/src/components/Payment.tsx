@@ -5,6 +5,7 @@ import "../styles/payment-checkout.css"
 import "../styles/payment-success.css"
 import SubscriptionInformationCard, {SubscriptionProps} from "./SubscriptionInformationCard";
 import loadingSpinner from "../Spinner-1s-200px.gif"
+import { Button } from "@material-ui/core";
 
 export const globalCurrencyCodeEuro = "EUR"
 
@@ -76,14 +77,14 @@ export const Payment = ({subscriptionContract}: SubscriptionProps) => {
                 <h2> Have fun with your service!</h2>
                 <h2>Vertrags-Kennung: {subscriptionContract.contractId}!</h2>
                 <Tick size={200}/>
-                <button
+                <Button
                     onClick={() => {
                         console.log("go back!")
                         setPaidFor(false)
                         setLoaded(false)
                     }}
                 > Back !
-                </button>
+                </Button>
             </div>
         );
     }

@@ -2,6 +2,12 @@ import express from "express";
 import cors from "cors"
 import {populateNetworkConnection} from "./NetConnection";
 import {ChainCodeCaller} from "./ChaincodeCaller";
+import {Stripe} from "stripe"
+
+var stripe = new Stripe('sk_test_51HJpsyGLRl9OMbnVDfUbtvIbo9zZiy1af7oGJIqYmEMkb5fEE1PDFu3o1RMTHYJrGeNZHIObb6TOkDeDQWkFzm3T00OxXXxlVu',
+        {
+            apiVersion: "2020-03-02",
+        });
 
 const app = express();
 process.title = "poc-server";
@@ -95,17 +101,34 @@ app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, r
     }
 })
 
-// app.get('/api/readInitialWithoutPromise', (req, res) => {
-//     populateNetworkConnection().then((network) =>
-//         new ChainCodeCaller(network))
-//         .then((caller) => caller.readInitialLedger())
-//         .then((response) => {
-//             res.status(200).json(JSON.parse(response))
-//         }).catch((apiError) => {
-//         res.status(400).send(apiError)
-//     })
-//     // caller.disconnect();
-// })
+
+app.get("/", (req, res) => {
+    res.send("Hello")
+})
+
+
+app.post('/sub', async (req, res) => {
+    const {email, payment_method} = req.body;
+
+    const customer = await stripe.customers.create({
+        payment_method: payment_method,
+        email: email,
+        invoice_settings: {
+            default_payment_method: payment_method,
+        },
+    });
+
+    const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{plan: 'prod_HtdGtm65srvqmm'}],
+        expand: ['latest_invoice.payment_intent']
+    });
+
+    const status = subscription['latest_invoice']['payment_intent']['status']
+    const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+
+    res.json({'client_secret': client_secret, 'status': status});
+})
 
 
 app.listen(3031);

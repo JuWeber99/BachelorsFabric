@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.9.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -12,15 +15,16 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.20.0",
+    "iso-country-currency": "^0.5.1",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-crude-animated-tick": "^1.0.2",
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "typescript": "~3.7.2",
-    "moment": "^2.27.0",
-    "iso-country-currency": "^0.5.1"
+    "typescript": "~3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",

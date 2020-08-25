@@ -4,6 +4,7 @@ import "../styles/personal-details.css"
 import errorImage from "../error.png";
 import {Link} from "react-router-dom";
 import infinSpinner from "../Infinity-1.1s-200px.gif";
+import {Button} from "@material-ui/core";
 
 export interface AllCustomerDetailsProps {
     accountId: string
@@ -47,7 +48,7 @@ export const AllCustomerDetails = ({accountId}: AllCustomerDetailsProps) => {
             <div className={"resource-missing"}>
                 <h1>RESSOURCE NICHT VORHANDEN!</h1>
                 <img src={errorImage} width={200} height={200}/>
-                <button><Link to={"/"}>Zurück zu Home</Link></button>
+                <Button><Link to={"/"}>Zurück zu Home</Link></Button>
             </div>
         )
     }

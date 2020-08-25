@@ -8,9 +8,17 @@ import SubscriptionInformationCard from "./components/SubscriptionInformationCar
 import {testAccounts, testContract} from "./testing/initialTestLedger";
 import PersonalDetailSettings from "./components/PersonalDetailSettings";
 import AllCustomerDetails from "./components/AllCustomerDetails";
+import SubscriptionPayment from "./components/SubscriptionPayment";
+import {Button} from "@material-ui/core";
+import {Elements} from "@stripe/react-stripe-js";
+import {loadStripe} from "@stripe/stripe-js";
+import {CheckoutForm} from "./components/StripAdditionals";
+
+const stripePromise = loadStripe("pk_test_51HJpsyGLRl9OMbnVYEBLVhqQtpP0uW1AZRUEYitU8IeqWILXRNeUz3v3nUtFoTjakB7qgJiG5F8uBFPXgTLKHAc1002ZXeeV6j");
 
 function App() {
     return (
+
         <div className={"app-container"}>
             <Switch>
                 <Route exact path={"/"}>
@@ -43,13 +51,18 @@ function App() {
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>
                 </Route>
-                <Route exact path={"/payment"}>
+                <Route exact path={"/paypal"}>
                     <Payment subscriptionContract={testContract}/>
                 </Route>
+                <Route exact path={"/stripe"}>
+                    <Elements stripe={stripePromise}>
+                        <CheckoutForm/>
+                    </Elements>
+                </Route>
             </Switch>
-
-            <button className={"tohome-btn"}> <Link to={"/"}> Hier gehts "nach Hause" </Link></button>
+            <Button color={"primary"} style={{marginTop: "10%"}}> <Link to={"/"}> Hier gehts "nach Hause" </Link></Button>
         </div>
+
     );
 }
 

@@ -19,15 +19,10 @@ body {
   align-items: center;
 }
 
-.tohome-btn {
-  margin-top: 15px;
-  padding: 15px;
-  font-weight: bolder;
-  font-size: 20px;
-  border: 1px solid cornflowerblue;
-  border-radius: 10px;
-}
-
 a{
   text-decoration: none;
+}
+
+.btn {
+  margin-top: 20px
 }

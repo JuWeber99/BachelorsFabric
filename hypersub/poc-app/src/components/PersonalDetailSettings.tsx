@@ -5,6 +5,7 @@ import {CustomerAccount} from "../types/CustomerAccountAsset";
 import infinSpinner from "../Infinity-1.1s-200px.gif"
 import errorImage from "../error.png"
 import {Link, Redirect, withRouter} from "react-router-dom";
+import {Button} from "@material-ui/core";
 
 
 export interface PersonalDetailSettingProps {
@@ -120,17 +121,18 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
                             <b>Straße/Hausnummer: </b> {personalDetails!.address.streetName} - {personalDetails!.address.houseNumber}
                         </p>
                     </ul>
-                    <button onClick={() => {
+                    <Button onClick={() => {
                         setShowSpinner(true)
                         setCallUpdate(true)
                     }}> Teste Update-Ledger API
-                    </button>
-                    <button onClick={() => {
+                    </Button>
+                    <Button onClick={() => {
                         callCreateTestAccount(1)
+                        setTimeout((() => console.log()) , 50 )
                     }}> <Link to={"/personal2"}>Erstelle Test-User 1</Link>
-                    </button>
-                    <button onClick={() => callCreateTestAccount(2)}><Link to={"/personal3"}>Erstelle Test-User 2</Link>
-                    </button>
+                    </Button>
+                    <Button onClick={() => callCreateTestAccount(2)}><Link to={"/personal3"}>Erstelle Test-User 2</Link>
+                    </Button>
                 </div>
             }
             {
@@ -141,8 +143,8 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailSetti
                 <div className={"resource-missing"}>
                     <h1>RESSOURCE NICHT VORHANDEN!</h1>
                     <img src={errorImage} width={200} height={200}/>
-                    <button><Link to={"/personal"}>Zur initialen Ressource</Link></button>
-                    <button><Link to={"/"}>Zurück zu Home</Link></button>
+                    <Button><Link to={"/personal"}>Zur initialen Ressource</Link></Button>
+                    <Button><Link to={"/"}>Zurück zu Home</Link></Button>
                 </div>
             }
         </React.Fragment>

@@ -6,7 +6,8 @@ export enum ProductType {
 export class Product {
     productId: string;
     productType: ProductType;
-    callThreshold: string;
+    callThresholdInMin: string;
     smsThreshold: number;
     dataUsageThresholdInMb: number;
+    amount: number;
 }

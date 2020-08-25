@@ -16,19 +16,21 @@ import {CustomerAccount} from "../types/assets/CustomerAccountAsset";
 
 // PRODUCTS #################################
 export const testSmsOption: Product = {
-    callThreshold: moment.duration(0).toISOString(),
+    callThresholdInMin: moment.duration(0).toISOString(),
     dataUsageThresholdInMb: 0,
     smsThreshold: 50,
     productId: "7b2b1179a8953dc98acc70bd827d569352f3c4d8dcb98f9fbf089b45da51d455",
-    productType: ProductType.RATE_OPTION
+    productType: ProductType.RATE_OPTION,
+    amount: 10
 }
 
 export const testStandartSubscribtion: Product = {
-    callThreshold: moment.duration(100, "minutes").toISOString(),
+    callThresholdInMin: moment.duration(100, "minutes").toISOString(),
     dataUsageThresholdInMb: 5000,
     smsThreshold: 200,
     productId: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    productType: ProductType.SUBSCRIPTION
+    productType: ProductType.SUBSCRIPTION,
+    amount: 10
 }
 // ##########################################
 
