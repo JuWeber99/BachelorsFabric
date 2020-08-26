@@ -4,7 +4,7 @@ import "../styles/personal-details.css"
 import {CustomerAccount} from "../types/CustomerAccountAsset";
 import infinSpinner from "../Infinity-1.1s-200px.gif"
 import errorImage from "../error.png"
-import {Link, Redirect, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {Button} from "@material-ui/core";
 
 
@@ -12,7 +12,6 @@ export interface PersonalDetailProps {
     accountId: string,
     name: string,
     forename: string
-    props?: any
 }
 
 export async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
@@ -30,7 +29,7 @@ export async function getPersonalDetailsForCustomerOnSite(accountId: string, per
 }
 
 
-const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailProps) => {
+const PersonalDetailSettings = ({accountId, name, forename, history}: PersonalDetailProps & RouteComponentProps ) => {
 
     const [callUpdate, setCallUpdate]: [boolean, any] = useState(false);
     const [personFetched, setPersonFetched]: [boolean, any] = useState(false);
@@ -129,10 +128,15 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailProps
                     </Button>
                     <Button onClick={() => {
                         callCreateTestAccount(1)
-                        setTimeout((() => console.log()) , 50 )
-                    }}> <Link to={"/personal2"}>Erstelle Test-User 1</Link>
+                        setTimeout((() => console.log()) , 150 )
+                        history.push("/personal2")
+                    }}>Erstelle Test-User 1
                     </Button>
-                    <Button onClick={() => callCreateTestAccount(2)}><Link to={"/personal3"}>Erstelle Test-User 2</Link>
+                    <Button onClick={() => {
+                        callCreateTestAccount(2)
+                        setTimeout((() => console.log()) , 150 )
+                        history.push("/personal2")
+                    }}>Erstelle Test-User 2
                     </Button>
                 </div>
             }
@@ -152,4 +156,4 @@ const PersonalDetailSettings = ({accountId, name, forename}: PersonalDetailProps
     );
 };
 
-export default PersonalDetailSettings;
+export default withRouter(PersonalDetailSettings);

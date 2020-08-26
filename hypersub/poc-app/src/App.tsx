@@ -14,7 +14,7 @@ import {loadStripe} from "@stripe/stripe-js";
 import {SubscriptionCheckout} from "./components/StripeCheckout";
 
 const stripePromise = loadStripe("pk_test_51HJpsyGLRl9OMbnVYEBLVhqQtpP0uW1AZRUEYitU8IeqWILXRNeUz3v3nUtFoTjakB7qgJiG5F8uBFPXgTLKHAc1002ZXeeV6j");
-
+process.title="poc-app"
 function App() {
     return (
 
@@ -49,9 +49,6 @@ function App() {
                         accountId={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
                         name={testAccounts.personalDetails[0].name}
                         forename={testAccounts.personalDetails[0].forename}/>
-                </Route>
-                <Route exact path={"/paypal"}>
-                    <InstantCheckout subscriptionContract={testContract}/>
                 </Route>
                 <Route exact path={"/stripe"}>
                     <Elements stripe={stripePromise}>

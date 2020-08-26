@@ -28,7 +28,6 @@ app.get("/api/changeCustomerAddress", async (req, res) => {
     }
 })
 
-
 app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
@@ -40,6 +39,19 @@ app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res
         res.status(400).send(apiError)
     }
 })
+
+app.get("/api/createTestContractForInitialUser", async (req, res) => {
+    try {
+        const network = await populateNetworkConnection();
+        const caller = new ChainCodeCaller(network);
+        await caller.createSubscriptionContractForCustomerSim("5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809","310120265624299");
+        res.status(200).send("PoC contract created!")
+        caller.disconnect();
+    } catch (apiError) {
+        res.status(400).send(apiError)
+    }
+})
+
 
 
 app.get('/api/createTestAccount', async (req, res) => {

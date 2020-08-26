@@ -31,6 +31,12 @@ const CARD_OPTIONS = {
     },
 };
 
+function createTestContractForInitialCustomer(): Promise<boolean> {
+    let success = fetch(`http://localhost:3031/api/createTestContractForInitialUser`)
+        .then((response) => response.ok)
+    return success;
+}
+
 const CardField = ({onChange}) => (
     <div className="FormRow">
         {/*// @ts-ignore*/}
@@ -250,9 +256,12 @@ export const SubscriptionCheckout = ({accountId, name, forename}: PersonalDetail
                     Thanks for trying Stripe Elements. No money was charged, but we
                     generated a PaymentMethod: {paymentMethod.id}
                 </div>
-                <ResetButton onClick={reset}/>
+                <ResetButton onClick={() => {
+                    createTestContractForInitialCustomer();
+                    reset()
+                }}/>
             </div>
-        ) : !doLoad ?  (
+        ) : !doLoad ? (
             <form className="Form" onSubmit={handleSubmitSub}>
                 <fieldset className="FormGroup">
                     <Field
@@ -264,7 +273,11 @@ export const SubscriptionCheckout = ({accountId, name, forename}: PersonalDetail
                         autoComplete="name"
                         value={personalDetails.name}
                         onChange={(e) => {
-                            setPersonalDetails({...personalDetails, name: e.target.value.toString().split(" ")[1], forename: e.target.value.toString().split(" ")[0] });
+                            setPersonalDetails({
+                                ...personalDetails,
+                                name: e.target.value.toString().split(" ")[1],
+                                forename: e.target.value.toString().split(" ")[0]
+                            });
                         }}
                     />
                     <Field
@@ -307,14 +320,5 @@ export const SubscriptionCheckout = ({accountId, name, forename}: PersonalDetail
                     Subscripe
                 </SubmitButton>
             </form>
-        ): <img style={{marginTop: "20%"}} src={infinSpinner}/>;
-    }
-;
-
-const ELEMENTS_OPTIONS = {
-    fonts: [
-        {
-            cssSrc: 'https://fonts.googleapis.com/css?family=Roboto',
-        },
-    ],
-};
+        ) : <img style={{marginTop: "20%"}} src={infinSpinner}/>;
+    };

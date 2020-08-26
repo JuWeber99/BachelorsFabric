@@ -2,7 +2,7 @@ import {Subscription} from "./Susbcription";
 import {PricedEvent} from "./PricedEvent";
 
 export interface SimDetails {
-    identity:  string | File ;
+    IMSI:  string | File ;
     phoneNumber: string;
     contracts?: Array<Subscription>
     consumedPricedEvents?: Array<PricedEvent>

@@ -116,7 +116,7 @@ export const testStatement: Statement = {
 }
 
 export const testSim: SimDetails = {
-    identity: "CERTIFICATE PATH",
+    IMSI: "CERTIFICATE PATH",
     phoneNumber: "+4901623713723",
     contracts: [testContract],
     consumedPricedEvents: [testCallEvent, testSMSEvent, testDataUsageEvent],

@@ -112,9 +112,9 @@ export const testStatement: Statement = {
 }
 
 export const testSim: SimDetails = {
-    identity: "CERTIFICATE PATH",
+    IMSI: "310120265624299",
     phoneNumber: "+4901623713723",
-    contracts: [testContract],
+    contracts: [],
     consumedPricedEvents: [testCallEvent, testSMSEvent, testDataUsageEvent],
 }
 
@@ -145,7 +145,11 @@ export const testAccountsTwo: CustomerAccount =
                 paymentToken: "testPaymentToken"
             }
         }],
-        personalDetails: [testPersonalDetails],
+        personalDetails:  [{
+            name: "User 1",
+            forename: "Test",
+            ...testPersonalDetails
+        }],
         statement: testStatement,
         simDetails: [testSim],
         isRevoked: false
@@ -160,7 +164,11 @@ export const testAccountsThree: CustomerAccount =
                 paymentToken: "testPaymentToken"
             }
         }],
-        personalDetails: [testPersonalDetails],
+        personalDetails:  [{
+            name: "User 2",
+            forename: "Test",
+            ...testPersonalDetails
+        }],
         statement: testStatement,
         simDetails: [testSim],
         isRevoked: false

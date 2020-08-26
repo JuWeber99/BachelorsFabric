@@ -3,10 +3,10 @@ import "../styles/subscription-card.css"
 import {Subscription} from "../types/Susbcription";
 
 export interface SubscriptionProps {
-    subscriptionContract: Subscription
+    accountId: string
 }
 
-const SubscriptionInformationCard = ({subscriptionContract}: SubscriptionProps) => {
+const SubscriptionInformationCard = ({accountId}: SubscriptionProps) => {
     return (
         <div className={"subscription-card"}>
             <h3>{subscriptionContract.subscriptionProduct.productType}</h3>

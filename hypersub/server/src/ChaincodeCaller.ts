@@ -50,7 +50,7 @@ export class ChainCodeCaller {
     }
 
     async readCustomerAccount(accountId: string): Promise<string> {
-        console.log("calling readCustomerAccount for id: "+accountId)
+        console.log("calling readCustomerAccount for id: " + accountId)
         let response = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
         console.log("Found something: +")
         console.log(ChainCodeCaller.deserializeResponse(response))
@@ -77,6 +77,14 @@ export class ChainCodeCaller {
         console.log(`targeting Person named: ${forename} ${name}`)
         let response = await this.contract.evaluateTransaction("findPersonalDetailIndex", accountId, name, forename);
         return response.toString();
+    }
+
+    async createSubscriptionContractForCustomerSim(accountId: string, imsi: string) {
+        console.log("calling createSubscriptionContractForCustomerSim")
+        console.log("target account: " + accountId)
+        console.log(`targeting SIM with IMSI: ${imsi}`)
+        let response = await this.contract.submitTransaction("createSubscriptionContractForCustomerSim",accountId, imsi )
+        return response.toString()
     }
 
 }
