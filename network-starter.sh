@@ -40,8 +40,6 @@ function startNode_Containers() {
 }
 
 function startApplication_Containers() {
-  printInfo "Sleeping for a short amount ..."
-  sleep 5
   printTask "Starting Docker containers for the application"
   docker-compose -f $COMPOSE_FILE_CUSTOMER_APP up -d
   docker ps -a
@@ -108,6 +106,7 @@ function networkUp() {
   createOrganisations
   createConsortium
   startNode_Containers
+  startApplication_Containers
 }
 
 ### Application Flow ###
@@ -117,11 +116,8 @@ echo
 echo
 
 networkUp
-
-sleep 5
 $HYPERSUB_BASE/scripts/createChannels.sh
 $HYPERSUB_BASE/scripts/deployChaincode.sh
-
 
 PREV_DIR=${PWD}
 
@@ -129,7 +125,7 @@ export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-npm start &
-cd $HYPERSUB_BASE/hypersub/poc-app/src
-npm start
+#npm start &
+#cd $HYPERSUB_BASE/hypersub/poc-app/src
+#npm start
 

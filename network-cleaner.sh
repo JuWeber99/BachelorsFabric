@@ -5,12 +5,14 @@ export HYPERSUB_BASE=/home/balr/Developement/BachelorsFabric
 COMPOSE_FILE_BASE=$HYPERSUB_BASE/docker/docker-compose-hypersub-net.yaml
 COMPOSE_FILE_COUCH=$HYPERSUB_BASE/docker/docker-compose-db.yaml
 COMPOSE_FILE_CA=$HYPERSUB_BASE/docker/docker-compose-ca.yaml
+COMPOSE_FILE_CUSTOMER_APP=$HYPERSUB_BASE/docker/docker-compose-poc.yaml
 
 function networkDown() {
-  pkill poc-server
-  pkill poc-client
+  pkill -f poc-server
+  pkill -f poc-client
   #clean up containers
   docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
+  docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_CUSTOMER_APP down --volumes --remove-orphans
   docker network prune -f
 
   #clean up files

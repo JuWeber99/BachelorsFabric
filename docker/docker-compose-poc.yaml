@@ -24,3 +24,22 @@ services:
       - hypersub-net
 
 
+
+  poc-server:
+    container_name: poc-server
+    build:
+      context: ../hypersub/server
+      dockerfile: Dockerfile
+    ports:
+      - 3031:3031
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - '..:/hypersub/server'
+      - '/hypersub/server/node_modules'
+    command: npm start
+    stdin_open: true
+    networks:
+      - hypersub-net
+
+
