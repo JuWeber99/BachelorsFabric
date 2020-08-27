@@ -1,5 +1,4 @@
 import {Contract, Network} from "fabric-network";
-import {testAccounts} from "../../poc-app/src/testing/initialTestLedger";
 
 export class ChainCodeCaller {
 

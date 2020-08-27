@@ -1,31 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {PersonalDetails} from "../types/PersonalDetails";
 import "../styles/personal-details.css"
-import {CustomerAccount} from "../types/CustomerAccountAsset";
 import infinSpinner from "../Infinity-1.1s-200px.gif"
 import errorImage from "../error.png"
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {Button} from "@material-ui/core";
+import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite} from "../api_util/readApi";
 
 
 export interface PersonalDetailProps {
     accountId: string,
     name: string,
     forename: string
-}
-
-export async function callFindPersonIndex(accountId: string, name: string, forename: string): Promise<number> {
-    const personIndex = await fetch(`http://localhost:3031/api/findPersonalDetailIndex/${accountId}/${name}/${forename}`)
-        .then((response) => response.json())
-        .then((personIndex: number) => personIndex)
-    return personIndex;
-}
-
-export async function getPersonalDetailsForCustomerOnSite(accountId: string, personIndex: number): Promise<PersonalDetails> {
-    let result = await fetch(`http://localhost:3031/api/readCustomerAccount/${accountId}`)
-        .then((response) => response.json())
-        .then((customerAccount: CustomerAccount) => customerAccount.personalDetails[personIndex])
-    return result
 }
 
 

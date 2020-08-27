@@ -1,17 +1,16 @@
 import React from 'react';
 import './styles/App.css';
 import "./styles/payment-success.css"
-import {InstantCheckout} from "./components/InstantCheckout";
 import {Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
 import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
-import {testAccounts, testContract} from "./testing/initialTestLedger";
+import {testAccounts} from "./testing/initialTestLedger";
 import PersonalDetailSettings from "./components/PersonalDetailSettings";
 import AllCustomerDetails from "./components/AllCustomerDetails";
-import {Button} from "@material-ui/core";
 import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
 import {SubscriptionCheckout} from "./components/StripeCheckout";
+import {Button} from "@material-ui/core";
 
 const stripePromise = loadStripe("pk_test_51HJpsyGLRl9OMbnVYEBLVhqQtpP0uW1AZRUEYitU8IeqWILXRNeUz3v3nUtFoTjakB7qgJiG5F8uBFPXgTLKHAc1002ZXeeV6j");
 process.title="poc-app"
@@ -27,7 +26,7 @@ function App() {
                     <AllCustomerDetails accountId={testAccounts.accountId}/>
                 </Route>
                 <Route exact path={"/infoCard"}>
-                    <SubscriptionInformationCard subscriptionContract={testContract}/>
+                    <SubscriptionInformationCard accountId={testAccounts.accountId}/>
                 </Route>
                 <Route exact path={"/personal"}>
                     <PersonalDetailSettings

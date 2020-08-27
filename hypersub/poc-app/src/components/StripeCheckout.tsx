@@ -2,10 +2,11 @@ import {CardElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import React, {useEffect, useState} from "react";
 import "../styles/stripe.css"
 import axios from "axios";
-import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite, PersonalDetailProps} from "./PersonalDetailSettings";
 import {PersonalDetails} from "../types/PersonalDetails";
 import {IsoCountryCodes} from "../types/IsoCountryCodes";
 import infinSpinner from "../Infinity-1.1s-200px.gif";
+import {PersonalDetailProps} from "./PersonalDetailSettings";
+import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite} from "../api_util/readApi";
 
 
 const CARD_OPTIONS = {
