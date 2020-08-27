@@ -7,12 +7,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {ccpPath} from "./enrollAdmin";
 
-
+// const ccpPath = path.resolve(__dirname, '..', '..', '..', 'organizations', 'peerOrganizations', 'nexnet.hypersub.com', 'connection-nexnet.json');
 export const populateNetworkConnection = async () => {
     console.log("populate connection ...")
     try {
-        const ccpPath = path.resolve(__dirname, '..', '..', '..', 'organizations', 'peerOrganizations', 'nexnet.hypersub.com', 'connection-nexnet.json');
+        const ccpPath = path.resolve(__dirname, '..', 'gateway', 'connection-nexnet.json');
         const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+        console.log(ccp)
         console.log(ccp.toString())
 // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');

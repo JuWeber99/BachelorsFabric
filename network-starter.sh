@@ -106,7 +106,7 @@ function networkUp() {
   createOrganisations
   createConsortium
   startNode_Containers
-#  startApplication_Containers
+  #startApplication_Containers
 }
 
 ### Application Flow ###
@@ -121,11 +121,12 @@ $HYPERSUB_BASE/scripts/deployChaincode.sh
 
 PREV_DIR=${PWD}
 
+startApplication_Containers
 export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-npm start &
-cd $HYPERSUB_BASE/hypersub/poc-app/src
-npm start
+#npm start &
+#cd $HYPERSUB_BASE/hypersub/poc-app/src
+#npm start
 

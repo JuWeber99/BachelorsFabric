@@ -16,8 +16,8 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     volumes:
-      - '../hypersub/poc-app:/home/node/app'
-      - '/home/node/app/node_modules'
+      - ../hypersub/poc-app:/home/node/app
+      - /home/node/app/node_modules
     command: npm start
     stdin_open: true
     networks:
@@ -35,8 +35,13 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     volumes:
-      - '..:/hypersub/server'
-      - '/hypersub/server/node_modules'
+      - ../hypersub/server:/hypersub/server
+      - /hypersub/server/node_modules
+      - type: bind
+        source: /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/connection-nexnet.json
+        target: /hypersub/server/gateway/connection-nexnet.json
+#      - /home/balr/Developement/BachelorsFabric/organizations/peerOrganizations/nexnet.hypersub.com/connection-nexnet.yaml:/hypersub/server/gateway/connection-nexnet.yaml
+
     command: npm start
     stdin_open: true
     networks:
