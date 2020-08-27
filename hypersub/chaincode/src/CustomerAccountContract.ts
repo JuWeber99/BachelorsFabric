@@ -1,11 +1,5 @@
 import {Context, Contract} from 'fabric-contract-api';
-import {
-    testAccounts,
-    testAccountsThree,
-    testAccountsTwo,
-    testContract,
-    testStandartSubscribtion
-} from "./data/initialTestLedger";
+import {testAccounts, testAccountsThree, testAccountsTwo, testContract} from "./data/initialTestLedger";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 
 class CustomerAccountContext extends Context {

@@ -10,7 +10,7 @@ import {getCustomerDetails} from "../api_util/readApi";
 export interface SubscriptionProps {
     accountId: string
 }
-
+// WASTE
 const SubscriptionInformationCard = ({accountId}: SubscriptionProps) => {
     const [isLoading, setLoading]: [boolean, any] = useState(true)
     const [error, setError]: [boolean, any] = useState(false)
@@ -18,9 +18,8 @@ const SubscriptionInformationCard = ({accountId}: SubscriptionProps) => {
 
     useEffect(() => {
         async function fetchCustomer() {
-            setLoading(true)
             const customer = await getCustomerDetails(accountId);
-            setSubscriptionContract(customer)
+            setSubscriptionContract(customer.simDetails)
         }
 
         if (subscriptionContract === null) {

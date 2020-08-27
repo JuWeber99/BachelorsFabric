@@ -25,9 +25,6 @@ function App() {
                 <Route exact path={"/data"}>
                     <AllCustomerDetails accountId={testAccounts.accountId}/>
                 </Route>
-                <Route exact path={"/infoCard"}>
-                    <SubscriptionInformationCard accountId={testAccounts.accountId}/>
-                </Route>
                 <Route exact path={"/personal"}>
                     <PersonalDetailSettings
                         key={testAccounts.accountId}

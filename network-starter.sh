@@ -106,7 +106,7 @@ function networkUp() {
   createOrganisations
   createConsortium
   startNode_Containers
-  startApplication_Containers
+#  startApplication_Containers
 }
 
 ### Application Flow ###
@@ -125,7 +125,7 @@ export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
 cd $HYPERSUB_BASE/hypersub/server/src
 ts-node enrollAdmin.ts
 ts-node enrollRegisterUser.ts
-#npm start &
-#cd $HYPERSUB_BASE/hypersub/poc-app/src
-#npm start
+npm start &
+cd $HYPERSUB_BASE/hypersub/poc-app/src
+npm start
 
