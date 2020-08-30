@@ -1,5 +1,5 @@
 import {Context, Contract} from 'fabric-contract-api';
-import {testAccounts, testAccountsThree, testAccountsTwo, testContract} from "./data/initialTestLedger";
+import {migrationData, testAccountsThree, testAccountsTwo, testContract} from "./data/initialTestLedger";
 import {CustomerAccount} from "./types/assets/CustomerAccountAsset";
 
 class CustomerAccountContext extends Context {
@@ -29,10 +29,11 @@ export class CustomerAccountContract extends Contract {
 
 
     public async initLedger(ctx: CustomerAccountContext) {
-        await ctx.stub.putState(testAccounts.accountId, ctx.toBuffer(testAccounts));
+        await ctx.stub.putState(migrationData.accountId, ctx.toBuffer(migrationData));
     }
 
     public async createCustomerTestAccount(ctx: CustomerAccountContext) {
+        console.log(JSON.stringify(testAccountsTwo))
         await ctx.stub.putState(testAccountsTwo.accountId, ctx.toBuffer(testAccountsTwo));
     };
 
@@ -78,18 +79,18 @@ export class CustomerAccountContract extends Contract {
         if (customerAccountBuffer.length === 0) {
             throw new Error(`${accountId} does not exist`);
         }
-        const customerAccount : CustomerAccount= ctx.fromBuffer(customerAccountBuffer);
+        const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountBuffer);
         const simIndex = await this.findSimIndex(ctx, accountId, imsi)
         const contracts = customerAccount.simDetails[simIndex]
         return ctx.toBuffer(contracts).toString();
     }
 
-    public async createSubscriptionContractForCustomerSim (ctx: CustomerAccountContext, accountId: string, imsi: string) {
+    public async createSubscriptionContractForCustomerSim(ctx: CustomerAccountContext, accountId: string, imsi: string) {
         const customerAccountBuffer = await ctx.stub.getState(accountId);
-        if (!customerAccountBuffer || customerAccountBuffer === null ) {
+        if (!customerAccountBuffer || customerAccountBuffer === null) {
             throw new Error(`customer with accountId: ${accountId} not found`);
         }
-        const customerAccount : CustomerAccount = ctx.fromBuffer(customerAccountBuffer);
+        const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountBuffer);
         const simIndex: number = await this.findSimIndex(ctx, accountId, imsi)
         //PoC purposes with initial test customer
         customerAccount.simDetails[simIndex].contracts.push(testContract);
@@ -115,15 +116,14 @@ export class CustomerAccountContract extends Contract {
 
     public async findSimIndex(ctx: CustomerAccountContext, accountId: string, imsi: string) {
         const customerAccountBuffer = await ctx.stub.getState(accountId);
-        if (!customerAccountBuffer || customerAccountBuffer === null ) {
+        if (!customerAccountBuffer || customerAccountBuffer === null) {
             throw new Error(`customer with accountId: ${accountId} not found`);
         }
-        const customerAccount : CustomerAccount = ctx.fromBuffer(customerAccountBuffer);
+        const customerAccount: CustomerAccount = ctx.fromBuffer(customerAccountBuffer);
         const simIndex: number = customerAccount.simDetails.findIndex(x => x.IMSI === imsi);
-        if(simIndex === -1) {
+        if (simIndex === -1) {
             throw new Error(`SIM with IMSI: ${imsi} not found`);
         }
         return simIndex;
     }
 }
-

@@ -6,7 +6,7 @@ import {PersonalDetails} from "../types/PersonalDetails";
 import {IsoCountryCodes} from "../types/IsoCountryCodes";
 import infinSpinner from "../Infinity-1.1s-200px.gif";
 import {PersonalDetailProps} from "./PersonalDetailSettings";
-import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite} from "../api_util/readApi";
+import {callFindPersonIndex, getPersonalDetailsForCustomerOnSite} from "../api_util/callApiEndpoints";
 
 
 const CARD_OPTIONS = {

@@ -3,7 +3,6 @@ import './styles/App.css';
 import "./styles/payment-success.css"
 import {Link, Route, Switch} from "react-router-dom"
 import Home from "./components/Home";
-import SubscriptionInformationCard from "./components/SubscriptionInformationCard";
 import {testAccounts} from "./testing/initialTestLedger";
 import PersonalDetailSettings from "./components/PersonalDetailSettings";
 import AllCustomerDetails from "./components/AllCustomerDetails";
@@ -36,15 +35,15 @@ function App() {
                     <PersonalDetailSettings
                         key={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
                         accountId={"guhidasfg238r766grzseugc97dsaftg67sadfadsf23"}
-                        name={testAccounts.personalDetails[0].name}
-                        forename={testAccounts.personalDetails[0].forename}/>
+                        name={"User 1"}
+                        forename={"Test"}/>
                 </Route>
                 <Route exact path={"/personal3"}>
                     <PersonalDetailSettings
                         key={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
                         accountId={"aaabbbcccdddeeefasdfhcsiqkfhjasdf"}
-                        name={testAccounts.personalDetails[0].name}
-                        forename={testAccounts.personalDetails[0].forename}/>
+                        name={"User 2"}
+                        forename={"Test"}/>
                 </Route>
                 <Route exact path={"/stripe"}>
                     <Elements stripe={stripePromise}>

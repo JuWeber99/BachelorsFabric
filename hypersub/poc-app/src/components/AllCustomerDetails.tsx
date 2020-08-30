@@ -5,7 +5,7 @@ import errorImage from "../error.png";
 import {Link} from "react-router-dom";
 import infinSpinner from "../Infinity-1.1s-200px.gif";
 import {Button} from "@material-ui/core";
-import {getCustomerDetails} from "../api_util/readApi";
+import {getCustomerDetails} from "../api_util/callApiEndpoints";
 
 export interface AllCustomerDetailsProps {
     accountId: string

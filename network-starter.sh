@@ -106,26 +106,38 @@ function networkUp() {
   createOrganisations
   createConsortium
   startNode_Containers
-#  startApplication_Containers
+  #  startApplication_Containers
 }
 
+function createChannel() {
+  $HYPERSUB_BASE/scripts/createChannels.sh
+}
+
+function deployChaincode() {
+  $HYPERSUB_BASE/scripts/deployChaincode.sh
+}
+
+function startClients() {
+  PREV_DIR=${PWD}
+
+  export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
+  cd $HYPERSUB_BASE/hypersub/server/src
+  ts-node enrollAdmin.ts
+  ts-node enrollRegisterUser.ts
+  npm start &
+  cd $HYPERSUB_BASE/hypersub/poc-app/src
+  npm start
+}
+
+cleanUp() {
+  echo
+  . $HYPERSUB_BASE/network-cleaner.sh
+  echo
+}
+
+
 ### Application Flow ###
-
-echo
-. $HYPERSUB_BASE/network-cleaner.sh
-echo
-
+cleanUp
 networkUp
-$HYPERSUB_BASE/scripts/createChannels.sh
-$HYPERSUB_BASE/scripts/deployChaincode.sh
-
-PREV_DIR=${PWD}
-
-export PATH=/home/balr/Developement/caching/.npm-global/bin/:$PATH
-cd $HYPERSUB_BASE/hypersub/server/src
-ts-node enrollAdmin.ts
-ts-node enrollRegisterUser.ts
-npm start &
-cd $HYPERSUB_BASE/hypersub/poc-app/src
-npm start
-
+createChannel
+deployChaincode

@@ -5,7 +5,7 @@ import infinSpinner from "../Infinity-1.1s-200px.gif";
 import errorImage from "../error.png";
 import {Button} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import {getCustomerDetails} from "../api_util/readApi";
+import {getCustomerDetails} from "../api_util/callApiEndpoints";
 
 export interface SubscriptionProps {
     accountId: string

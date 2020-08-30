@@ -119,7 +119,7 @@ export const testSim: SimDetails = {
 }
 
 
-export const testAccounts: CustomerAccount =
+export const migrationData: CustomerAccount =
     {
         accountId: "5d60f057f5294daa7aee33183d3252d1fa78a64da3aee5d8dbdebcbc24c3b809", //random hash string
         bankingDetails: [{
@@ -148,7 +148,16 @@ export const testAccountsTwo: CustomerAccount =
         personalDetails:  [{
             name: "User 1",
             forename: "Test",
-            ...testPersonalDetails
+            address: {
+                country: IsoCountryCodes.Germany,
+                postalCode: "16798",
+                streetName: "testStreet",
+                houseNumber: "1",
+                residence: "Teststadt"
+            },
+            birthday: moment({day: 14, month: 6, year: 1999}).toDate(),
+            mailAddress: "test@poc-testuser1.de",
+            telephoneContact: "1111111111111111111"
         }],
         statement: testStatement,
         simDetails: [testSim],
@@ -167,7 +176,16 @@ export const testAccountsThree: CustomerAccount =
         personalDetails:  [{
             name: "User 2",
             forename: "Test",
-            ...testPersonalDetails
+            address: {
+                country: IsoCountryCodes.Germany,
+                postalCode: "16798",
+                streetName: "testStreet",
+                houseNumber: "2",
+                residence: "Teststadt"
+            },
+            birthday: moment({day: 14, month: 6, year: 1999}).toDate(),
+            mailAddress: "test@poc-testuser2.de",
+            telephoneContact: "22222222222222222"
         }],
         statement: testStatement,
         simDetails: [testSim],

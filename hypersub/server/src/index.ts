@@ -16,7 +16,7 @@ app.use(cors())
 app.use(bodyParser.json())
 
 
-app.get("/api/changeCustomerAddress", async (req, res) => {
+    app.get("/api/changeCustomerAddress", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -27,8 +27,7 @@ app.get("/api/changeCustomerAddress", async (req, res) => {
         res.status(400).send(apiError)
     }
 })
-
-app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res) => {
+    app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -39,8 +38,7 @@ app.get("/api/changeCustomerAddress/:accountId/:name/:forename", async (req, res
         res.status(400).send(apiError)
     }
 })
-
-app.get("/api/createTestContractForInitialUser", async (req, res) => {
+    app.get("/api/createTestContractForInitialUser", async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -51,10 +49,7 @@ app.get("/api/createTestContractForInitialUser", async (req, res) => {
         res.status(400).send(apiError)
     }
 })
-
-
-
-app.get('/api/createTestAccount', async (req, res) => {
+    app.get('/api/createTestAccount', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -65,9 +60,7 @@ app.get('/api/createTestAccount', async (req, res) => {
         res.status(400).send(apiError)
     }
 })
-
-
-app.get('/api/ct2', async (req, res) => {
+    app.get('/api/createTestTwoAccount', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -79,8 +72,7 @@ app.get('/api/ct2', async (req, res) => {
     }
 })
 
-
-app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
+    app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -90,9 +82,9 @@ app.get('/api/readCustomerAccount/:accountId', async (req, res) => {
     } catch (apiError) {
         res.status(400).send(apiError)
     }
-})
+    })
 
-app.get('/api/readInitialLedger', async (req, res) => {
+    app.get('/api/readInitialLedger', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -103,7 +95,7 @@ app.get('/api/readInitialLedger', async (req, res) => {
         res.status(400).send(apiError)
     }
 })
-app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, res) => {
+    app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
@@ -114,14 +106,10 @@ app.get('/api/findPersonalDetailIndex/:accountId/:name/:forename', async (req, r
         res.status(400).send(apiError)
     }
 })
-
-
-app.get("/", (req, res) => {
+    app.get("/", (req, res) => {
     res.send("Hello")
 })
-
-
-app.post('/sub', async (req, res) => {
+    app.post('/sub', async (req, res) => {
 
     const {email, payment_method} = req.body
     let client_secret;
@@ -158,6 +146,7 @@ app.post('/sub', async (req, res) => {
         })
     }
 })
+
 
 
 app.listen(3031);

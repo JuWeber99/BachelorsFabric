@@ -6,9 +6,10 @@ export class ChainCodeCaller {
     private chaincodeId;
     private contract: Contract;
 
-    constructor(network: Network) {
+
+    constructor(network: Network, chaincodeId:string="customeraccountcc") {
         this.network = network;
-        this.chaincodeId = "customeraccountcc"
+        this.chaincodeId = chaincodeId;
         this.contract = network.getContract(this.chaincodeId)
     }
 
@@ -51,7 +52,7 @@ export class ChainCodeCaller {
     async readCustomerAccount(accountId: string): Promise<string> {
         console.log("calling readCustomerAccount for id: " + accountId)
         let response = await this.contract.evaluateTransaction('readCustomerAccount', accountId);
-        console.log("Found something: +")
+        console.log("transaction proposal response: ")
         console.log(ChainCodeCaller.deserializeResponse(response))
         return ChainCodeCaller.deserializeResponse(response)
     }
@@ -85,5 +86,7 @@ export class ChainCodeCaller {
         let response = await this.contract.submitTransaction("createSubscriptionContractForCustomerSim",accountId, imsi )
         return response.toString()
     }
+
+
 
 }

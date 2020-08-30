@@ -146,18 +146,16 @@ VERBOSE="$4"
 : ${MAX_RETRY:="5"}
 : ${VERBOSE:="false"}
 
+
 ## Create channeltx for channel 1
 printTask "Generating channel create transaction '${CHANNEL_NAME}.tx'"
 createChannelTx "1"
-
 ## Create anchorpeertx
 printTask "Generating anchor peer update transactions "
 createAncorPeerTxOne
-
 ## Create channel
 printTask "Creating channel "$CHANNEL_NAME
 createChannel
-
 ## Join all the peers to the channel
 printTask "Join nexnet peers to the channel..."
 joinChannel 1
@@ -165,7 +163,6 @@ printTask "Join xorg peers to the channel..."
 joinChannel 2
 printTask "Join auditor peers to the channel"
 joinChannel 3
-
 ## Set the anchor peers for each org in the channel
 printTask "Updating anchor peers for nexnet..."
 updateAnchorPeers 1
@@ -173,25 +170,19 @@ printTask "Updating anchor peers for xorg..."
 updateAnchorPeers 2
 printTask "Updating anchor peers for auditor..."
 updateAnchorPeers 3
-
 echo
 printInfo "========= Channel1 successfully joined =========== "
 echo
-
 CHANNEL_NAME="channel2"
-
 ## Create channeltx for channel 1
 printTask "Generating channel create transaction '${CHANNEL_NAME}.tx' "
 createChannelTx "2"
-
 ## Create anchorpeertx
 printTask "Generating anchor peer update transactions "
 createAncorPeerTxTwo
-
 ## Create channel
 printTask "Creating channel $CHANNEL_NAME"
 createChannel
-
 ## Join all the peers to the channel
 printTask "Join nexnet peers to the channel..."
 joinChannel 1
@@ -199,7 +190,6 @@ printTask "Join xorg peers to the channel..."
 joinChannel 2
 printTask "Join debtcollector peers to the channel..."
 joinChannel 4
-
 ## Set the anchor peers for each org in the channel
 printTask "Updating anchor peers for nexnet ..."
 updateAnchorPeers 1
@@ -207,7 +197,6 @@ printTask "Updating anchor peers for xorg..."
 updateAnchorPeers 2
 printTask "Updating anchor peers for xorg..."
 updateAnchorPeers 4
-
 printInfo " ========= Channel2 successfully joined =========== "
 
 exit 0

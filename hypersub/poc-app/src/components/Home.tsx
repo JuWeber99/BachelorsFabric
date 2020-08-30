@@ -2,9 +2,10 @@ import React from 'react';
 import {Link, Redirect, withRouter} from "react-router-dom";
 import "../styles/home.css"
 import {Button} from "@material-ui/core";
+import {RouterProps} from "react-router";
 
 
-const Home = (props: any) => {
+const Home = (props: RouterProps) => {
     return (
         <div className={"home"}>
             <h1 style={{marginBottom: "0"}}> Willkommen zur PoC Applikation</h1>
@@ -14,7 +15,6 @@ const Home = (props: any) => {
                 <Button onClick={() => props.history.push("stripe")}> Zur Stripe-Integration für Subscription-Bezahlungen</Button>
                 <Button onClick={() => props.history.push("personal")}> Zur Ansicht der Persönlichen Informationen
                 </Button>
-                <Button onClick={() => props.history.push("infoCard")}> Zur Vertragsübersicht</Button>
                 <Button onClick={() => props.history.push("/data")}> Alle Daten für initialen Testuser </Button>
             </div>
         </div>
