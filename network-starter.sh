@@ -141,3 +141,4 @@ cleanUp
 networkUp
 createChannel
 deployChaincode
+startClients

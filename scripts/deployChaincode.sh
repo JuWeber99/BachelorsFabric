@@ -452,16 +452,6 @@ chaincodeInvokeInitFromNexnet() {
   echo ""
 }
 
-testInvalidSignatureSecond() {
-  setNexnetGlobals
-  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.hypersub.com \
-    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n ${CC_NAME} \
-    --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_NEXNET_CA \
-    --peerAddresses localhost:8051 --tlsRootCertFiles $PEER0_XORG_CA \
-    --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_NEXNET_CA \
-    -I -c '{"Function":"createCustomerTestAccount","Args":[]}'
-}
-
 chaincodeQuery() {
   ORG=$1
   setGlobals $ORG
