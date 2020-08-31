@@ -8,7 +8,9 @@
   },
   "main": "src/index.ts",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "build": "tsc",
+    "prod": "ts-node dist/index.js"
   },
   "engineStrict": true,
   "author": "Hyperledger",

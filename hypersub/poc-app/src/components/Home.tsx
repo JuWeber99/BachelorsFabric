@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import "../styles/home.css"
 import {Button} from "@material-ui/core";
 import {RouterProps} from "react-router";

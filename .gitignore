@@ -26,8 +26,6 @@
 /contract/node_modules/
 /hypersub/chaincode/dist/
 /hypersub/server/wallet/
-/hypersub/server/dist
-/hypersub/server/dist/*
 /customeraccountcc.tar.gz
 /waste/CustomerAccountContractTest.ts
 /hypersub/server/package-lock.json
