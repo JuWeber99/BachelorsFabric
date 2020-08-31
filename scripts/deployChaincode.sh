@@ -521,5 +521,4 @@ else
   printTask " Invoking the chaincodes for all peers on channel 1"
   chaincodeInvokeInitFromNexnet
 fi
-testInvalidSignature
 exit 0
