@@ -124,8 +124,10 @@ function startClients() {
   cd $HYPERSUB_BASE/hypersub/server/src
   ts-node enrollAdmin.ts
   ts-node enrollRegisterUser.ts
+  npm run build
   npm run prod &
   cd $HYPERSUB_BASE/hypersub/poc-app/src
+  npm run build
   npm run prod
 }
 
