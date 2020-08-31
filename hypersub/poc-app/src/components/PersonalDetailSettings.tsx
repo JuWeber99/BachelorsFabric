@@ -108,13 +108,19 @@ const PersonalDetailSettings = ({accountId, name, forename, history}: PersonalDe
                 </Button>
                 <Button onClick={() => {
                     callCreateTestAccount(1)
-                    history.push("/personal2")
                 }}>Erstelle Test-User 1
                 </Button>
                 <Button onClick={() => {
                     callCreateTestAccount(2)
-                    history.push("/personal3")
                 }}>Erstelle Test-User 2
+                </Button>
+                <Button onClick={() => {
+                    history.push("/personal2")
+                }}>Zu Test-User 1
+                </Button>
+                <Button onClick={() => {
+                    history.push("/personal3")
+                }}>Zu Test-User 2
                 </Button>
             </div>
         )

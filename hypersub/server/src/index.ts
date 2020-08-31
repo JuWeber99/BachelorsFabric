@@ -60,7 +60,7 @@ app.use(bodyParser.json())
         res.status(400).send(apiError)
     }
 })
-    app.get('/api/createTestTwoAccount', async (req, res) => {
+    app.get('/api/ct2', async (req, res) => {
     try {
         const network = await populateNetworkConnection();
         const caller = new ChainCodeCaller(network);
